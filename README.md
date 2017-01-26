@@ -1,2 +1,2 @@
 # pandroide-mafia-de-cuba
-Masters degree's project that aims to extending the logic to incorporate lies
+Masters degree's project that aims to extend the logic to incorporate lies
