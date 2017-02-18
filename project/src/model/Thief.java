@@ -1,17 +1,9 @@
 package model;
 
 public class Thief extends Role implements ThiefSide{
-	
 	private int numberOfDiamondsStolen;
 	
-	public Thief(int nbDiamondsStolen){
-		super("Thief");
-		numberOfDiamondsStolen = nbDiamondsStolen;
+	Thief(){
+		//TODO
 	}
-	
-	@Override
-	public int getNbDiamondsStolen(){
-		return numberOfDiamondsStolen ;
-	}
-	
 }

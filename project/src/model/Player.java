@@ -1,17 +1,17 @@
 package model;
 
 public class Player {
-	
 	private Role role;
 	private int position;
+	private boolean human;
 	
-	public Player(Role r, int pos){
-		role = r ;
-		position = pos ;
+	Player(){
+		//TODO
 	}
 	
 	public boolean isFirstPlayer(){
-		return (position==1) ;
+		//TODO
+		return true;
 	}
 	
 	public boolean isLastPlayer(){
@@ -20,46 +20,36 @@ public class Player {
 	}
 	
 	public void takeDiamonds(int diamonds){
-		role = new Thief(diamonds) ;
+		//TODO
 	}
 	
 	public void takeToken(String token){
-		switch (token) {
-			case "LoyalHenchman" :
-				role = new LoyalHenchman();
-				break ;
-			case "FBIAgent" :
-				role = new FBI();
-				break;
-			case "CIAAgent" :
-				role = new CIA();
-				break; 
-			case "Cleaner" :
-				role = new Cleaner() ;
-				break ;
-			case "Driver" :
-				role = new Driver(new Player(null,position-1));
-				break;
-			default :
-				break;
-		}
+		//TODO
 	}
 	
-	public SecretID reveal(){
-		if(role instanceof Thief)
-			return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
-		else {
-			if(role instanceof StreetUpchin)
-				return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
-		}
-		return new SecretID(role.getName(),role.getNbDiamondsStolen(),role.getName());
+	public boolean isHuman(){
+		return human;
 	}
 
-	public int getPosition(){
-		return position ;
+	public Role getRole() {
+		return role;
 	}
+
+	public void setRole(Role role) {
+		this.role = role;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+	public void setHuman(boolean human) {
+		this.human = human;
+	}
+
 	
-	public Role getRole(){
-		return role ;
-	}
 }

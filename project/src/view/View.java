@@ -8,6 +8,7 @@ import javafx.scene.text.Text;
 
 public class View {
 	private Pane panel;
+	private int lastHeight;
 	
 	//constructors
 	public View(int x, int y){
@@ -49,11 +50,12 @@ public class View {
 			buttons.get(buttonIndex).setMinWidth((largeurBoutons / numberOfColumns) - 2);
 						
 			//moving buttons to the right place
-			buttons.get(buttonIndex).setTranslateX(sidesMargin + ((largeurBoutons / numberOfColumns) - 2) * (buttonIndex % numberOfColumns));
-			buttons.get(buttonIndex).setTranslateY(topMargin + buttonHeight * (buttonIndex / numberOfColumns) + ((int)(buttonIndex / numberOfColumns) * spaceBetweenButtons));
+			buttons.get(buttonIndex).setTranslateX(sidesMargin + ((largeurBoutons / numberOfColumns) - 2) * (buttonIndex % numberOfColumns) + spaceBetweenButtons * (buttonIndex % numberOfColumns));
+			buttons.get(buttonIndex).setTranslateY(topMargin + buttonHeight * ((buttonIndex / numberOfColumns) + this.lastHeight ) + ((int)((buttonIndex / numberOfColumns)+this.lastHeight) * spaceBetweenButtons));
 			buttonIndex++;
 			
 		}
+		this.lastHeight += buttonIndex/numberOfColumns;
 	}
 	
 	/**
