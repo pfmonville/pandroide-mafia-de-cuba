@@ -3,280 +3,268 @@ package view;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import controller.App;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Tooltip;
+import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import controller.App;
 
 public class OptionView extends View{
-	private RadioButton iaJ1, iaJ2, huJ1, huJ2;
-	private RadioButton nv1j1, nv2j1, nv3j1, nv4j1, nv5j1, nv6j1;
-	private RadioButton nv1j2, nv2j2, nv3j2, nv4j2, nv5j2, nv6j2;
-	private Label labelnvj1, labelnvj2;
+	private RadioButton plIA,plHU;
+	private RadioButton nbpl6, nbpl7, nbpl8, nbpl9, nbpl10, nbpl11, nbpl12;
+	private RadioButton pos1,pos2,pos3,pos4,pos5,pos6,pos7,pos8,pos9,pos10,pos11,pos12;
+	private Label labelnbpl,labelHUPos;
 	private Button valider;
 	private Button quitter;
-	private ToggleGroup iahuJ1;
-	private ToggleGroup iahuJ2;
-	private ToggleGroup nvj1;
-	private ToggleGroup nvj2;
+
+	private ToggleGroup nbpl;
+	private ToggleGroup pos;
+	
+	private int numberOfLoyalHenchmen;
+	private int numberOfCleaners;
+	private int numberOfAgents;
+	private int numberOfDrivers;
+
 
 
 	public OptionView(int x, int y){
 		super(x, y);
 		
-		
-		GridPane gridPanel = new GridPane();
-		gridPanel.setTranslateX(50);
-		gridPanel.setTranslateY(250);
-		
-		//*********************************************************//
-		//LISTE ET PANEL CONTENANT LES OPTIONS RELATIVES AU JOUEUR 2
-		ArrayList<Node> listej1 = new ArrayList<Node>();
-
-		//*********************************************************//
-
+		//split the window vertically 
+		VBox mainPanel = new VBox();
+		mainPanel.setTranslateX(200);
+		mainPanel.setTranslateY(250);
 		
 		
+		//***************************************
+		//First gridPane for the number of player
 		
-		//*********************************************************//
-		//LISTE ET PANEL CONTENANT LES OPTIONS RELATIVES AU JOUEUR 2
-		ArrayList<Node> listej2 = new ArrayList<Node>();
-
-		//*********************************************************//
-
-
-		//initialisation des élements à afficher
+		HBox hBox1 = new HBox();
+		hBox1.setTranslateX(200);
+		hBox1.setTranslateY(0);
 		
-		//intstancie les tooltips
-		final Tooltip tooltipJoueurNoir = new Tooltip("Joueur Noir");
-		final Tooltip tooltipJoueurBlanc = new Tooltip("Joueur Blanc");
-		final Tooltip tooltipNiveau = new Tooltip("Niveau de difficulté");
-		final Tooltip tooltipIA = new Tooltip("Intelligence Artificielle");
-		final Tooltip tooltipHU = new Tooltip("Joueur Humain");
+		//list of element to be added to gridPane
+		ArrayList<Node> nbplList = new ArrayList<Node>();
+	
 		
-		//instancie les icones humain, ia, niveau
+		//the part where the user chooses the number of player
+		Image iconNumberOfPlayer = new Image("image/numberOfPlayer1.png");
+		
+		labelnbpl = new Label("");
+		labelnbpl.setGraphic(new ImageView(iconNumberOfPlayer));
+		labelnbpl.setId("Nombre de joueur");
+		labelnbpl.setTooltip(super.createStandardTooltip("Nombre de Joueur"));
+		nbpl6 = new RadioButton("6");
+		nbpl6.setUserData("6");
+		nbpl7 = new RadioButton("7");
+		nbpl7.setUserData("7");
+		nbpl8 = new RadioButton("8");
+		nbpl8.setUserData("8");
+		nbpl9 = new RadioButton("9");
+		nbpl9.setUserData("9");
+		nbpl10 = new RadioButton("10");
+		nbpl10.setUserData("10");
+		nbpl11 = new RadioButton("11");
+		nbpl11.setUserData("11");
+		nbpl12 = new RadioButton("12");
+		nbpl12.setUserData("12");
+		
+		nbpl = new ToggleGroup();
+		nbpl6.setToggleGroup(nbpl);
+		nbpl7.setToggleGroup(nbpl);
+		nbpl8.setToggleGroup(nbpl);
+		nbpl9.setToggleGroup(nbpl);
+		nbpl10.setToggleGroup(nbpl);
+		nbpl11.setToggleGroup(nbpl);
+		nbpl12.setToggleGroup(nbpl);
+		
+		nbpl6.setSelected(true);
+		
+		//set the behavior for the numberOfPlayer radio group
+		nbpl.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+		      public void changed(ObservableValue<? extends Toggle> ov,
+		              Toggle old_toggle, Toggle new_toggle) {
+		            if (nbpl.getSelectedToggle() != null) {
+		              int newNumberOfPlayer = Integer.parseInt(new_toggle.getUserData().toString());
+		              setNumberOfLoyalHenchmen(newNumberOfPlayer);
+		              setNumberOfCleaners(newNumberOfPlayer);
+		              setNumberOfAgents(newNumberOfPlayer);
+		              setNumberOfDrivers(newNumberOfPlayer);
+		              for(int i = 11; i >= newNumberOfPlayer; i--){
+		            	  ((RadioButton) pos.getToggles().get(i)).setDisable(true);
+		              }
+		              for(int i = 0; i < newNumberOfPlayer; i++){
+		            	  ((RadioButton) pos.getToggles().get(i)).setDisable(false);
+		              }
+		              int selectedPosition = Integer.parseInt(pos.getSelectedToggle().getUserData().toString());
+		              if(selectedPosition > newNumberOfPlayer){
+		            	  pos.selectToggle(pos.getToggles().get(newNumberOfPlayer-1));
+		              }
+		            }
+		      }
+		});
+		
+		nbplList.addAll(Arrays.asList(labelnbpl, new Text("\t"), nbpl6, nbpl7, nbpl8, nbpl9, nbpl10, nbpl11,nbpl12));
+		
+		//add all the elements to the gripPanel
+		hBox1.getChildren().addAll(nbplList);
+		
+		
+		
+		//***************************************
+		//Second gridPane for the position of the human player
+		
+		HBox hBox2 = new HBox();
+		hBox2.setTranslateX(0);
+		hBox2.setTranslateY(0);
+		
+		//list of element to be added to gridPane
+		ArrayList<Node> posList = new ArrayList<Node>();
+		
+		
+		//the part where the user chooses to play or watch ia
 		Image iconHU = new Image("image/humanIcon.png");
 		Image iconIA = new Image("image/IAIcon.png");
-		Image niveau = new Image("image/strength1.png");
-
-		
-		//*********************************************************//
-		//CHOIX HUMAIN OU IA J1
-		
 		Image imageJ1 = new Image("image/gogui-black-32x32.png");
 		
 		ImageView imagevJ1 = new ImageView(imageJ1);
-		Tooltip.install(imagevJ1, tooltipJoueurNoir);
+		Tooltip.install(imagevJ1, super.createStandardTooltip("Type de joueurs"));
 		imagevJ1.setFitHeight(28);
 		imagevJ1.setPreserveRatio(true);
-		iaJ1 = new RadioButton();
-		iaJ1.setUserData("ia");
-		iaJ1.setGraphic(new ImageView(iconIA));
-		iaJ1.setTooltip(tooltipIA);
-		huJ1 = new RadioButton();
-		huJ1.setUserData("hu");
-		huJ1.setGraphic(new ImageView(iconHU));
-		huJ1.setTooltip(tooltipHU);
-		iahuJ1 = new ToggleGroup(); 
-		iaJ1.setToggleGroup(iahuJ1); 
-		huJ1.setToggleGroup(iahuJ1);
+		plIA = new RadioButton();
+		plIA.setUserData("ia");
+		plIA.setGraphic(new ImageView(iconIA));
+		plIA.setTooltip(super.createStandardTooltip("Tous IA"));
+		plHU = new RadioButton();
+		plHU.setUserData("hu");
+		plHU.setGraphic(new ImageView(iconHU));
+		plHU.setTooltip(super.createStandardTooltip("Un Joueur Humain"));
+		pos = new ToggleGroup(); 
+		plIA.setToggleGroup(pos); 
+		plHU.setToggleGroup(pos);
 		
-		huJ1.setSelected(true);
-		
-		//tant que le thread n'est pas fonctionnel
-		//iaJ1.setDisable(true);
-		
-		//AJOUT DE CES ELEMENTS A LA LISTE
-		listej1.addAll(Arrays.asList(imagevJ1,new Text("\t"), iaJ1, huJ1));
-				
-		//*********************************************************//
-		
-
+		plHU.setSelected(true);
 		
 		
-		//*********************************************************//
-		//CHOIX HUMAIN OU IA J2
+		posList.addAll(Arrays.asList(imagevJ1,new Text("\t"), plIA, plHU, new Text("\t")));
 		
-		Image imageJ2 = new Image("image/gogui-white-32x32.png");
-		ImageView imagevJ2 = new ImageView(imageJ2);
-		Tooltip.install(imagevJ2, tooltipJoueurBlanc);
-		imagevJ2.setFitHeight(28);
-		imagevJ2.setPreserveRatio(true);
-		iaJ2 = new RadioButton();
-		iaJ2.setUserData("ia");
-		iaJ2.setGraphic(new ImageView(iconIA));
-		iaJ2.setTooltip(tooltipIA);
-		huJ2 = new RadioButton();
-		huJ2.setUserData("hu");
-		huJ2.setGraphic(new ImageView(iconHU));
-		huJ2.setTooltip(tooltipHU);
-		iahuJ2 = new ToggleGroup();
-		iaJ2.setToggleGroup(iahuJ2); 
-		huJ2.setToggleGroup(iahuJ2);
+		//the part where the user chooses where he sits
+		Image iconHumanPosition = new Image("image/numberOfPlayer1.png");
 		
-		iaJ2.setSelected(true);
-		
-		//AJOUT DE CES ELEMENTS A LA LISTE
-		listej2.addAll(Arrays.asList(imagevJ2,new Text("\t"), iaJ2, huJ2));
-		
-		//*********************************************************//
-
-		
-		
-		
-		//*********************************************************//
-		//CHOIX NIVEAU J1
-		
-		labelnvj1 = new Label("");
-		labelnvj1.setGraphic(new ImageView(niveau));
-		labelnvj1.setId("niveau");
-		labelnvj1.setTooltip(tooltipNiveau);
-		nv1j1 = new RadioButton("1");
-		nv1j1.setUserData("1");
-		nv2j1 = new RadioButton("2");
-		nv2j1.setUserData("2");
-		nv3j1 = new RadioButton("3");
-		nv3j1.setUserData("3");
-		nv4j1 = new RadioButton("4");
-		nv4j1.setUserData("4");
-		nv5j1 = new RadioButton("5");
-		nv5j1.setUserData("5");
-		nv6j1 = new RadioButton("6");
-		nv6j1.setUserData("6");
-		
-		nvj1 = new ToggleGroup();
-		nv1j1.setToggleGroup(nvj1);
-		nv2j1.setToggleGroup(nvj1);
-		nv3j1.setToggleGroup(nvj1);
-		nv4j1.setToggleGroup(nvj1);
-		nv5j1.setToggleGroup(nvj1);
-		nv6j1.setToggleGroup(nvj1);
-		
-		nv1j1.setDisable(true);
-		nv2j1.setDisable(true);
-		nv3j1.setDisable(true);
-		nv4j1.setDisable(true);
-		nv5j1.setDisable(true);
-		nv6j1.setDisable(true);
-		
-		nv3j1.setSelected(true);
-		
-		//AJOUT DES ELEMENTS A LA LISTE
-		listej1.addAll(Arrays.asList(new Text("\t"), labelnvj1, new Text("   "), nv1j1, nv2j1, nv3j1, nv4j1, nv5j1, nv6j1));
-		
-		//*********************************************************//
-
+		labelHUPos = new Label("");
+		labelHUPos.setGraphic(new ImageView(iconHumanPosition));
+		labelHUPos.setId("humanPosition");
+		labelHUPos.setTooltip(super.createStandardTooltip("Position du joueur humain\nLa position 1 correspond au Parrain"));
+		pos1 = new RadioButton("1");
+		pos1.setUserData("1");
+		pos2 = new RadioButton("2");
+		pos2.setUserData("2");
+		pos3 = new RadioButton("3");
+		pos3.setUserData("3");
+		pos4 = new RadioButton("4");
+		pos4.setUserData("4");
+		pos5 = new RadioButton("5");
+		pos5.setUserData("5");
+		pos6 = new RadioButton("6");
+		pos6.setUserData("6");
+		pos7 = new RadioButton("7");
+		pos7.setUserData("7");
+		pos8 = new RadioButton("8");
+		pos8.setUserData("8");
+		pos9 = new RadioButton("9");
+		pos9.setUserData("9");
+		pos10 = new RadioButton("10");
+		pos10.setUserData("10");
+		pos11 = new RadioButton("11");
+		pos11.setUserData("11");
+		pos12 = new RadioButton("12");
+		pos12.setUserData("12");
 		
 		
+		pos = new ToggleGroup();
+		pos1.setToggleGroup(pos);
+		pos2.setToggleGroup(pos);
+		pos3.setToggleGroup(pos);
+		pos4.setToggleGroup(pos);
+		pos5.setToggleGroup(pos);
+		pos6.setToggleGroup(pos);
+		pos7.setToggleGroup(pos);
+		pos8.setToggleGroup(pos);
+		pos9.setToggleGroup(pos);
+		pos10.setToggleGroup(pos);
+		pos11.setToggleGroup(pos);
+		pos12.setToggleGroup(pos);
 		
 		
+		pos1.setSelected(true);
 		
+		pos7.setDisable(true);
+		pos8.setDisable(true);
+		pos9.setDisable(true);
+		pos10.setDisable(true);
+		pos11.setDisable(true);
+		pos12.setDisable(true);
 		
-		//*********************************************************//
-		//CHOIX NIVEAU J2
-
-		labelnvj2 = new Label();
-		labelnvj2.setGraphic(new ImageView(niveau));
-		labelnvj2.setId("niveau");
-		labelnvj2.setTooltip(tooltipNiveau);
-		nv1j2 = new RadioButton("1");
-		nv1j2.setUserData("1");
-		nv2j2 = new RadioButton("2");
-		nv2j2.setUserData("2");
-		nv3j2 = new RadioButton("3");
-		nv3j2.setUserData("3");
-		nv4j2 = new RadioButton("4");
-		nv4j2.setUserData("4");
-		nv5j2 = new RadioButton("5");
-		nv5j2.setUserData("5");
-		nv6j2 = new RadioButton("6");
-		nv6j2.setUserData("6");
-
-		nvj2 = new ToggleGroup();
-		nv1j2.setToggleGroup(nvj2);
-		nv2j2.setToggleGroup(nvj2);
-		nv3j2.setToggleGroup(nvj2);
-		nv4j2.setToggleGroup(nvj2);
-		nv5j2.setToggleGroup(nvj2);
-		nv6j2.setToggleGroup(nvj2);
-		
-		nv3j2.setSelected(true);
-		
-		//AJOUT DES ELEMENTS A LA LISTE
-		listej2.addAll(Arrays.asList(new Text("\t"), labelnvj2, new Text("   "),nv1j2, nv2j2, nv3j2, nv4j2, nv5j2, nv6j2));
-		
-		//*********************************************************//
-		
-		
-		//AJOUT DES LISTENER SUR LES BOUTONS IA ET HU PERMETTANT DE GRISER LES NIVEAUX
-		
-		iaJ1.setOnAction((event)->{
-			nv1j1.setDisable(false);
-			nv2j1.setDisable(false);
-			nv3j1.setDisable(false);
-			nv4j1.setDisable(false);
-			nv5j1.setDisable(false);
-			nv6j1.setDisable(false);
+		plIA.setOnAction((event)->{
+				for(int i = 0; i < App.rules.getMaximumNumberOfPlayer(); i++){
+					((RadioButton) pos.getToggles().get(i)).setDisable(true);
+				}
 		});
 		
-		huJ1.setOnAction((event)->{
-			nv1j1.setDisable(true);
-			nv2j1.setDisable(true);
-			nv3j1.setDisable(true);
-			nv4j1.setDisable(true);
-			nv5j1.setDisable(true);
-			nv6j1.setDisable(true);
+		plHU.setOnAction((event)->{
+			for(int i = 0; i < Integer.parseInt(nbpl.getSelectedToggle().getUserData().toString()); i++){
+				((RadioButton) pos.getToggles().get(i)).setDisable(false);
+			}
 		});
 		
-		iaJ2.setOnAction((event)->{
-			nv1j2.setDisable(false);
-			nv2j2.setDisable(false);
-			nv3j2.setDisable(false);
-			nv4j2.setDisable(false);
-			nv5j2.setDisable(false);
-			nv6j2.setDisable(false);
-		});
 		
-		huJ2.setOnAction((event)->{
-			nv1j2.setDisable(true);
-			nv2j2.setDisable(true);
-			nv3j2.setDisable(true);
-			nv4j2.setDisable(true);
-			nv5j2.setDisable(true);
-			nv6j2.setDisable(true);
-		});
+		posList.addAll(Arrays.asList(labelHUPos, new Text("\t"), pos1, pos2, pos3, pos4, pos5, pos6, pos7, pos8, pos9, pos10, pos11, pos12));
 		
-		//*********************************************************//
-
+		//add elements to hBox2
+		hBox2.getChildren().addAll(posList);
 		
 		
 		
 		
 		
-		//*********************************************************//
-		//AJOUT DES ELEMENTS AU GRIDPANEL
 		
-		for(int i=0;i<listej2.size();i++){
-			gridPanel.add(listej2.get(i), i, 2);
-		}
+		//***************************************
+		//personalization part
 		
-		//pour marquer l'espace entre les deux options
-		gridPanel.add(new Text(""), 0 ,1);
+		HBox persBox = new HBox();
 		
-		for(int i=0;i<listej1.size();i++){
-			gridPanel.add(listej1.get(i), i, 0);
-		}
-
-		super.getPanel().getChildren().add(gridPanel);
+		//add a checkbox to enable personalization
+		CheckBox checkBox1 = new CheckBox();
+		checkBox1.selectedProperty().set(false);
+		
+		Label persLabel = new Label();
+		persLabel.setText("Personalization");
+		persLabel.setFont(new Font("Tahoma", 20));
+		
+		
+		
+		persBox.getChildren().addAll(checkBox1, new Text("\t"), persLabel);
+		
+		
+		//add all sub-elements to the mainPanel
+		mainPanel.getChildren().addAll(hBox1, new Text(""), hBox2, new Text("\n\n"), persBox);
+		
+		//add the mainPanel to the window
+		super.getPanel().getChildren().add(mainPanel);
 		
 		//*********************************************************//
 		
@@ -345,20 +333,28 @@ public class OptionView extends View{
 		
 	}
 
-	public ToggleGroup getIahuJ1() {
-		return iahuJ1;
-	}
-
-	public ToggleGroup getIahuJ2() {
-		return iahuJ2;
-	}
-
 	public ToggleGroup getNvj1() {
-		return nvj1;
+		return nbpl;
 	}
 
-	public ToggleGroup getNvj2() {
-		return nvj2;
+	
+	
+
+	public void setNumberOfLoyalHenchmen(int numberOfLoyalHenchmen) {
+		this.numberOfLoyalHenchmen = numberOfLoyalHenchmen;
+		//TODO changer l'�tat des radio boutons du bas
+	}
+
+	public void setNumberOfCleaners(int numberOfCleaners) {
+		this.numberOfCleaners = numberOfCleaners;
+	}
+
+	public void setNumberOfAgents(int numberOfAgents) {
+		this.numberOfAgents = numberOfAgents;
+	}
+
+	public void setNumberOfDrivers(int numberOfDrivers) {
+		this.numberOfDrivers = numberOfDrivers;
 	}
 
 	@Override
