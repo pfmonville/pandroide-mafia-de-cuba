@@ -1,5 +1,8 @@
 package model;
 
-public class Cleaner implements GodFatherSide{
-	//TODO
+public class Cleaner extends Role implements GodFatherSide{
+
+	public Cleaner(){
+		super("Cleaner");
+	}
 }

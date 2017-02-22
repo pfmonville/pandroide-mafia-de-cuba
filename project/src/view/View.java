@@ -3,10 +3,7 @@ package view;
 import java.util.ArrayList;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class View {
@@ -72,15 +69,5 @@ public class View {
 	public void centerTextLayout(Text text, int width, int yPosition){
 		text.setWrappingWidth(width);
 		text.setTranslateY(yPosition);
-	}
-	
-	
-	public Tooltip createStandardTooltip(String content){
-		Tooltip tooltip = new Tooltip(content);
-		tooltip.setMaxWidth(200);
-		tooltip.setWrapText(true);
-		tooltip.setFont(new Font("Tahoma", 15));
-		
-		return tooltip;
 	}
 }

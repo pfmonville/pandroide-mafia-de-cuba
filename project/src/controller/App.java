@@ -42,7 +42,7 @@ public class App extends Application {
 	public void start(Stage stage) throws IOException{
 		mainStage = stage;
 		ov = new OptionView(1280, 1024);
-		gv = new GameView(600, 600);
+		gv = new GameView(1280, 920);
 		sv = new StartView(1280, 920);
 
 		mainLayout = new Pane();
@@ -55,7 +55,7 @@ public class App extends Application {
 		
 		stage.setScene(scene);
 		oldCursor = scene.getCursor();
-		stage.getIcons().add(new Image("image/icone.png"));
+		stage.getIcons().add(new Image("image/diamond.png"));
 		stage.setResizable(false);
 		stage.show();
 	}
