@@ -29,6 +29,15 @@ public class Rules {
 	private String nameThief;
 	private String nameStreetUpchin;
 	
+	//Value for the game initialize in the OptionView
+	private int numberOfLoyalHenchmen;
+	private int numberOfCleaners;
+	private int numberOfAgents;
+	private int numberOfDrivers;
+	private int numberOfJokers;
+	private int numberOfDiamonds;
+	private boolean allIA;
+	private int humanPosition;
 	
 	public Rules(){
 		this.nameGodFather = "Parrain";
@@ -51,8 +60,36 @@ public class Rules {
 		this.firstPlayerCanHide = true;
 		this.minimumNumberOfPlayer = 6;
 		this.maximumNumberOfPlayer = 12;
+		
+		this.numberOfLoyalHenchmen = 1;
+		this.numberOfCleaners = 0;
+		this.numberOfAgents = 1;
+		this.numberOfDrivers = 1;
+		this.numberOfJokers = 0;
+		this.numberOfDiamonds = 15;
+		this.allIA = false;
 	}
 	
+	
+	/**
+	 * this method resets the rule set for a new game
+	 */
+	public void reset(){
+		this.maxHiddenDiamonds = 5;
+		this.maxHiddenTokens = 1;
+		this.lastPlayerMustTake = false;
+		this.firstPlayerCanHide = true;
+		this.minimumNumberOfPlayer = 6;
+		this.maximumNumberOfPlayer = 12;
+		
+		this.numberOfLoyalHenchmen = 1;
+		this.numberOfCleaners = 0;
+		this.numberOfAgents = 1;
+		this.numberOfDrivers = 1;
+		this.numberOfJokers = 0;
+		this.numberOfDiamonds = 15;
+		this.allIA = false;
+	}
 	
 	
 	public ArrayList<String> getTokensFor(int numberOfPlayer){
@@ -71,6 +108,90 @@ public class Rules {
 			tokens.add(nameDriver);
 		}
 		return tokens;
+	}
+	
+	
+	
+	public int getNumberOfLoyalHenchmenFor(int newNumberOfPlayer) {
+		switch(newNumberOfPlayer){
+		case 6:
+			return 1;
+		case 7:
+			return 2;
+		case 8:
+			return 3;
+		case 9:
+		case 10:
+		case 11:
+			return 4;
+		case 12:
+			return 5;
+		default:
+			return 0;
+		}
+	}
+	
+	public int getNumberOfCleanersFor(int newNumberOfPlayer) {
+		switch(newNumberOfPlayer){
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		default:
+			return 0;
+		}
+	}
+	
+	public int getNumberOfAgentsFor(int newNumberOfPlayer) {
+		switch(newNumberOfPlayer){
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+			return 1;
+		case 10:
+		case 11:
+		case 12:
+			return 2;
+		default:
+			return 0;
+		}
+	}
+	
+	public int getNumberOfDriversFor(int newNumberOfPlayer) {
+		switch(newNumberOfPlayer){
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+			return 1;
+		case 11:
+		case 12:
+			return 2;
+		default:
+			return 0;
+		}
+	}
+	
+	public int getNumberOfJokerFor(int newNumberOfPlayer){
+		switch(newNumberOfPlayer){
+		case 6:
+		case 7:
+			return 0;
+		case 8:
+		case 9:
+		case 10:
+			return 1;
+		case 11:
+		case 12:
+			return 2;
+		default:
+			return 0;
+		}
 	}
 
 
@@ -317,6 +438,120 @@ public class Rules {
 
 	public void setMaximumNumberOfPlayer(int maximumNumberOfPlayer) {
 		this.maximumNumberOfPlayer = maximumNumberOfPlayer;
+	}
+
+
+
+	public int getNumberOfLoyalHenchmen() {
+		return numberOfLoyalHenchmen;
+	}
+
+
+
+	public void setNumberOfLoyalHenchmen(int numberOfLoyalHenchmen) {
+		this.numberOfLoyalHenchmen = numberOfLoyalHenchmen;
+	}
+
+
+	public void setNumberOfLoyalHenchmenFor(int numberOfPlayer) {
+		this.numberOfLoyalHenchmen = this.getDefaultNumberOfLoyalHenchmenFor(numberOfPlayer);
+	}
+	
+
+	public int getNumberOfCleaners() {
+		return numberOfCleaners;
+	}
+
+
+
+	public void setNumberOfCleaners(int numberOfCleaners) {
+		this.numberOfCleaners = numberOfCleaners;
+	}
+
+	public void setNumberOfCleanersFor(int numberOfPlayer) {
+		this.numberOfCleaners = this.getDefaultNumberOfCleanersFor(numberOfPlayer);
+	}
+
+
+	public int getNumberOfAgents() {
+		return numberOfAgents;
+	}
+
+
+
+	public void setNumberOfAgents(int numberOfAgents) {
+		this.numberOfAgents = numberOfAgents;
+	}
+
+	public void setNumberOfAgentsFor(int numberOfPlayer) {
+		this.numberOfAgents = this.getDefaultNumberOfAgentsFor(numberOfPlayer);
+	}
+	
+
+	public int getNumberOfDrivers() {
+		return numberOfDrivers;
+	}
+
+
+
+	public void setNumberOfDrivers(int numberOfDrivers) {
+		this.numberOfDrivers = numberOfDrivers;
+	}
+
+
+	public void setNumberOfDriversFor(int numberOfPlayer) {
+		this.numberOfDrivers = this.getDefaultNumberOfDriversFor(numberOfPlayer);
+	}
+	
+
+	public int getNumberOfJokers() {
+		return numberOfJokers;
+	}
+
+
+
+	public void setNumberOfJokers(int numberOfJoker) {
+		this.numberOfJokers = numberOfJoker;
+	}
+	
+	public void setNumberOfJokersFor(int numberOfPlayer) {
+		this.numberOfJokers = this.getDefaultNumberOfJokerFor(numberOfPlayer);
+	}
+
+
+
+	public int getNumberOfDiamonds() {
+		return numberOfDiamonds;
+	}
+
+
+
+	public void setNumberOfDiamonds(int numberOfDiamonds) {
+		this.numberOfDiamonds = numberOfDiamonds;
+	}
+
+
+
+	public boolean isAllIA() {
+		return allIA;
+	}
+
+
+
+	public void setAllIA(boolean allIA) {
+		this.allIA = allIA;
+	}
+
+
+
+	public int getHumanPosition() {
+		return humanPosition;
+	}
+
+
+
+	public void setHumanPosition(int humanPosition) {
+		this.humanPosition = humanPosition;
 	}
 
 

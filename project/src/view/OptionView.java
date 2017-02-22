@@ -7,28 +7,24 @@ import controller.App;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.Node;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
-import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import model.Theme;
 
 public class OptionView extends View{
 	private RadioButton plIA,plHU;
@@ -39,11 +35,8 @@ public class OptionView extends View{
 
 	private ToggleGroup nbpl;
 	private ToggleGroup huIA, pos, nbLoy, nbCle, nbAge, nbDri, nbJok;
+	private ComboBox<String> nbDia;
 	
-	private int numberOfLoyalHenchmen;
-	private int numberOfCleaners;
-	private int numberOfAgents;
-	private int numberOfDrivers;
 
 
 
@@ -53,7 +46,7 @@ public class OptionView extends View{
 		//split the window vertically 
 		VBox mainPanel = new VBox();
 		mainPanel.setTranslateX(350);
-		mainPanel.setTranslateY(250);
+		mainPanel.setTranslateY(200);
 		
 		
 		//***************************************
@@ -62,7 +55,7 @@ public class OptionView extends View{
 	
 		
 		//the part where the user chooses the number of player
-		Image iconNumberOfPlayer = new Image("image/numberOfPlayer1.png");
+		Image iconNumberOfPlayer = new Image(Theme.pathNumberOfPlayer);
 		
 		//label
 		labelnbpl = new Label("");
@@ -87,13 +80,22 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 	    	  		if (nbpl.getSelectedToggle() != null) {
+	    	  			
+	    	  			//Collect the new number of player
 	    	  			int newNumberOfPlayer = Integer.parseInt(new_toggle.getUserData().toString());
-						setNumberOfLoyalHenchmen(newNumberOfPlayer);
-						setNumberOfCleaners(newNumberOfPlayer);
-						setNumberOfAgents(newNumberOfPlayer);
-						setNumberOfDrivers(newNumberOfPlayer);
+	    	  			//update standard role distribution
+	    	  			App.rules.setNumberOfLoyalHenchmenFor(newNumberOfPlayer);
+	    	  			App.rules.setNumberOfCleanersFor(newNumberOfPlayer);
+	    	  			App.rules.setNumberOfAgentsFor(newNumberOfPlayer);
+	    	  			App.rules.setNumberOfDriversFor(newNumberOfPlayer);
+	    	  			App.rules.setNumberOfJokersFor(newNumberOfPlayer);
+	    	  			
+
+	    	  			//de-activate too high positions
 						for(int i = 11; i >= newNumberOfPlayer; i--){
-							((RadioButton) pos.getToggles().get(i)).setDisable(true);
+							if(huIA.getSelectedToggle().getUserData().toString().equals("hu")){
+								((RadioButton) pos.getToggles().get(i)).setDisable(true);
+							}
 							if(checkBox1.isSelected()){
 								((RadioButton) nbLoy.getToggles().get(i)).setDisable(true);
 								((RadioButton) nbCle.getToggles().get(i)).setDisable(true);
@@ -102,8 +104,11 @@ public class OptionView extends View{
 								((RadioButton) nbJok.getToggles().get(i)).setDisable(true);
 							}
 						}
+						//activate all available positions
 						for(int i = 0; i < newNumberOfPlayer; i++){
-							((RadioButton) pos.getToggles().get(i)).setDisable(false);
+							if(huIA.getSelectedToggle().getUserData().toString().equals("hu")){
+								((RadioButton) pos.getToggles().get(i)).setDisable(false);
+		    	  			}
 							if(checkBox1.isSelected()){
 								((RadioButton) nbLoy.getToggles().get(i)).setDisable(false);
 								((RadioButton) nbCle.getToggles().get(i)).setDisable(false);
@@ -112,60 +117,16 @@ public class OptionView extends View{
 								((RadioButton) nbJok.getToggles().get(i)).setDisable(false);
 							}	
 						}
-						switch(newNumberOfPlayer){
-						case 6:
-							nbLoy.getToggles().get(1).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(1).setSelected(true);
-							nbDri.getToggles().get(1).setSelected(true);
-							nbJok.getToggles().get(0).setSelected(true);
-							break;
-						case 7:
-							nbLoy.getToggles().get(2).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(1).setSelected(true);
-							nbDri.getToggles().get(1).setSelected(true);
-							nbJok.getToggles().get(0).setSelected(true);
-							break;
-						case 8:
-							nbLoy.getToggles().get(3).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(1).setSelected(true);
-							nbDri.getToggles().get(1).setSelected(true);
-							nbJok.getToggles().get(1).setSelected(true);
-							break;
-						case 9:
-							nbLoy.getToggles().get(4).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(1).setSelected(true);
-							nbDri.getToggles().get(1).setSelected(true);
-							nbJok.getToggles().get(1).setSelected(true);
-							break;
-						case 10:
-							nbLoy.getToggles().get(4).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(2).setSelected(true);
-							nbDri.getToggles().get(1).setSelected(true);
-							nbJok.getToggles().get(1).setSelected(true);
-							break;
-						case 11:
-							nbLoy.getToggles().get(4).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(2).setSelected(true);
-							nbDri.getToggles().get(2).setSelected(true);
-							nbJok.getToggles().get(2).setSelected(true);
-							break;
-						case 12:
-							nbLoy.getToggles().get(5).setSelected(true);
-							nbCle.getToggles().get(0).setSelected(true);
-							nbAge.getToggles().get(2).setSelected(true);
-							nbDri.getToggles().get(2).setSelected(true);
-							nbJok.getToggles().get(2).setSelected(true);
-							break;
-						default:
-							break;
-						}
+						
+						//select the standard role distribution
+						nbLoy.getToggles().get(App.rules.getNumberOfLoyalHenchmen()).setSelected(true);
+						nbCle.getToggles().get(App.rules.getNumberOfCleaners()).setSelected(true);
+						nbAge.getToggles().get(App.rules.getNumberOfAgents()).setSelected(true);
+						nbDri.getToggles().get(App.rules.getNumberOfDrivers()).setSelected(true);
+						nbJok.getToggles().get(App.rules.getNumberOfJokers()).setSelected(true);
+						
 						int selectedPosition = Integer.parseInt(pos.getSelectedToggle().getUserData().toString());
+						//move the selected position to a correct number
 						if(selectedPosition > newNumberOfPlayer){
 							pos.selectToggle(pos.getToggles().get(newNumberOfPlayer-1));
 						}
@@ -183,12 +144,12 @@ public class OptionView extends View{
 		
 		
 		//the part where the user chooses to play or watch ia
-		Image iconHU = new Image("image/humanIcon.png");
-		Image iconIA = new Image("image/IAIcon.png");
+		Image iconHU = new Image(Theme.pathHumanIcon);
+		Image iconIA = new Image(Theme.pathIAIcon);
 		
 		
 		Label typeOfPlayerLabel = new Label();
-		Image imageJ1 = new Image("image/gogui-black-32x32.png");
+		Image imageJ1 = new Image(Theme.pathTypeOfPlayer);
 		typeOfPlayerLabel.setGraphic(new ImageView(imageJ1));
 		typeOfPlayerLabel.setTooltip(super.createStandardTooltip("Type de joueurs"));
 		plIA = new RadioButton();
@@ -212,9 +173,8 @@ public class OptionView extends View{
 		gridPane1.add(new Text(""), 0, 3);
 		
 		
-		
 		//the part where the user chooses where he sits
-		Image iconHumanPosition = new Image("image/numberOfPlayer1.png");
+		Image iconHumanPosition = new Image(Theme.pathPosition);
 		
 		labelHUPos = new Label("");
 		labelHUPos.setGraphic(new ImageView(iconHumanPosition));
@@ -239,16 +199,26 @@ public class OptionView extends View{
 
 		
 		plIA.setOnAction((event)->{
+			App.rules.setAllIA(true);
 				for(int i = 0; i < App.rules.getMaximumNumberOfPlayer(); i++){
 					((RadioButton) pos.getToggles().get(i)).setDisable(true);
 				}
 		});
 		
 		plHU.setOnAction((event)->{
+			App.rules.setAllIA(false);
 			for(int i = 0; i < Integer.parseInt(nbpl.getSelectedToggle().getUserData().toString()); i++){
 				((RadioButton) pos.getToggles().get(i)).setDisable(false);
 			}
 		});
+		
+		
+		pos.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+		      public void changed(ObservableValue<? extends Toggle> ov, Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setHumanPosition(Integer.parseInt(new_toggle.getUserData().toString()));
+		      }
+		});
+		
 		
 		gridPane1.add(labelHUPos, 0, 4);
 		gridPane1.add(new Text("\t"), 1, 4);
@@ -281,6 +251,7 @@ public class OptionView extends View{
 					((RadioButton) nbAge.getToggles().get(i)).setDisable(false);
 					((RadioButton) nbDri.getToggles().get(i)).setDisable(false);
 					((RadioButton) nbJok.getToggles().get(i)).setDisable(false);
+					nbDia.setDisable(false);
 				}
 			}else{
 				for (int i = 0; i < 12; i++) {
@@ -289,6 +260,7 @@ public class OptionView extends View{
 					((RadioButton) nbAge.getToggles().get(i)).setDisable(true);
 					((RadioButton) nbDri.getToggles().get(i)).setDisable(true);
 					((RadioButton) nbJok.getToggles().get(i)).setDisable(true);
+					nbDia.setDisable(true);
 				}
 			}
 		});
@@ -321,6 +293,7 @@ public class OptionView extends View{
 		nbLoy.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setNumberOfLoyalHenchmen(Integer.parseInt(new_toggle.getUserData().toString()));
 		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
@@ -336,7 +309,7 @@ public class OptionView extends View{
 		
 		//For the number of cleaner
 		Label cleanerLabel = new Label();
-		Image imgCleaner = new Image("image/cleaner32.png");
+		Image imgCleaner = new Image(Theme.pathCleaner);
 		cleanerLabel.setGraphic(new ImageView(imgCleaner));
 		cleanerLabel.setTooltip(super.createStandardTooltip("Nombre de jetons Nettoyeur"));
 		
@@ -354,6 +327,7 @@ public class OptionView extends View{
 		nbCle.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setNumberOfCleaners(Integer.parseInt(new_toggle.getUserData().toString()));
 		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
@@ -368,7 +342,7 @@ public class OptionView extends View{
 		
 		//For the number of Agent
 		Label agentLabel = new Label();
-		Image imgAgent = new Image("image/agent32.png");
+		Image imgAgent = new Image(Theme.pathAgent);
 		agentLabel.setGraphic(new ImageView(imgAgent));
 		agentLabel.setTooltip(super.createStandardTooltip("Nombre de jetons Agent"));
 		
@@ -386,6 +360,7 @@ public class OptionView extends View{
 		nbAge.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setNumberOfAgents(Integer.parseInt(new_toggle.getUserData().toString()));
 		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
@@ -400,7 +375,7 @@ public class OptionView extends View{
 		
 		//For the number of driver
 		Label driverLabel = new Label();
-		Image imgDriver = new Image("image/driver32.png");
+		Image imgDriver = new Image(Theme.pathDriver);
 		driverLabel.setGraphic(new ImageView(imgDriver));
 		driverLabel.setTooltip(super.createStandardTooltip("Nombre de jetons Chauffeur"));
 		
@@ -418,6 +393,7 @@ public class OptionView extends View{
 		nbDri.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setNumberOfDrivers(Integer.parseInt(new_toggle.getUserData().toString()));
 		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
@@ -432,7 +408,7 @@ public class OptionView extends View{
 		
 		//For the number of Joker
 		Label jokerLabel = new Label();
-		Image imgJoker = new Image("image/joker32.png");
+		Image imgJoker = new Image(Theme.pathJoker);
 		jokerLabel.setGraphic(new ImageView(imgJoker));
 		jokerLabel.setTooltip(super.createStandardTooltip("Nombre de Jokers"));
 		
@@ -448,16 +424,47 @@ public class OptionView extends View{
 		}
 		jokerList.get(0).setSelected(true);
 		
+		nbJok.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+		      public void changed(ObservableValue<? extends Toggle> ov,
+		              Toggle old_toggle, Toggle new_toggle) {
+		    	  App.rules.setNumberOfJokers(Integer.parseInt(new_toggle.getUserData().toString()));
+		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		      }
+		});
+		
 		optionGrid.add(jokerLabel, 0, 8);
 		optionGrid.add(new Text("   "), 1, 8);
 		for(int i = 0; i < jokerList.size(); i++){
 			optionGrid.add(jokerList.get(i), i+2, 8);
 		}
+		optionGrid.add(new Text(""), 0, 9);
 		
+		
+		//For the number of Diamonds
+		HBox diaBox = new HBox();
+		Label diamondLabel = new Label();
+		Image imgDiamond = new Image(Theme.pathDiamond);
+		diamondLabel.setGraphic(new ImageView(imgDiamond));
+		diamondLabel.setTooltip(super.createStandardTooltip("Nombre de Diamants"));
+		
+		ObservableList<String> options = 
+			    FXCollections.observableArrayList(
+			        "1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20"
+			    );
+		nbDia = new ComboBox<String>(options);
+		nbDia.setVisibleRowCount(5);
+		nbDia.setValue("15");
+		nbDia.setDisable(true);
+		
+		nbDia.setOnAction((event) -> {
+			App.rules.setNumberOfDiamonds(Integer.parseInt(nbDia.getValue().toString()));
+		});
+		
+		diaBox.getChildren().addAll(diamondLabel, new Text("   "), nbDia);
 		
 		
 		//add all sub-elements to the mainPanel
-		mainPanel.getChildren().addAll(gridPane1, new Text("\n\n"), persBox, optionGrid);
+		mainPanel.getChildren().addAll(gridPane1, new Text("\n\n"), persBox, optionGrid, diaBox);
 		
 		//add the mainPanel to the window
 		super.getPanel().getChildren().add(mainPanel);
@@ -505,7 +512,7 @@ public class OptionView extends View{
 		ArrayList<Button> validation = new ArrayList<Button>();
 		validation.addAll(Arrays.asList(valider, quitter));
 		
-		super.quickMenu(validation, 2, 75, 700, 500);
+		super.quickMenu(validation, 2, 75, 800, 500);
 		
 		super.getPanel().getChildren().add(valider);
 		super.getPanel().getChildren().add(quitter);
@@ -537,125 +544,6 @@ public class OptionView extends View{
 	}
 
 	
-	
-
-	public void setNumberOfLoyalHenchmen(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-			case 1:
-				break;
-			case 2:
-				break;
-			case 3:
-				break;
-			case 4:
-				break;
-			case 5:
-				break;
-			case 6:
-				break;
-			case 7:
-				break;
-			case 8:
-				break;
-			case 9:
-				break;
-			case 10:
-				break;
-			case 11:
-				break;
-			case 12:
-				break;
-			default:
-				break;
-		}
-		//TODO changer l'état des radio boutons du bas
-	}
-
-	public void setNumberOfCleaners(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
-			break;
-		case 9:
-			
-		case 10:
-			
-		case 11:
-			break;
-		case 12:
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void setNumberOfAgents(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-			
-		case 7:
-			
-		case 8:
-			
-		case 9:
-			this.numberOfAgents = 1;
-			break;
-		case 10:
-			
-		case 11:
-			
-		case 12:
-			this.numberOfAgents = 2;
-			break;
-		default:
-			break;
-		}
-	}
-
-	public void setNumberOfDrivers(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
-			break;
-		case 9:
-			break;
-		case 10:
-			break;
-		case 11:
-			break;
-		case 12:
-			break;
-		default:
-			break;
-		}
-	}
-		
-	public void setNumberOfJokers(int newNumberOfPlayer){
-		switch(newNumberOfPlayer){
-		case 6:
-			break;
-		case 7:
-			break;
-		case 8:
-			break;
-		case 9:
-			break;
-		case 10:
-			break;
-		case 11:
-			break;
-		case 12:
-			break;
-		default:
-			break;
-		}
-	}
 
 	@Override
 	public Pane getPanel(){
