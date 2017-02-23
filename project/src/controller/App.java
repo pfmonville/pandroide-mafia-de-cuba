@@ -11,6 +11,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Rules;
+import model.Theme;
 import view.OptionView;
 import view.GameView;
 import view.StartView;
@@ -55,7 +56,7 @@ public class App extends Application {
 		
 		stage.setScene(scene);
 		oldCursor = scene.getCursor();
-		stage.getIcons().add(new Image("image/diamond.png"));
+		stage.getIcons().add(new Image(Theme.pathMainLogo1));
 		stage.setResizable(false);
 		stage.show();
 	}

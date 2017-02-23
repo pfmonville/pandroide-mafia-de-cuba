@@ -18,5 +18,7 @@ public class Theme {
 	
 	public static String pathTable = "image/table1.png";
 	public static String pathLogo = "image/logoMafiaDeCuba1.png";
+	public static String pathMainLogo = "image/mafiaDeCubaLogo1.jpg";
+	public static String pathMainLogo1 = "image/diamond.png";
 	
 }
