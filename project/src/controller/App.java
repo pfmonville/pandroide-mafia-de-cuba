@@ -41,9 +41,9 @@ public class App extends Application {
 	@Override
 	public void start(Stage stage) throws IOException{
 		mainStage = stage;
-		ov = new OptionView(1280, 1024);
-		gv = new GameView(600, 600);
-		sv = new StartView(1280, 920);
+		ov = new OptionView(1280, 1000);
+		gv = new GameView(1280, 1000);
+		sv = new StartView(1280, 1000);
 
 		mainLayout = new Pane();
 		mainLayout.getChildren().add(sv.getPanel());
@@ -55,7 +55,7 @@ public class App extends Application {
 		
 		stage.setScene(scene);
 		oldCursor = scene.getCursor();
-		stage.getIcons().add(new Image("image/icone.png"));
+		stage.getIcons().add(new Image("image/diamond.png"));
 		stage.setResizable(false);
 		stage.show();
 	}
@@ -65,9 +65,9 @@ public class App extends Application {
 	 * reset the game 
 	 */
 	public static void reset(){
-		ov = new OptionView(600, 600);
-		gv = new GameView(600, 600);
-		sv = new StartView(600, 600);
+		ov = new OptionView(1280, 1000);
+		gv = new GameView(1280, 1000);
+		sv = new StartView(1280, 1000);
 		gameController.finish();
 	}
 	
@@ -79,7 +79,7 @@ public class App extends Application {
 		//delete the old GameView
 		mainLayout.getChildren().remove(gv.getPanel());
 		//refresh the GameView
-		gv = new GameView(600, 600);
+		gv = new GameView(1280, 1000);
 		//restart the game
 		gameController.restart();
 	}

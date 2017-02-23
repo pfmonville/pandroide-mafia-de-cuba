@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Rules {
+	
 	private int maxHiddenDiamonds;
 	private int maxHiddenTokens;
 	private boolean lastPlayerMustTake;
@@ -38,8 +39,10 @@ public class Rules {
 	private int numberOfDiamonds;
 	private boolean allIA;
 	private int humanPosition;
+
 	
-	public Rules(){
+	public Rules() {
+		
 		this.nameGodFather = "Parrain";
 		this.nameLoyalHenchman = "Fidèle";
 		this.nameCleaner = "Nettoyeur";
@@ -53,6 +56,7 @@ public class Rules {
 		this.defaultNumberOfAgents = Arrays.asList(1,1,1,1,2,2,2);
 		this.defaultNumberOfDrivers = Arrays.asList(1,1,1,1,1,2,2);
 		this.defaultNumberOfJoker = Arrays.asList(0,0,1,1,1,2,2);
+		
 		
 		this.maxHiddenDiamonds = 5;
 		this.maxHiddenTokens = 1;
@@ -91,8 +95,7 @@ public class Rules {
 		this.allIA = false;
 	}
 	
-	
-	public ArrayList<String> getTokensFor(int numberOfPlayer){
+public ArrayList<String> getTokensFor(int numberOfPlayer){
 		
 		ArrayList<String> tokens = new ArrayList<>();
 		for(int i = 0; i < this.defaultNumberOfLoyalHenchmen.get(numberOfPlayer - minimumNumberOfPlayer); i++){
@@ -109,91 +112,6 @@ public class Rules {
 		}
 		return tokens;
 	}
-	
-	
-	
-	public int getNumberOfLoyalHenchmenFor(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-			return 1;
-		case 7:
-			return 2;
-		case 8:
-			return 3;
-		case 9:
-		case 10:
-		case 11:
-			return 4;
-		case 12:
-			return 5;
-		default:
-			return 0;
-		}
-	}
-	
-	public int getNumberOfCleanersFor(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-		case 11:
-		case 12:
-		default:
-			return 0;
-		}
-	}
-	
-	public int getNumberOfAgentsFor(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-			return 1;
-		case 10:
-		case 11:
-		case 12:
-			return 2;
-		default:
-			return 0;
-		}
-	}
-	
-	public int getNumberOfDriversFor(int newNumberOfPlayer) {
-		switch(newNumberOfPlayer){
-		case 6:
-		case 7:
-		case 8:
-		case 9:
-		case 10:
-			return 1;
-		case 11:
-		case 12:
-			return 2;
-		default:
-			return 0;
-		}
-	}
-	
-	public int getNumberOfJokerFor(int newNumberOfPlayer){
-		switch(newNumberOfPlayer){
-		case 6:
-		case 7:
-			return 0;
-		case 8:
-		case 9:
-		case 10:
-			return 1;
-		case 11:
-		case 12:
-			return 2;
-		default:
-			return 0;
-		}
-	}
-
 
 
 	public int getDefaultNumberOfLoyalHenchmenFor(int numberOfPlayer) {
@@ -284,6 +202,15 @@ public class Rules {
 		this.minimumNumberOfPlayer = minimumNumberOfPlayer;
 	}
 
+
+	public int getMaximumNumberOfPlayer() {
+		return maximumNumberOfPlayer;
+	}
+
+
+	public void setMaximumNumberOfPlayer(int maximumNumberOfPlayer) {
+		this.maximumNumberOfPlayer = maximumNumberOfPlayer;
+	}
 
 
 	public List<Integer> getDefaultNumberOfLoyalHenchmen() {
@@ -430,18 +357,6 @@ public class Rules {
 
 
 
-	public int getMaximumNumberOfPlayer() {
-		return maximumNumberOfPlayer;
-	}
-
-
-
-	public void setMaximumNumberOfPlayer(int maximumNumberOfPlayer) {
-		this.maximumNumberOfPlayer = maximumNumberOfPlayer;
-	}
-
-
-
 	public int getNumberOfLoyalHenchmen() {
 		return numberOfLoyalHenchmen;
 	}
@@ -549,15 +464,20 @@ public class Rules {
 	}
 
 
-
 	public void setHumanPosition(int humanPosition) {
 		this.humanPosition = humanPosition;
 	}
-
-
 	
+	public boolean getLastPlayerMustTake(){
+		return lastPlayerMustTake ;
+	}
 	
+	public void setLastPlayerMustTke(boolean b){
+		lastPlayerMustTake = b ;
+	}
 	
-	
+	public boolean getFirstPlayerCanHide(){
+		return firstPlayerCanHide ;
+	}
 	
 }

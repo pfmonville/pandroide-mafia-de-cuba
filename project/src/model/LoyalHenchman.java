@@ -1,5 +1,8 @@
 package model;
 
 public class LoyalHenchman extends Role implements GodFatherSide{
-	//TODO
+	
+	public LoyalHenchman(){
+		super("LoyalHenchman");
+	}
 }

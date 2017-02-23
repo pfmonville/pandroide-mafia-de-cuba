@@ -32,7 +32,7 @@ public class GameController {
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;
-	private ArrayList<Answer> asnwers;
+	private ArrayList<Answer> answers;
 	private ArrayList<Talk> gameHistory;
 	private boolean firstHalf;
 	private int numberOfThieves;

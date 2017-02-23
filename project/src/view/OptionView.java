@@ -1,5 +1,6 @@
 package view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -46,7 +47,18 @@ public class OptionView extends View{
 		//split the window vertically 
 		VBox mainPanel = new VBox();
 		mainPanel.setTranslateX(350);
-		mainPanel.setTranslateY(200);
+		mainPanel.setTranslateY(330);
+		
+		
+		//get the logo
+		Image logo = new Image(Theme.pathLogo);
+		ImageView vLogo = new ImageView(logo);
+		vLogo.setFitHeight(300);
+		vLogo.setFitWidth(500);
+		vLogo.setX(390);
+		vLogo.setY(10);
+		
+		super.getPanel().getChildren().add(vLogo);
 		
 		
 		//***************************************
@@ -482,8 +494,14 @@ public class OptionView extends View{
 		
 		// action du bouton: changement de la fenètre vers le plateau
 		valider.setOnAction((event)->{
+			try {
+				App.changePanel(this.getPanel(), App.gv.getPanel());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			//Lancement du controlleur de jeu
-			App.gameController.begin();
+			//App.gameController.begin();
 		});
 		
 		//*********************************************************//
@@ -512,7 +530,7 @@ public class OptionView extends View{
 		ArrayList<Button> validation = new ArrayList<Button>();
 		validation.addAll(Arrays.asList(valider, quitter));
 		
-		super.quickMenu(validation, 2, 75, 800, 500);
+		super.quickMenu(validation, 2, 75, 850, 500);
 		
 		super.getPanel().getChildren().add(valider);
 		super.getPanel().getChildren().add(quitter);
@@ -521,18 +539,18 @@ public class OptionView extends View{
 		
 		
 		
-		//*********************************************************//
-		//AJOUT D UN TITRE A LA PAGE
-		
-		Text title = new Text("Mafia de Cuba");
-		title.setId("title");
-		//mise en page du titre
-		super.centerTextLayout(title, (int)(super.getPanel().getPrefWidth()), 150);
-		
-		//ajout du titre à optionview
-		super.getPanel().getChildren().add(title);
-		
-		//*********************************************************//
+//		//*********************************************************//
+//		//AJOUT D UN TITRE A LA PAGE
+//		
+//		Text title = new Text("Mafia de Cuba");
+//		title.setId("title");
+//		//mise en page du titre
+//		super.centerTextLayout(title, (int)(super.getPanel().getPrefWidth()), 150);
+//		
+//		//ajout du titre à optionview
+//		super.getPanel().getChildren().add(title);
+//		
+//		//*********************************************************//
 		
 		//TODO : mettre une image de fond
 		//super.getPanel().setBackground(new Background(new BackgroundImage(new Image(""), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));
