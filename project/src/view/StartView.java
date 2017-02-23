@@ -64,7 +64,6 @@ public class StartView extends View{
 		btnPlay.setOnAction((event)->{
 			try {
 				App.changePanel(super.getPanel(), App.ov.getPanel());
-				//App.changePanel(super.getPanel(), App.gv.getPanel());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

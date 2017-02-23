@@ -21,4 +21,6 @@ public class Theme {
 	public static String pathMainLogo = "image/mafiaDeCubaLogo1.jpg";
 	public static String pathMainLogo1 = "image/diamond.png";
 	
+	public static String pathPlayerShape = "image/player_shape.png";
+	
 }
