@@ -89,6 +89,14 @@ public class GameController {
 	}
 	
 	/**
+	 * get the number of players
+	 * @return the number of players
+	 */
+	public int getNumberOfPlayer(){
+		return numberOfPlayer ;
+	}
+	
+	/**
 	 * 
 	 */
 	public void startGame(){
@@ -247,4 +255,10 @@ public class GameController {
 //			App.gv.removeWaitingCursor();
 //		}
 	}
+
+
+	public ArrayList<Question> getQuestions() {
+		return questions;
+	}
+
 }

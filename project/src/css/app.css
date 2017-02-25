@@ -60,7 +60,7 @@
 	-fx-alignment:center;
 	-fx-text-fill:blue;
 	-fx-font : 28px Tahoma;
-	-fx-background-color:brown;
+	-fx-background-color:lightgrey;
 }
 
 #log{
@@ -68,20 +68,21 @@
 	-fx-alignment : center ;
 	-fx-font : 28px Tahoma;
 	-fx-border-color :transparent transparent black black ; 
-	-fx-background-color:lightyellow ;
 }
 
 #info{
-	-fx-text-alignment:center;
-	-fx-alignment : center ;
+	-fx-text-alignment:justify;
+	-fx-alignment : center;
 	-fx-font : 28px Tahoma;
-	-fx-border-color : black transparent transparent black ; 
-	-fx-background-color: lightyellow;
 }
 
-#botArea{
-	-fx-text-alignment:center;
-	-fx-alignment : center ;
-	-fx-font : 28px Tahoma;
-	-fx-border-color :black transparent transparent transparent;
+#player{
+	-fx-background-color:rgb(200, 120, 50);
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+
+#player:hover{
+	-fx-background-color:rgb(255,127,0);
 }
