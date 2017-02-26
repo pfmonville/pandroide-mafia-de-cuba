@@ -42,6 +42,7 @@ public class App extends Application {
 	@Override
 	public void start(Stage stage) throws IOException{
 		mainStage = stage;
+		mainStage.setTitle("Mafia de Cuba");
 		ov = new OptionView(1280, 1000);
 		gv = new GameView(1280, 1000);
 		sv = new StartView(1280, 1000);

@@ -1,12 +1,22 @@
 package view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import com.sun.glass.ui.Menu;
+
+import javafx.application.Platform;
+import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.Separator;
+import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -25,7 +35,7 @@ public class GameView extends View{
 	
 	@FXML
 	private Pane panel;
-	private VBox mainBox,logInfo ;
+	private VBox mainBox,logInfo, info,pocket ;
 	private HBox top,bot ;
 	private BorderPane imgAtCenter ;
 	private StackPane table ;
@@ -34,20 +44,64 @@ public class GameView extends View{
 	private GridPane questionsBox, questionsPlayers, questionsOthers ;
 	private Button box, player, other, emptyPocket ;
 	
-	private Label answer ;
+	private ToolBar toolBar ;
+	private Label answer,diamondsBack, diamondsAway, thieves, jokers ;
 
+	// for css
+	protected static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected"); 
+	protected static final PseudoClass CHOSEN_PSEUDO_CLASS = PseudoClass.getPseudoClass("chosen");
+	
 	private boolean tourDeNoir;
 	private boolean mouseListenerIsActive, couperSon;
 	
 	private Button retourAuMenu;
 	private Button retourAuMenuFinPartie;
-	private Button rejouerPartie;
+	private Button replay, inspect, rules, quit;
 
 	public GameView(int x, int y) {
 		super(x, y);
 		panel = super.getPanel();
 		mainBox = new VBox();
 		mainBox.setPrefSize(1280,1000);
+		
+		//***********************
+		//TOOLBAR
+		//***********************
+		toolBar = new ToolBar();
+		BorderPane bar = new BorderPane(); 
+		toolBar.setStyle("-fx-background-color : lightgrey;-fx-border-color:white;");
+		
+		replay = new Button();
+		inspect = new Button();
+		rules = new Button();
+		quit = new Button();
+		
+		replay.setGraphic(new ImageView(new Image(Theme.pathReplayIcon)));
+		replay.setTooltip(super.createStandardTooltip("Replay"));
+		inspect.setGraphic(new ImageView(new Image(Theme.pathInspectIcon)));
+		inspect.setTooltip(super.createStandardTooltip("Inspect"));
+		rules.setGraphic(new ImageView(new Image(Theme.pathRulesIcon)));
+		rules.setTooltip(super.createStandardTooltip("Rules"));
+		quit.setGraphic(new ImageView( new Image( Theme.pathQuitIcon)));
+		quit.setTooltip(super.createStandardTooltip("Quit"));
+		
+		
+		replay.setOnAction((event)->{
+			try {
+				App.changePanel(super.getPanel(), App.ov.getPanel());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		
+		quit.setOnAction((event)->{
+			Platform.exit();
+		}) ;
+		
+		toolBar.getItems().addAll(new Separator(),replay,inspect,rules,quit, new Separator());
+		
+		bar.setTop(toolBar);
+		panel.getChildren().add(bar);
 		
 		//***********************
 		// top et bottom elements
@@ -65,7 +119,8 @@ public class GameView extends View{
 		imgAtCenter.setPrefSize(960, 750);
 		
 		table = new StackPane() ;
-	
+		
+		//answer : to be continued
 		answer = new Label ("Answer expected");
 		answer.setId("answer");
 		answer.setPrefSize(450, 250);
@@ -85,6 +140,7 @@ public class GameView extends View{
 		//*********************************
 		//RIGHT PART
 		//*********************************
+		//to be continued
 		logInfo = new VBox();	
 		logInfo.setPrefSize(320, 750);
 		Label log = new Label("Log");
@@ -93,26 +149,26 @@ public class GameView extends View{
 		//*********************************
 		//INFO
 		//*********************************
-		VBox info = new VBox();
+		info = new VBox();
 		info.setSpacing(30);
 		info.setPrefSize(320, 375);
-		Label diamondsBack = new Label("Diamonds back : 0");
-		Label diamondsAway = new Label("Diamonds away : 5");
-		Label jokers = new Label("Jockers : 1");
-		Label thiefs = new Label("Thiefs caught : 0");
+		diamondsBack = new Label("Diamonds back : 0");
+		diamondsAway = new Label("Diamonds away : 5");
+		jokers = new Label("Jokers : 1");
+		thieves = new Label("Thieves caught : 0"); //+App.gameController.getNbThiefsCaught();
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
 		diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
 		jokers.setGraphic(new ImageView(Theme.pathJoker));
-		thiefs.setGraphic(new ImageView(Theme.pathThief));
+		thieves.setGraphic(new ImageView(Theme.pathThief));
 		
 		jokers.setStyle("-fx-text-fill:white;");
-		thiefs.setStyle("-fx-text-fill:white;");
+		thieves.setStyle("-fx-text-fill:white;");
 		diamondsBack.setStyle("-fx-text-fill:white;");
 		diamondsAway.setStyle("-fx-text-fill:white;");
 		
 		info.getChildren().add(diamondsAway);
 		info.getChildren().add(diamondsBack);
-		info.getChildren().add(thiefs);
+		info.getChildren().add(thieves);
 		info.getChildren().add(jokers);
 
 		log.setId("log");
@@ -135,21 +191,21 @@ public class GameView extends View{
 		box.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
-			box.setStyle("-fx-background-color:grey;-fx-border-width:5;");
+			box.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsBox);
 		});
 		player = new Button("Player");
 		player.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
-			player.setStyle("-fx-background-color:grey;-fx-border-width:5;");
+			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsPlayers);
 		});
 		other = new Button("Others");
 		other.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
-			other.setStyle("-fx-background-color:grey;-fx-border-width:5;");
+			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsOthers);
 		});
 		box.setPrefSize(100, 80);
@@ -191,7 +247,7 @@ public class GameView extends View{
 		//*********************************
 		// button "Empty your pockets"
 		//*********************************
-		VBox pocket = new VBox() ;
+		pocket = new VBox() ;
 		emptyPocket = new Button("Empty your pockets !");
 		emptyPocket.setPrefSize(200, 80);
 		emptyPocket.setStyle("-fx-border-color:red;");
@@ -222,8 +278,16 @@ public class GameView extends View{
 		for (int i = 0; i < nbPlayers; i++){
 			Button b = new Button();
 			b.setPrefSize(100, 80);
-			b.setId("player");
+			b.setId(""+(i+1));
+			b.getStyleClass().add("player");
 			b.setGraphic(new ImageView( new Image(Theme.pathPlayerShape)));
+			b.setOnAction((event)->{
+				b.pseudoClassStateChanged(CHOSEN_PSEUDO_CLASS, true);
+				for(Button button : iaButtons){
+					if(button != b)
+						button.pseudoClassStateChanged(CHOSEN_PSEUDO_CLASS, false);
+				}
+			});
 			iaButtons.add(b);
 		}
 		//disposition
@@ -293,6 +357,7 @@ public class GameView extends View{
 			int index=box.indexOf(q);
 			Button b = new Button(q.getContent());
 			b.setPrefHeight(50);
+			b.setId(q.getId()+"");
 			if(index%2==0 && index!=0)
 				i++;
 			questionsBox.add(b, index%nbCol, i );
@@ -326,11 +391,11 @@ public class GameView extends View{
 	 */
 	public void changeStyle(GridPane toChange){
 		if (toChange == questionsBox)
-			box.setStyle("");
+			box.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 		if(toChange==questionsPlayers)
-			player.setStyle("");
+			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 		if(toChange==questionsOthers)
-			other.setStyle("");
+			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 	}
 
 	

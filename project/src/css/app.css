@@ -18,6 +18,12 @@
 	-fx-background-color:linear-gradient(black, grey);
 }
 
+.button:selected{
+	-fx-background-color:grey;
+	-fx-border-width:5;
+	-fx-border-color:cyan;
+}
+
 #title{
 	-fx-font: 64px Tahoma;
 	-fx-text-alignment:center;
@@ -76,13 +82,19 @@
 	-fx-font : 28px Tahoma;
 }
 
-#player{
+.player{
 	-fx-background-color:rgb(200, 120, 50);
 	-fx-opacity:1;
 	-fx-border-radius: 70;
 	-fx-background-radius: 70;
 }
 
-#player:hover{
+.player:hover{
 	-fx-background-color:rgb(255,127,0);
+}
+
+.player:chosen{
+	-fx-background-color:rgb(255,127,0);
+	-fx-border-width:5;
+	-fx-border-color:cyan;
 }

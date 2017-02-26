@@ -260,5 +260,9 @@ public class GameController {
 	public ArrayList<Question> getQuestions() {
 		return questions;
 	}
+	
+	public int getNbThiefsCaught(){
+		return numberOfThievesCaught;
+	}
 
 }

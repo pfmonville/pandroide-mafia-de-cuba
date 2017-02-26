@@ -22,6 +22,11 @@ public class Theme {
 	public static String pathMainLogo = "image/mafiaDeCubaLogo1.jpg";
 	public static String pathMainLogo1 = "image/diamond.png";
 	
+	public static String pathReplayIcon = "image/replay-arrow.png";
+	public static String pathInspectIcon="image/search.png";
+	public static String pathRulesIcon = "image/open-book.png";
+	public static String pathQuitIcon = "image/cross-circular-button.png";
+	
 	public static String pathPlayerShape = "image/player_shape.png";
 	
 }
