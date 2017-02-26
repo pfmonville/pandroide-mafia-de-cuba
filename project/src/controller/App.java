@@ -43,9 +43,9 @@ public class App extends Application {
 	public void start(Stage stage) throws IOException{
 		mainStage = stage;
 		mainStage.setTitle("Mafia de Cuba");
-		ov = new OptionView(1280, 1000);
-		gv = new GameView(1280, 1000);
-		sv = new StartView(1280, 1000);
+		ov = new OptionView(1024, 768);
+		gv = new GameView(1024, 768);
+		sv = new StartView(1024, 768);
 
 		mainLayout = new Pane();
 		mainLayout.getChildren().add(sv.getPanel());

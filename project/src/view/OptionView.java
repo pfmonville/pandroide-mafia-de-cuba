@@ -46,16 +46,15 @@ public class OptionView extends View{
 		
 		//split the window vertically 
 		VBox mainPanel = new VBox();
-		mainPanel.setTranslateX(350);
-		mainPanel.setTranslateY(330);
-		
-		
+		mainPanel.setTranslateX(super.getWidth()/4);//350
+		mainPanel.setTranslateY(super.getHeight()/5+20);//330		
+
 		//get the logo
 		Image logo = new Image(Theme.pathLogo);
 		ImageView vLogo = new ImageView(logo);
-		vLogo.setFitHeight(300);
-		vLogo.setFitWidth(500);
-		vLogo.setX(390);
+		vLogo.setFitHeight(super.getHeight()/4);
+		vLogo.setFitWidth(super.getWidth()/3);
+		vLogo.setX(super.getWidth()/3);
 		vLogo.setY(10);
 		
 		super.getPanel().getChildren().add(vLogo);
@@ -64,7 +63,8 @@ public class OptionView extends View{
 		//***************************************
 		//First gridPane for the number of player
 		GridPane gridPane1 = new GridPane();
-	
+		
+		gridPane1.setTranslateY(super.getHeight()/20);
 		
 		//the part where the user chooses the number of player
 		Image iconNumberOfPlayer = new Image(Theme.pathNumberOfPlayer);
@@ -530,7 +530,7 @@ public class OptionView extends View{
 		ArrayList<Button> validation = new ArrayList<Button>();
 		validation.addAll(Arrays.asList(valider, quitter));
 		
-		super.quickMenu(validation, 2, 75, 850, 500);
+		super.quickMenu(validation, 2, super.getHeight()/12, super.getHeight()-super.getHeight()/10, (super.getWidth()/2-100));
 		
 		super.getPanel().getChildren().add(valider);
 		super.getPanel().getChildren().add(quitter);

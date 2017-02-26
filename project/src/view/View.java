@@ -11,6 +11,7 @@ import javafx.scene.text.Text;
 public class View {
 	private Pane panel;
 	private int lastHeight;
+	private int width, height ;
 	
 	//constructors
 	public View(int x, int y){
@@ -18,6 +19,8 @@ public class View {
 		this.panel = new Pane();
 		this.panel.setPrefWidth(x);
 		this.panel.setPrefHeight(y);
+		width = x;
+		height = y ;
 	}
 	
 	//getters and setters
@@ -48,7 +51,7 @@ public class View {
 			buttons.get(buttonIndex).setMinHeight(buttonHeight);
 			
 			//buttons width set
-			int largeurBoutons = (int)(getPanel().getPrefWidth()) - sidesMargin * 2;
+			int largeurBoutons = (int)(getPanel().getPrefWidth()) - sidesMargin *2;
 			buttons.get(buttonIndex).setMinWidth((largeurBoutons / numberOfColumns) - 2);
 						
 			//moving buttons to the right place
@@ -81,5 +84,21 @@ public class View {
 		tooltip.setFont(new Font("Tahoma", 15));
 		
 		return tooltip;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 }

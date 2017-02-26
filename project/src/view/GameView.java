@@ -62,7 +62,7 @@ public class GameView extends View{
 		super(x, y);
 		panel = super.getPanel();
 		mainBox = new VBox();
-		mainBox.setPrefSize(1280,1000);
+		mainBox.setPrefSize(super.getWidth(),super.getHeight());
 		
 		//***********************
 		//TOOLBAR
@@ -107,25 +107,28 @@ public class GameView extends View{
 		// top et bottom elements
 		//***********************
 		top = new HBox();
-		top.setPrefSize(1280, 750);
+		top.setPrefSize(super.getWidth(), (super.getHeight()/4)*3);
 		bot = new HBox();
-		bot.setPrefSize(1280, 250);
+		bot.setPrefSize(super.getWidth(), super.getHeight()/4);
 		
 		//**************************
 		//TOP
 		//**************************
 		// image at center
 		imgAtCenter = new BorderPane() ;
-		imgAtCenter.setPrefSize(960, 750);
+		imgAtCenter.setPrefSize( (super.getWidth()/4)*3,  (super.getHeight()/4)*3);
 		
 		table = new StackPane() ;
 		
 		//answer : to be continued
 		answer = new Label ("Answer expected");
 		answer.setId("answer");
-		answer.setPrefSize(450, 250);
+		answer.setPrefSize(super.getWidth()/3, super.getHeight()/4);
 		
-		table.getChildren().add(new ImageView( new Image(Theme.pathTable)));	
+		ImageView tableV = new ImageView( new Image(Theme.pathTable));
+		tableV.setFitHeight(super.getHeight()/3);
+		tableV.setFitWidth(super.getWidth()/2);
+		table.getChildren().add(tableV);	
 		table.getChildren().add(answer);		
 	
 		imgAtCenter.setCenter(table);
@@ -135,16 +138,16 @@ public class GameView extends View{
 		//*********************************
 		
 		//createIAButton(App.gameController.getNumberOfPlayer());
-		createIAButton(12) ; // test
+		createIAButton(11) ; // test
 		
 		//*********************************
 		//RIGHT PART
 		//*********************************
 		//to be continued
 		logInfo = new VBox();	
-		logInfo.setPrefSize(320, 750);
+		logInfo.setPrefSize(super.getWidth()/4, (super.getHeight()/4)*3);
 		Label log = new Label("Log");
-		log.setPrefSize(320, 375);
+		log.setPrefSize(super.getWidth()/4, ((super.getHeight()/4)*3)/2);
 		
 		//*********************************
 		//INFO
@@ -185,8 +188,8 @@ public class GameView extends View{
 		//*********************************
 		// buttons to choose questions' thematic
 		themeButtons = new TilePane();
-		themeButtons.setPrefSize(100,250);
-		themeButtons.setVgap(5);
+		themeButtons.setPrefSize(super.getWidth()/12,(super.getHeight()/4));
+		themeButtons.setVgap(10);
 		box = new Button("Box");
 		box.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
@@ -208,9 +211,9 @@ public class GameView extends View{
 			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsOthers);
 		});
-		box.setPrefSize(100, 80);
-		player.setPrefSize(100, 80);
-		other.setPrefSize(100, 80);
+		box.setPrefSize(super.getWidth()/12, super.getHeight()/12);
+		player.setPrefSize(super.getWidth()/12, super.getHeight()/12);
+		other.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		
 		themeButtons.getChildren().add(box);
 		themeButtons.getChildren().add(player);
@@ -220,17 +223,17 @@ public class GameView extends View{
 		// Questions area
 		//*********************************
 		questionsArea = new FlowPane();
-		questionsArea.setPrefSize(980, 250);
+		questionsArea.setPrefSize((super.getWidth()/5)*3, super.getHeight()/4);
 		
 		questionsBox = new GridPane();
 		questionsPlayers = new GridPane();
 		questionsOthers = new GridPane();
-		questionsBox.setPrefSize(980, 250);
-		questionsPlayers.setPrefSize(980, 250);
-		questionsOthers.setPrefSize(980, 250);
-		questionsBox.setVgap(10); questionsBox.setHgap(10);
-		questionsPlayers.setVgap(10); questionsPlayers.setHgap(10);
-		questionsOthers.setVgap(10); questionsOthers.setHgap(10);
+		questionsBox.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
+		questionsPlayers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
+		questionsOthers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
+		questionsBox.setVgap(3); questionsBox.setHgap(3);
+		questionsPlayers.setVgap(3); questionsPlayers.setHgap(3);
+		questionsOthers.setVgap(3); questionsOthers.setHgap(3);
 		
 		questionsArea.getChildren().add(questionsBox);//default : show the questions relative to the box
 		
@@ -248,11 +251,12 @@ public class GameView extends View{
 		// button "Empty your pockets"
 		//*********************************
 		pocket = new VBox() ;
-		emptyPocket = new Button("Empty your pockets !");
-		emptyPocket.setPrefSize(200, 80);
+		emptyPocket = new Button("Empty your pockets");
+		emptyPocket.setPrefSize(super.getWidth()/6, super.getHeight()/12);
 		emptyPocket.setStyle("-fx-border-color:red;");
 		pocket.getChildren().add(emptyPocket);
 		pocket.setAlignment(Pos.CENTER);
+		pocket.setMargin(emptyPocket, new Insets(0,0,0,5));
 		
 		bot.getChildren().add(themeButtons);
 		bot.getChildren().add(questionsArea); 
@@ -277,7 +281,7 @@ public class GameView extends View{
 		
 		for (int i = 0; i < nbPlayers; i++){
 			Button b = new Button();
-			b.setPrefSize(100, 80);
+			b.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 			b.setId(""+(i+1));
 			b.getStyleClass().add("player");
 			b.setGraphic(new ImageView( new Image(Theme.pathPlayerShape)));
@@ -323,10 +327,10 @@ public class GameView extends View{
 		playerRight.setSpacing(25);
 		
 		// position
-		imgAtCenter.setMargin(playerTop, new Insets(100,0,0,250));
-		imgAtCenter.setMargin(playerBot, new Insets(0,0,20,250));
-		imgAtCenter.setMargin(playerLeft, new Insets(150,0,0,10));
-		imgAtCenter.setMargin(playerRight, new Insets(150,0,0,10));
+		imgAtCenter.setMargin(playerTop, new Insets(super.getHeight()/10,0,0,super.getWidth()/6));
+		imgAtCenter.setMargin(playerBot, new Insets(0,0,20,super.getWidth()/6));
+		imgAtCenter.setMargin(playerLeft, new Insets(super.getHeight()/9,0,0,10));
+		imgAtCenter.setMargin(playerRight, new Insets(super.getHeight()/9,10,0,10));
 		
 		imgAtCenter.setTop(playerTop);		
 		imgAtCenter.setBottom(playerBot);
@@ -361,7 +365,7 @@ public class GameView extends View{
 			if(index%2==0 && index!=0)
 				i++;
 			questionsBox.add(b, index%nbCol, i );
-			questionsBox.setMargin(b, new Insets(10,0,0,5));
+			questionsBox.setMargin(b, new Insets(5,0,0,5));
 		}
 		i =0;
 		for (Question q : players){
@@ -371,7 +375,7 @@ public class GameView extends View{
 			if(index%2==0 && index!=0)
 				i++;
 			questionsPlayers.add(b, index%nbCol,i);
-			questionsPlayers.setMargin(b, new Insets(10,0,0,5));
+			questionsPlayers.setMargin(b, new Insets(5,0,0,5));
 		}
 		i =0;
 		for (Question q : others){
@@ -381,7 +385,7 @@ public class GameView extends View{
 			if(index%2==0 && index!=0)
 				i++;
 			questionsOthers.add(b, index%nbCol, i );
-			questionsOthers.setMargin(b, new Insets(10,0,0,5));
+			questionsOthers.setMargin(b, new Insets(5,0,0,5));
 		}
 	}
 

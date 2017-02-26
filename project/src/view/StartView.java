@@ -35,9 +35,9 @@ public class StartView extends View{
 		//super.centerTextLayout(title, (int)(super.getPanel().getPrefWidth()), 150);
 		logo = new Image(Theme.pathLogo);
 		vLogo = new ImageView(logo);
-		vLogo.setFitHeight(300);
-		vLogo.setFitWidth(500);
-		vLogo.setX(390);
+		vLogo.setFitHeight(super.getHeight()/3);
+		vLogo.setFitWidth(super.getWidth()/2);
+		vLogo.setX(super.getWidth()/4);
 		vLogo.setY(10);
 		
 		//buttons layout
@@ -47,7 +47,7 @@ public class StartView extends View{
 		menu.add(btnSettings);
 		menu.add(btnAbout);
 		menu.add(btnExit);
-		super.quickMenu(menu, 1, 100, 350, 500);
+		super.quickMenu(menu, 1, super.getHeight()/10, super.getHeight()/3+50, super.getWidth()/2-50);
 		
 		//add elements to the panel
 		addElement(btnPlay);
