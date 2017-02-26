@@ -68,7 +68,6 @@ public class GameView extends View{
 		//TOOLBAR
 		//***********************
 		toolBar = new ToolBar();
-		BorderPane bar = new BorderPane(); 
 		toolBar.setStyle("-fx-background-color : lightgrey;-fx-border-color:white;");
 		
 		replay = new Button();
@@ -99,9 +98,7 @@ public class GameView extends View{
 		}) ;
 		
 		toolBar.getItems().addAll(new Separator(),replay,inspect,rules,quit, new Separator());
-		
-		bar.setTop(toolBar);
-		panel.getChildren().add(bar);
+		mainBox.getChildren().addAll(toolBar);
 		
 		//***********************
 		// top et bottom elements
