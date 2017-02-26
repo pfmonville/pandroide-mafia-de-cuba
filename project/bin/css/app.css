@@ -18,6 +18,12 @@
 	-fx-background-color:linear-gradient(black, grey);
 }
 
+.button:selected{
+	-fx-background-color:grey;
+	-fx-border-width:5;
+	-fx-border-color:cyan;
+}
+
 #title{
 	-fx-font: 64px Tahoma;
 	-fx-text-alignment:center;
@@ -53,4 +59,42 @@
 	-fx-opacity:1;
 	-fx-background-color:transparent;
 	-fx-border-color:transparent;
+}
+
+#answer{
+	-fx-text-alignment:center;
+	-fx-alignment:center;
+	-fx-text-fill:blue;
+	-fx-font : 28px Tahoma;
+	-fx-background-color:lightgrey;
+}
+
+#log{
+	-fx-text-alignment:center;
+	-fx-alignment : center ;
+	-fx-font : 28px Tahoma;
+	-fx-border-color :transparent transparent black black ; 
+}
+
+#info{
+	-fx-text-alignment:justify;
+	-fx-alignment : center;
+	-fx-font : 20px Tahoma;
+}
+
+.player{
+	-fx-background-color:rgb(200, 120, 50);
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+
+.player:hover{
+	-fx-background-color:rgb(255,127,0);
+}
+
+.player:chosen{
+	-fx-background-color:rgb(255,127,0);
+	-fx-border-width:5;
+	-fx-border-color:cyan;
 }

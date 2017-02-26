@@ -3,6 +3,8 @@ package model;
 public class Theme {
 
 	//All paths for Images
+	public static String pathBackground = "image/bg-1.jpg";
+	
 	public static String pathTypeOfPlayer = "image/typeOfPlayer2.png";
 	public static String pathNumberOfPlayer = "image/numberOfPlayer2.png";
 	public static String pathPosition = "image/position2.png";
@@ -29,4 +31,9 @@ public class Theme {
 	
 	public static String pathPlayerShape = "image/player_shape.png";
 	
+	
+	
+	//Resolution
+	public static int windowWidth = 1280;
+	public static int windowHeight = 768;
 }
