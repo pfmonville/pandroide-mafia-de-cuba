@@ -15,6 +15,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.Separator;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
@@ -35,8 +36,8 @@ public class GameView extends View{
 	
 	@FXML
 	private Pane panel;
-	private VBox mainBox,logInfo, info,pocket ;
-	private HBox top,bot ;
+	private VBox mainBox,logPart, leftPart,pocket ;
+	private HBox top,bot,info ;
 	private BorderPane imgAtCenter ;
 	private StackPane table ;
 	private TilePane themeButtons ;
@@ -45,7 +46,7 @@ public class GameView extends View{
 	private Button box, player, other, emptyPocket ;
 	
 	private ToolBar toolBar ;
-	private Label answer,diamondsBack, diamondsAway, thieves, jokers ;
+	private Label answer,diamondsBack, diamondsAway, jokers ;
 
 	// for css
 	protected static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected"); 
@@ -54,8 +55,6 @@ public class GameView extends View{
 	private boolean tourDeNoir;
 	private boolean mouseListenerIsActive, couperSon;
 	
-	private Button retourAuMenu;
-	private Button retourAuMenuFinPartie;
 	private Button replay, inspect, rules, quit;
 
 	public GameView(int x, int y) {
@@ -68,7 +67,7 @@ public class GameView extends View{
 		//TOOLBAR
 		//***********************
 		toolBar = new ToolBar();
-		toolBar.setStyle("-fx-background-color : lightgrey;-fx-border-color:white;");
+		toolBar.setStyle("-fx-background-color : transparent;");
 		
 		replay = new Button();
 		inspect = new Button();
@@ -104,23 +103,30 @@ public class GameView extends View{
 		// top et bottom elements
 		//***********************
 		top = new HBox();
-		top.setPrefSize(super.getWidth(), (super.getHeight()/4)*3);
+		top.setPrefSize(super.getWidth(), super.getHeight()/2);
 		bot = new HBox();
-		bot.setPrefSize(super.getWidth(), super.getHeight()/4);
+		bot.setPrefSize(super.getWidth(), super.getHeight()/2);
 		
 		//**************************
 		//TOP
 		//**************************
+		
+		//**************************
+		//LEFT PART
+		//**************************
+		//
+		leftPart = new VBox();
+		leftPart.setPrefSize((super.getWidth()/3)*2, (super.getHeight()/2));
 		// image at center
 		imgAtCenter = new BorderPane() ;
-		imgAtCenter.setPrefSize( (super.getWidth()/4)*3,  (super.getHeight()/4)*3);
+		imgAtCenter.setPrefSize( (super.getWidth()/3)*2,  3*(super.getHeight()/2)/4);
 		
 		table = new StackPane() ;
 		
 		//answer : to be continued
 		answer = new Label ("Answer expected");
 		answer.setId("answer");
-		answer.setPrefSize(super.getWidth()/3, super.getHeight()/4);
+		answer.setPrefSize(super.getWidth()/3, super.getHeight()/5);
 		
 		ImageView tableV = new ImageView( new Image(Theme.pathTable));
 		tableV.setFitHeight(super.getHeight()/3);
@@ -138,54 +144,54 @@ public class GameView extends View{
 		createIAButton(11) ; // test
 		
 		//*********************************
-		//RIGHT PART
-		//*********************************
-		//to be continued
-		logInfo = new VBox();	
-		logInfo.setPrefSize(super.getWidth()/4, (super.getHeight()/4)*3);
-		Label log = new Label("Log");
-		log.setPrefSize(super.getWidth()/4, ((super.getHeight()/4)*3)/2);
-		
-		//*********************************
 		//INFO
 		//*********************************
-		info = new VBox();
-		info.setSpacing(30);
-		info.setPrefSize(320, 375);
-		diamondsBack = new Label("Diamonds back : 0");
-		diamondsAway = new Label("Diamonds away : 5");
-		jokers = new Label("Jokers : 1");
-		thieves = new Label("Thieves caught : 0"); //+App.gameController.getNbThiefsCaught();
+		info = new HBox();
+		info.setSpacing(50);
+		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
+		info.setAlignment(Pos.CENTER_RIGHT);
+		diamondsBack = new Label("0");
+		diamondsAway = new Label("5");
+		jokers = new Label("1");
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
 		diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
 		jokers.setGraphic(new ImageView(Theme.pathJoker));
-		thieves.setGraphic(new ImageView(Theme.pathThief));
-		
+				
 		jokers.setStyle("-fx-text-fill:white;");
-		thieves.setStyle("-fx-text-fill:white;");
 		diamondsBack.setStyle("-fx-text-fill:white;");
 		diamondsAway.setStyle("-fx-text-fill:white;");
-		
+				
 		info.getChildren().add(diamondsAway);
 		info.getChildren().add(diamondsBack);
-		info.getChildren().add(thieves);
 		info.getChildren().add(jokers);
 
-		log.setId("log");
 		info.setId("info");
+		
+		leftPart.getChildren().add(imgAtCenter);
+		leftPart.getChildren().add(info);
+		
+		//*********************************
+		//RIGHT PART
+		//*********************************
+		//to be continued
+		logPart = new VBox();	
+		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2));
+		Label log = new Label("Log");
+		log.setPrefSize(super.getWidth()/3, (super.getHeight()/2));
+		
+		log.setId("log");
 
-		logInfo.getChildren().add(log);
-		logInfo.getChildren().add(info);
+		logPart.getChildren().add(log);
 
-		top.getChildren().add(imgAtCenter);
-		top.getChildren().add(logInfo);
+		top.getChildren().add(leftPart);
+		top.getChildren().add(logPart);
 		
 		//*********************************
 		//BOTTOM
 		//*********************************
 		// buttons to choose questions' thematic
 		themeButtons = new TilePane();
-		themeButtons.setPrefSize(super.getWidth()/12,(super.getHeight()/4));
+		themeButtons.setPrefSize(super.getWidth()/12,(super.getHeight()/2));
 		themeButtons.setVgap(10);
 		box = new Button("Box");
 		box.setOnAction((event)->{
@@ -220,14 +226,14 @@ public class GameView extends View{
 		// Questions area
 		//*********************************
 		questionsArea = new FlowPane();
-		questionsArea.setPrefSize((super.getWidth()/5)*3, super.getHeight()/4);
+		questionsArea.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
 		
 		questionsBox = new GridPane();
 		questionsPlayers = new GridPane();
 		questionsOthers = new GridPane();
-		questionsBox.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
-		questionsPlayers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
-		questionsOthers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/4);
+		questionsBox.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
+		questionsPlayers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
+		questionsOthers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
 		questionsBox.setVgap(3); questionsBox.setHgap(3);
 		questionsPlayers.setVgap(3); questionsPlayers.setHgap(3);
 		questionsOthers.setVgap(3); questionsOthers.setHgap(3);
@@ -248,11 +254,12 @@ public class GameView extends View{
 		// button "Empty your pockets"
 		//*********************************
 		pocket = new VBox() ;
-		emptyPocket = new Button("Empty your pockets");
-		emptyPocket.setPrefSize(super.getWidth()/6, super.getHeight()/12);
+		emptyPocket = new Button("Empty your pockets !");
+		emptyPocket.setPrefSize(super.getWidth()/10, super.getHeight()/10);
 		emptyPocket.setStyle("-fx-border-color:red;");
+		emptyPocket.setWrapText(true);
 		pocket.getChildren().add(emptyPocket);
-		pocket.setAlignment(Pos.CENTER);
+		pocket.setAlignment(Pos.TOP_CENTER);
 		pocket.setMargin(emptyPocket, new Insets(0,0,0,5));
 		
 		bot.getChildren().add(themeButtons);
@@ -278,7 +285,7 @@ public class GameView extends View{
 		
 		for (int i = 0; i < nbPlayers; i++){
 			Button b = new Button();
-			b.setPrefSize(super.getWidth()/12, super.getHeight()/12);
+			b.setPrefSize(super.getWidth()/14, super.getHeight()/12);
 			b.setId(""+(i+1));
 			b.getStyleClass().add("player");
 			b.setGraphic(new ImageView( new Image(Theme.pathPlayerShape)));
@@ -318,16 +325,16 @@ public class GameView extends View{
 		}
 		
 		// space between buttons
-		playerTop.setSpacing(25);
-		playerBot.setSpacing(25);
-		playerLeft.setSpacing(25);
-		playerRight.setSpacing(25);
+		playerTop.setSpacing(20);
+		playerBot.setSpacing(20);
+		playerLeft.setSpacing(20);
+		playerRight.setSpacing(20);
 		
 		// position
-		imgAtCenter.setMargin(playerTop, new Insets(super.getHeight()/10,0,0,super.getWidth()/6));
-		imgAtCenter.setMargin(playerBot, new Insets(0,0,20,super.getWidth()/6));
-		imgAtCenter.setMargin(playerLeft, new Insets(super.getHeight()/9,0,0,10));
-		imgAtCenter.setMargin(playerRight, new Insets(super.getHeight()/9,10,0,10));
+		imgAtCenter.setMargin(playerTop, new Insets(super.getHeight()/30,0,0,super.getWidth()/6));
+		imgAtCenter.setMargin(playerBot, new Insets(0,0,super.getHeight()/30,super.getWidth()/6));
+		imgAtCenter.setMargin(playerLeft, new Insets(super.getHeight()/10,0,0,10));
+		imgAtCenter.setMargin(playerRight, new Insets(super.getHeight()/10,10,0,10));
 		
 		imgAtCenter.setTop(playerTop);		
 		imgAtCenter.setBottom(playerBot);
@@ -358,6 +365,7 @@ public class GameView extends View{
 			int index=box.indexOf(q);
 			Button b = new Button(q.getContent());
 			b.setPrefHeight(50);
+			b.setWrapText(true);
 			b.setId(q.getId()+"");
 			if(index%2==0 && index!=0)
 				i++;
@@ -369,6 +377,7 @@ public class GameView extends View{
 			int index=players.indexOf(q);
 			Button b = new Button(q.getContent());
 			b.setPrefHeight(50);
+			b.setWrapText(true);
 			if(index%2==0 && index!=0)
 				i++;
 			questionsPlayers.add(b, index%nbCol,i);
@@ -379,6 +388,7 @@ public class GameView extends View{
 			int index= others.indexOf(q);
 			Button b = new Button(q.getContent());
 			b.setPrefHeight(50);
+			b.setWrapText(true);
 			if(index%2==0 && index!=0)
 				i++;
 			questionsOthers.add(b, index%nbCol, i );

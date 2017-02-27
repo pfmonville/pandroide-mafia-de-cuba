@@ -3,10 +3,12 @@ package view;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import model.Theme;
 import controller.App;
@@ -36,8 +38,8 @@ public class StartView extends View{
 		logo = new Image(Theme.pathLogo);
 		vLogo = new ImageView(logo);
 		vLogo.setFitHeight(super.getHeight()/3);
-		vLogo.setFitWidth(super.getWidth()/2);
-		vLogo.setX(super.getWidth()/4);
+		vLogo.setFitWidth(2*super.getHeight()/3);
+		vLogo.setX((super.getWidth()-(2*super.getHeight()/3))/2);
 		vLogo.setY(10);
 		
 		//buttons layout
@@ -47,8 +49,8 @@ public class StartView extends View{
 		menu.add(btnSettings);
 		menu.add(btnAbout);
 		menu.add(btnExit);
-		super.quickMenu(menu, 1, super.getHeight()/10, super.getHeight()/3+50, super.getWidth()/2-50);
-		
+		super.quickMenu(menu, 1, ((2*super.getHeight()/3)-40)/5, super.getHeight()/3+20, ((super.getWidth()-(2*super.getHeight()/3)+200)/2)+super.getHeight()/9);
+
 		//add elements to the panel
 		addElement(btnPlay);
 		addElement(btnExit);
