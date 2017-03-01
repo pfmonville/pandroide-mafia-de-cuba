@@ -3,23 +3,20 @@ package controller;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.controlsfx.control.Notifications;
-
 import controller.ia.AgentStrategy;
 import controller.ia.CleanerStrategy;
 import controller.ia.DriverStrategy;
 import controller.ia.GodFatherStrategy;
 import controller.ia.IAGodFatherController;
 import controller.ia.IASuspectController;
-import controller.ia.IGodFatherStrategy;
 import controller.ia.LoyalHenchmanStrategy;
 import controller.ia.StreetUpchinStrategy;
 import controller.ia.ThiefStrategy;
-import javafx.application.Platform;
-import javafx.util.Duration;
 import model.Answer;
+import model.Box;
 import model.Player;
 import model.Question;
+import model.Rules;
 import model.Talk;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -37,6 +34,9 @@ public class GameController {
 	private boolean firstHalf;
 	private int numberOfThieves;
 	private int numberOfThievesCaught;
+	
+	private Rules rules = new Rules();
+	private Box box /*= new Box(rules.getNumberOfDiamonds(), rules.getTokensFor(numberOfPlayers))*/;
 	
 	public GameController(){
 	}
@@ -183,25 +183,25 @@ public class GameController {
 			else{
 				switch(player.getRole().getName()){
 				case("GodFather"):
-					playerControllers.add((PlayerController) new IAGodFatherController(new GodFatherStrategy()));
+					playerControllers.add((PlayerController) new IAGodFatherController(player, box, rules, numberOfPlayers, new GodFatherStrategy()));
 					break;
 				case("LoyalHenchman"):
-					playerControllers.add((PlayerController) new IASuspectController(new LoyalHenchmanStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new LoyalHenchmanStrategy()));
 					break;
 				case("Cleaner"):
-					playerControllers.add((PlayerController) new IASuspectController(new CleanerStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new CleanerStrategy()));
 					break;
 				case("Driver"):
-					playerControllers.add((PlayerController) new IASuspectController(new DriverStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new DriverStrategy()));
 					break;
 				case("Thief"):
-					playerControllers.add((PlayerController) new IASuspectController(new ThiefStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new ThiefStrategy()));
 					break;
 				case("StreetUpchin"):
-					playerControllers.add((PlayerController) new IASuspectController(new StreetUpchinStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new StreetUpchinStrategy()));
 					break;
 				case("Agent"):
-					playerControllers.add((PlayerController) new IASuspectController(new AgentStrategy()));
+					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new AgentStrategy()));
 					break;
 				}
 			}

@@ -47,7 +47,7 @@ public class IAController implements Runnable{
 		for(String s : rolesLeft){
 			rolesTaken.remove(s);
 		}
-		if(diamondsLeftWhenBoxReceived < rules.getNumberOfDiamonds()){
+		if(diamondsLeftWhenBoxReceived < rules.getNumberOfDiamonds() - rules.getMaxHiddenDiamonds()){
 			rolesTaken.add(rules.getNameThief());
 		}
 		
