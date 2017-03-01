@@ -47,7 +47,7 @@ public class Rules {
 		this.nameLoyalHenchman = "Fidèle";
 		this.nameCleaner = "Nettoyeur";
 		this.nameAgent = "Agent";
-		this.nameDriver = "chauffeur";
+		this.nameDriver = "Chauffeur";
 		this.nameThief= "Voleur";
 		this.nameStreetUpchin = "Enfant des Rues";
 		

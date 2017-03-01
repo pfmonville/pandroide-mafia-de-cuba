@@ -28,7 +28,7 @@ import sun.audio.AudioStream;
 public class GameController {
 	private int actualPlayer;
 	private int actualTurn;
-	private int numberOfPlayer;
+	private int numberOfPlayers;
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;
@@ -64,7 +64,7 @@ public class GameController {
 	 * update the actualPlayer attribute to match the next player number for the first part of the game
 	 */
 	public void nextPlayer(){
-		if (this.actualPlayer == this.numberOfPlayer){ 
+		if (this.actualPlayer == this.numberOfPlayers){ 
 			this.actualPlayer = 1;
 		}else{
 			this.actualPlayer += 1;
@@ -93,7 +93,7 @@ public class GameController {
 	 * @return the number of players
 	 */
 	public int getNumberOfPlayer(){
-		return numberOfPlayer ;
+		return numberOfPlayers ;
 	}
 	
 	/**
