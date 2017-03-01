@@ -32,7 +32,7 @@ public class OptionView extends View{
 	private RadioButton plIA,plHU;
 	private Label labelnbpl,labelHUPos;
 	private Button valider;
-	private Button quitter;
+	private Button mainMenu;
 	CheckBox checkBox1;
 
 	private ToggleGroup nbpl;
@@ -513,11 +513,15 @@ public class OptionView extends View{
 		//*********************************************************//
 		//AJOUT DU BOUTON QUITTER
 		
-		quitter = new Button("Quitter");
+		mainMenu = new Button("Menu Principal");
 		
 		//action du bouton: quitter l'application
-		quitter.setOnAction((event)->{
-			Platform.exit();
+		mainMenu.setOnAction((event)->{
+			try {
+				App.changePanel(super.getPanel(), App.sv.getPanel());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		});
 		
 		
@@ -529,12 +533,12 @@ public class OptionView extends View{
 		//*********************************************************//
 		//AJOUT DE LA LISTE DE BOUTONS
 		ArrayList<Button> validation = new ArrayList<Button>();
-		validation.addAll(Arrays.asList(valider, quitter));
+		validation.addAll(Arrays.asList(valider, mainMenu));
 		
 		super.quickMenu(validation, 2, super.getHeight()/12, super.getHeight()-super.getHeight()/10, (super.getWidth()/2-100));
 		
 		super.getPanel().getChildren().add(valider);
-		super.getPanel().getChildren().add(quitter);
+		super.getPanel().getChildren().add(mainMenu);
 				
 		//*********************************************************//
 		

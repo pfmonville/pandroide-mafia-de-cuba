@@ -93,6 +93,14 @@
 
 .player:chosen{
 	-fx-background-color:rgb(255,127,0);
-	-fx-border-width:5;
+	-fx-border-width:3;
 	-fx-border-color:cyan;
+}
+
+.question{
+	-fx-font: 15px Tahoma;
+	-fx-background-color:linear-gradient(grey, black);
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-opacity : 0.90;
 }

@@ -30,7 +30,11 @@ public class Theme {
 	public static String pathQuitIcon = "image/cross-circular-button.png";
 	
 	public static String pathPlayerShape = "image/player_shape.png";
+	public static String pathBrownHairShape = "image/brown_hair_shape.png";
+	public static String pathHatShape = "image/hat_shape.png";
+	public static String pathSmokingShape = "image/smoking_shape.png";
 	
+	public static String pathEmptyPocket = "image/target-of-audience.png";
 	
 	
 	//Resolution

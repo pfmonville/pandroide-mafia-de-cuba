@@ -51,8 +51,9 @@ public class View {
 			//buttons height 
 			buttons.get(buttonIndex).setMinHeight(buttonHeight);
 			
-			//buttons width set
+//			//buttons width set
 			int largeurBoutons = (int)(getPanel().getPrefWidth()) - sidesMargin *2;
+
 			buttons.get(buttonIndex).setMinWidth((largeurBoutons / numberOfColumns) - 2);
 						
 			//moving buttons to the right place
