@@ -31,10 +31,31 @@ public class Theme {
 	
 	public static String pathPlayerShape = "image/player_shape.png";
 	public static String pathBrownHairShape = "image/brown_hair_shape.png";
+	public static String pathBlondHairShape = "image/blond_hair_shape.png";
 	public static String pathHatShape = "image/hat_shape.png";
 	public static String pathSmokingShape = "image/smoking_shape.png";
+	public static String pathNecklaceShape = "image/necklace_shape.png";
+	public static String pathGlassesShape = "image/glasses_shape.png" ;
+	public static String pathBeardShape = "image/beard_shape.png";
+	public static String pathLongHairNecklaceShape="image/longHair_necklace_shape.png";
+	public static String pathBeretShape = "image/beret_shape.png";
+	public static String pathBoaShape = "image/boa_shape.png";
+	public static String pathOldManShape = "image/old_man_shape.png";
+	
+	public static String pathBlondHairShapeBig = "image/blond_hair_shape_big.png";
+	public static String pathBrownHairShapeBig = "image/brown_hair_shape_big.png";
+	public static String pathHatShapeBig = "image/hat_shape_big.png";
+	public static String pathSmokingShapeBig = "image/smoking_shape_big.png";
+	public static String pathNecklaceShapeBig = "image/necklace_shape_big.png";
+	public static String pathGlassesShapeBig = "image/glasses_shape_big.png" ;
+	public static String pathBeardShapeBig = "image/beard_shape_big.png";
+	public static String pathLongHairNecklaceShapeBig="image/longHair_necklace_shape_big.png";
+	public static String pathBeretShapeBig = "image/beret_shape_big.png";
+	public static String pathBoaShapeBig = "image/boa_shape_big.png";
+	public static String pathOldManShapeBig = "image/old_man_shape_big.png";
 	
 	public static String pathEmptyPocket = "image/target-of-audience.png";
+	public static String pathAskQuestion = "image/ask_question.png" ;
 	
 	
 	//Resolution
