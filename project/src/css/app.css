@@ -64,8 +64,9 @@
 #answer{
 	-fx-text-alignment:center;
 	-fx-alignment:center;
-	-fx-text-fill:white;
+	-fx-text-fill:blue;
 	-fx-font : 28px Tahoma;
+	-fx-background-color:lightgrey;
 }
 
 #log{
