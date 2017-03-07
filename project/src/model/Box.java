@@ -35,4 +35,25 @@ public class Box {
 		tokens = newTokens ;
 	}
 	
+	public boolean isEmpty(){
+		if(this.diamonds == 0 && tokens.isEmpty()){
+			return true;
+		}
+		return false;
+	}
+	public boolean removeToken(String tokenToRemove){
+		if(tokens.contains(tokenToRemove)){
+			tokens.remove(tokenToRemove);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean removeDiamonds(int diamondsToRemove){
+		if(this.diamonds >= diamondsToRemove){
+			this.diamonds -= diamondsToRemove;
+			return true;
+		}
+		return false;
+	}
 }

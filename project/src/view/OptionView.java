@@ -96,6 +96,7 @@ public class OptionView extends View{
 	    	  			
 	    	  			//Collect the new number of player
 	    	  			int newNumberOfPlayer = Integer.parseInt(new_toggle.getUserData().toString());
+	    	  			App.rules.setCurrentNumberOfPlayer(newNumberOfPlayer);
 	    	  			//update standard role distribution
 	    	  			App.rules.setNumberOfLoyalHenchmenFor(newNumberOfPlayer);
 	    	  			App.rules.setNumberOfCleanersFor(newNumberOfPlayer);
@@ -489,19 +490,18 @@ public class OptionView extends View{
 		
 		
 		//*********************************************************//
-		//AJOUT DU BOUTON POUR VALIDER
+		//Add button to confirm
 		
 		valider = new Button("Valider");
 		
-		// action du bouton: changement de la fenètre vers le plateau
+		// go to game view
 		valider.setOnAction((event)->{
 			try {
 				App.changePanel(this.getPanel(), App.gv.getPanel());
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			//Lancement du controlleur de jeu
+			//launch game controller
 			//App.gameController.begin();
 		});
 		
@@ -511,11 +511,11 @@ public class OptionView extends View{
 		
 		
 		//*********************************************************//
-		//AJOUT DU BOUTON QUITTER
+		//Add the button to get back to menu
 		
 		mainMenu = new Button("Menu Principal");
 		
-		//action du bouton: quitter l'application
+		//go to start view
 		mainMenu.setOnAction((event)->{
 			try {
 				App.changePanel(super.getPanel(), App.sv.getPanel());
@@ -531,7 +531,7 @@ public class OptionView extends View{
 		
 		
 		//*********************************************************//
-		//AJOUT DE LA LISTE DE BOUTONS
+		//format confirm and go to menu buttons
 		ArrayList<Button> validation = new ArrayList<Button>();
 		validation.addAll(Arrays.asList(valider, mainMenu));
 		
@@ -542,20 +542,6 @@ public class OptionView extends View{
 				
 		//*********************************************************//
 		
-		
-		
-//		//*********************************************************//
-//		//AJOUT D UN TITRE A LA PAGE
-//		
-//		Text title = new Text("Mafia de Cuba");
-//		title.setId("title");
-//		//mise en page du titre
-//		super.centerTextLayout(title, (int)(super.getPanel().getPrefWidth()), 150);
-//		
-//		//ajout du titre à optionview
-//		super.getPanel().getChildren().add(title);
-//		
-//		//*********************************************************//
 		
 		//TODO : mettre une image de fond
 		//super.getPanel().setBackground(new Background(new BackgroundImage(new Image(""), BackgroundRepeat.REPEAT, BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT)));

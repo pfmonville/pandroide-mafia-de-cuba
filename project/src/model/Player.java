@@ -1,21 +1,41 @@
 package model;
 
+import controller.App;
+
 public class Player {
 	
 	private Role role;
 	private int position;
 	private boolean human;
 	private boolean lastPlayer;
+	private boolean thief;
+	
+	
+	public Player(int pos, boolean human, boolean lastPlayer){
+		this.position = pos;
+		this.human = human;
+		this.lastPlayer = lastPlayer;
+		this.thief = false;
+	}
 	
 	public Player(Role r, int pos, boolean human,boolean lastPlayer){
 		role = r ;
 		position = pos ;
 		this.setHuman(human) ;
 		this.lastPlayer = lastPlayer ;
+		if(r.getName() == "Thief"){
+			this.thief = true;
+		}else{
+			this.thief = false;
+		}
 	}
 	
+	/**
+	 * 
+	 * @return true if the player is the first after the godFather false otherwise
+	 */
 	public boolean isFirstPlayer(){
-		return (position==1) ;
+		return (position==2) ;
 	}
 	
 	public boolean isLastPlayer(){
@@ -24,6 +44,7 @@ public class Player {
 	
 	public void takeDiamonds(int diamonds){
 		role = new Thief(diamonds) ;
+		this.thief = true;
 	}
 	
 	public void takeToken(String token){
@@ -31,17 +52,19 @@ public class Player {
 			case "LoyalHenchman" :
 				role = new LoyalHenchman();
 				break ;
-			case "FBIAgent" :
+			case "FBI" :
 				role = new FBI();
 				break;
-			case "CIAAgent" :
+			case "CIA" :
 				role = new CIA();
 				break; 
+			case "Agent":
+				role = new Agent(App.rules.getNameAgentLambda());
 			case "Cleaner" :
 				role = new Cleaner() ;
 				break ;
 			case "Driver" :
-				role = new Driver(new Player(null,position-1,false,false));
+				role = new Driver(position-1);
 				break;
 			default :
 				role = new StreetUpchin() ;
@@ -73,6 +96,11 @@ public class Player {
 	
 	public void setRole(Role role) {
 		this.role = role;
+		if(role.getName() == "Thief"){
+			this.thief = true;
+		}else{
+			this.thief = false;
+		}
 	}
 
 	public boolean isHuman() {
@@ -82,4 +110,16 @@ public class Player {
 	public void setHuman(boolean human) {
 		this.human = human;
 	}
+
+	public void setLastPlayer(boolean lastPlayer) {
+		this.lastPlayer = lastPlayer;
+	}
+
+	public boolean isThief() {
+		return thief;
+	}
+	
+	
+	
+	
 }

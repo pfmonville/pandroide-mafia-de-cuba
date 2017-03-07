@@ -1,8 +1,9 @@
 package model;
 
-public class CIA extends Agent{
+import controller.App;
 
+public class CIA extends Agent{
 	public CIA(){
-		super("CIA");
+		super(App.rules.getNameAgentCIA());
 	}
 }

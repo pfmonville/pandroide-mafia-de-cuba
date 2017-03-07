@@ -25,7 +25,9 @@ public class Rules {
 	private String nameGodFather;
 	private String nameLoyalHenchman;
 	private String nameCleaner;
-	private String nameAgent;
+	private String nameAgentFBI;
+	private String nameAgentCIA;
+	private String nameAgentLambda;
 	private String nameDriver;
 	private String nameThief;
 	private String nameStreetUpchin;
@@ -39,6 +41,7 @@ public class Rules {
 	private int numberOfDiamonds;
 	private boolean allIA;
 	private int humanPosition;
+	private int currentNumberOfPlayer;
 
 	
 	public Rules() {
@@ -46,7 +49,8 @@ public class Rules {
 		this.nameGodFather = "Parrain";
 		this.nameLoyalHenchman = "Fidèle";
 		this.nameCleaner = "Nettoyeur";
-		this.nameAgent = "Agent";
+		this.nameAgentFBI = "FBI";
+		this.nameAgentCIA = "CIA";
 		this.nameDriver = "chauffeur";
 		this.nameThief= "Voleur";
 		this.nameStreetUpchin = "Enfant des Rues";
@@ -95,7 +99,7 @@ public class Rules {
 		this.allIA = false;
 	}
 	
-public ArrayList<String> getTokensFor(int numberOfPlayer){
+	public ArrayList<String> getTokensFor(int numberOfPlayer){
 		
 		ArrayList<String> tokens = new ArrayList<>();
 		for(int i = 0; i < this.defaultNumberOfLoyalHenchmen.get(numberOfPlayer - minimumNumberOfPlayer); i++){
@@ -105,7 +109,13 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 			tokens.add(nameCleaner);
 		}
 		for(int i = 0; i < this.defaultNumberOfAgents.get(numberOfPlayer - minimumNumberOfPlayer); i++){
-			tokens.add(nameAgent);
+			if(i ==0){
+				tokens.add(nameAgentFBI);
+			}else if(i == 1){
+				tokens.add(nameAgentCIA);
+			}else{
+				tokens.add(nameAgentLambda);
+			}
 		}
 		for(int i = 0; i < this.defaultNumberOfDrivers.get(numberOfPlayer - minimumNumberOfPlayer); i++){
 			tokens.add(nameDriver);
@@ -114,6 +124,42 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	}
 
 
+	public boolean isAValidToken(String token){
+		if(token.equals(nameDriver)||token.equals(nameLoyalHenchman)||token.equals(nameAgentFBI)|| token.equals(nameAgentCIA)|| token.equals(nameAgentLambda)){
+			return true;
+		}else if(this.numberOfCleaners > 0 && token.equals(nameCleaner)){
+			return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getTokens(){
+		ArrayList<String> tokens = new ArrayList<>();
+		for(int i = 0; i < this.numberOfLoyalHenchmen; i++){
+			tokens.add(nameLoyalHenchman);
+		}
+		for(int i = 0; i < this.numberOfCleaners; i++){
+			tokens.add(nameCleaner);
+		}
+		for(int i = 0; i < this.numberOfAgents; i++){
+			if(i ==0){
+				tokens.add(nameAgentFBI);
+			}else if(i == 1){
+				tokens.add(nameAgentCIA);
+			}else{
+				tokens.add(nameAgentLambda);
+			}
+		}
+		for(int i = 0; i < this.numberOfDrivers; i++){
+			tokens.add(nameDriver);
+		}
+		return tokens;
+	}
+	
+	public Box getBox(){
+		return new Box(this.numberOfDiamonds, this.getTokens());
+	}
+	
 	public int getDefaultNumberOfLoyalHenchmenFor(int numberOfPlayer) {
 		return defaultNumberOfLoyalHenchmen.get(numberOfPlayer - minimumNumberOfPlayer);
 	}
@@ -309,14 +355,31 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 
 
 
-	public String getNameAgent() {
-		return nameAgent;
+	public String getNameAgentLambda() {
+		return nameAgentLambda;
+	} 
+
+
+	public void setNameAgentLambda(String nameAgent) {
+		this.nameAgentLambda = nameAgent;
 	}
+	
+	public String getNameAgentFBI() {
+		return nameAgentFBI;
+	} 
 
 
+	public void setNameAgentFBI(String nameAgent) {
+		this.nameAgentFBI = nameAgent;
+	}
+	
+	public String getNameAgentCIA() {
+		return nameAgentCIA;
+	} 
 
-	public void setNameAgent(String nameAgent) {
-		this.nameAgent = nameAgent;
+
+	public void setNameAgentCIA(String nameAgent) {
+		this.nameAgentCIA = nameAgent;
 	}
 
 
@@ -479,5 +542,17 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	public boolean getFirstPlayerCanHide(){
 		return firstPlayerCanHide ;
 	}
+
+
+	public int getCurrentNumberOfPlayer() {
+		return currentNumberOfPlayer;
+	}
+
+
+	public void setCurrentNumberOfPlayer(int currentNumberOfPlayer) {
+		this.currentNumberOfPlayer = currentNumberOfPlayer;
+	}
+	
+	
 	
 }

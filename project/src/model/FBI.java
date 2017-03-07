@@ -1,8 +1,9 @@
 package model;
 
-public class FBI extends Agent{
+import controller.App;
 
+public class FBI extends Agent{
 	public FBI(){
-		super("FBI");
+		super(App.rules.getNameAgentFBI());
 	}
 }

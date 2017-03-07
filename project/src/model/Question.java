@@ -5,7 +5,8 @@ import java.util.Random;
 
 public class Question extends Phrase{
 
-	private ArrayList<Integer> answersExpected ;
+	private ArrayList<Integer> answersExpected;
+	private int tagetPlayer;
 	/**
 	 * question's category
 	 * 0 : box 
@@ -52,5 +53,15 @@ public class Question extends Phrase{
 	public void setCategory(int category) {
 		this.category = category;
 	}
+
+	public int getTagetPlayer() {
+		return tagetPlayer;
+	}
+
+	public void setTagetPlayer(int tagetPlayer) {
+		this.tagetPlayer = tagetPlayer;
+	}
+	
+	
 
 }
