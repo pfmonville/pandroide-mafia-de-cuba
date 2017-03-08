@@ -1,6 +1,7 @@
 package controller.runnable;
 
 import controller.App;
+import controller.IAController;
 import controller.PlayerController;
 import controller.ia.IASuspectController;
 import model.Box;
@@ -19,6 +20,7 @@ public class PickSomethingRunnable implements Runnable{
 	
 	@Override
 	public void run() {
+		((IAController)playerController).createWorldsVision(this.box);
 		Object[] obj = ((IASuspectController)playerController).pickSomething(position, box);
 		int diamondsPicked = (int) obj[0];
 		String tokenPicked = (String) obj[1];

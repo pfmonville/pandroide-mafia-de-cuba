@@ -1,6 +1,7 @@
 package controller.runnable;
 
 import controller.App;
+import controller.IAController;
 import controller.PlayerController;
 import controller.ia.IAGodFatherController;
 import model.Box;

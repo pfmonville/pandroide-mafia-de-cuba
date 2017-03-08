@@ -12,6 +12,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -22,6 +23,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -30,6 +32,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.Question;
 import model.Theme;
@@ -96,6 +99,36 @@ public class GameView extends View{
 					}
 				}
 			});
+		});
+		
+		inspect.setOnAction((event)->{
+			Stage stage = new Stage();
+			stage.setTitle("Réglages");
+			Pane layout = new Pane();
+			//TODO
+//			layout.getChildren().add(iv.getPanel());
+			Scene scene = new Scene(layout);
+			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+			App.loadCSS("css/app.css", scene);
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(Theme.pathMainLogo1));
+			stage.setResizable(false);
+	        stage.show();
+		});
+		
+		rules.setOnAction((event)->{
+			Stage stage = new Stage();
+			stage.setTitle("Réglages");
+			Pane layout = new Pane();
+			//TODO
+//			layout.getChildren().add(rv.getPanel());
+			Scene scene = new Scene(layout);
+			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+			App.loadCSS("css/app.css", scene);
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(Theme.pathMainLogo1));
+			stage.setResizable(false);
+	        stage.show();
 		});
 		
 		toolBar.getItems().addAll(new Separator(),replay,inspect,rules, new Separator());

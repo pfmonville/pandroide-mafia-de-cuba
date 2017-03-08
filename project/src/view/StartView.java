@@ -2,18 +2,16 @@ package view;
 
 import java.util.ArrayList;
 
-import javafx.application.Platform;
-import javafx.geometry.Pos;
+import controller.App;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import model.Theme;
-import controller.App;
 
 public class StartView extends View{
 
@@ -28,10 +26,10 @@ public class StartView extends View{
 		super(x, y);
 
 		//element initialization to display
-		btnPlay = new Button("Play");
-		btnSettings = new Button("Settings");
-		btnRules = new Button("Rules");
-		btnAbout = new Button("About");
+		btnPlay = new Button("Jouer");
+		btnSettings = new Button("Réglages");
+		btnRules = new Button("Règles");
+		btnAbout = new Button("A Propos");
 
 		//title layout
 		//super.centerTextLayout(title, (int)(super.getPanel().getPrefWidth()), 150);
@@ -57,6 +55,52 @@ public class StartView extends View{
 		addElement(btnAbout);
 		addElement(btnRules);
 		addElement(btnSettings);
+		
+		btnAbout.setOnAction((event)->{
+			Stage stage = new Stage();
+			stage.setTitle("A Propos");
+			Pane layout = new Pane();
+			//TODO
+//			layout.getChildren().add(av.getPanel());
+			Scene scene = new Scene(layout);
+			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+			App.loadCSS("css/app.css", scene);
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(Theme.pathMainLogo1));
+			stage.setResizable(false);
+	        stage.show();
+		});
+		
+		btnRules.setOnAction((event)->{
+			Stage stage = new Stage();
+			stage.setTitle("Règles");
+			Pane layout = new Pane();
+			//TODO
+//			layout.getChildren().add(rv.getPanel());
+			Scene scene = new Scene(layout);
+			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+			App.loadCSS("css/app.css", scene);
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(Theme.pathMainLogo1));
+			stage.setResizable(false);
+	        stage.show();
+		});
+		
+		
+		btnSettings.setOnAction((event)->{
+			Stage stage = new Stage();
+			stage.setTitle("Réglages");
+			Pane layout = new Pane();
+			//TODO
+//			layout.getChildren().add(setv.getPanel());
+			Scene scene = new Scene(layout);
+			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+			App.loadCSS("css/app.css", scene);
+			stage.setScene(scene);
+			stage.getIcons().add(new Image(Theme.pathMainLogo1));
+			stage.setResizable(false);
+	        stage.show();
+		});
 		
 		btnPlay.setOnAction((event)->{
 			try {

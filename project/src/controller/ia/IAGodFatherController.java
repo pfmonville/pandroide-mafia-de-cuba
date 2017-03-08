@@ -6,6 +6,8 @@ import controller.IAController;
 import model.Box;
 import model.Player;
 import model.Question;
+import model.SecretID;
+import model.Talk;
 
 public class IAGodFatherController extends IAController{
 
@@ -18,7 +20,7 @@ public class IAGodFatherController extends IAController{
 	public void addStrategy(IGodFatherStrategy strategy){
 		this.strategy = strategy;
 	}
-
+	
 	public Question chooseQuestion(ArrayList<Question> questions){
 		return this.strategy.chooseQuestion(questions);
 	}

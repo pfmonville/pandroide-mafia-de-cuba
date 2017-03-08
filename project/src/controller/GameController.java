@@ -18,6 +18,7 @@ import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
 import controller.runnable.EmptyPocketsRunnable;
+import controller.runnable.GetBackTheBoxRunnable;
 import controller.runnable.PickSomethingRunnable;
 import controller.runnable.PrepareBoxRunnable;
 import model.Answer;
@@ -25,6 +26,7 @@ import model.Box;
 import model.GodFather;
 import model.Player;
 import model.Question;
+import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
@@ -43,6 +45,7 @@ public class GameController {
 	private boolean firstHalf;
 	private int numberOfThieves;
 	private int numberOfThievesCaught;
+	private int diamondsTakenBack;
 	private Box box;
 	private String tokenHidden;
 	private int diamondsHidden;
@@ -62,6 +65,7 @@ public class GameController {
 		this.actualTurn = 0;
 		this.firstHalf = true;
 		this.numberOfThievesCaught = 0;
+		this.diamondsTakenBack = 0;
 		this.numberOfPlayer = App.rules.getCurrentNumberOfPlayer();
 		this.gameHistory = new ArrayList<>();
 		this.humanPosition = App.rules.getHumanPosition();
@@ -197,6 +201,7 @@ public class GameController {
 		}else{
 			this.box.removeDiamonds(numberOfDiamondsHidden);
 			this.diamondsHidden = numberOfDiamondsHidden;
+			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
 		this.actualPlayer = 2;
 		this.nextTurn();
@@ -249,12 +254,13 @@ public class GameController {
 		}else{
 			//TODO : raise pickingStrategyError("you have to choose either to pick dimaonds or a token")
 		}
+	
 		
 		//if this is the last player then start the second half
 		if(players.get(this.actualPlayer).isLastPlayer()){
 			this.actualPlayer = 1;
 			this.actualTurn = 1;
-			SelectingGodFathersAction();
+			beginSecondHalf();
 		}else{
 			this.actualPlayer ++;
 			this.actualTurn ++;
@@ -268,7 +274,12 @@ public class GameController {
 	//Second Half functions
 	//*********************************************************************
 	
-	private void SelectingGodFathersAction(){
+	private void giveTheBoxToGodFather(){
+		Thread thread = new Thread(new GetBackTheBoxRunnable(playerControllers.get(1), this.box));
+		thread.start();
+	}
+	
+	public void SelectingGodFathersAction(){
 		if(humanPosition == this.actualPlayer){
 			//TODO : call the view to display questions
 		}else{
@@ -305,14 +316,44 @@ public class GameController {
 	public void emptyPocketsTo(int targetPlayer){
 		//TODO handle the Cleaner shot
 		//TODO reveal the identity of the targetPlayer
-		//TODO if there is no thieves left, GodFather's side wins else if there is no more jokers Thieves's side wins, else call selectingGodFathersAction
+		SecretID secret = players.get(targetPlayer).reveal();
+		if(secret.getRole() == App.rules.getNameAgentCIA() || secret.getRole() == App.rules.getNameAgentFBI() || secret.getRole() == App.rules.getNameAgentLambda()){
+			//TODO display losing : the agent alone has won
+		}
+		if(secret.getRole() == App.rules.getNameThief()){
+			this.numberOfThievesCaught += 1;
+			this.diamondsTakenBack += secret.getDiamondsTaken();
+			//update the number of diamonds taken back in display
+			if(hasGodFatherWon()){
+				//TODO display winning 
+			}
+		}else{
+			if(((GodFather)players.get(1).getRole()).consumeJoker()){
+				//TODO : display one less joker and everyone knows who is the target
+				for(PlayerController pc: playerControllers.values()){
+					((IAController)pc).updateWorldsVision(secret);
+				}
+				SelectingGodFathersAction();
+			}else{
+				//TODO : display losing : thieves have won
+			}
+		}
 	}
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
 		//TODO display pop up informing everyone on the answer
 		//TODO update log creating a Talk
 		Talk talk = new Talk(question, answer);
+		this.gameHistory.add(talk);
+		updateIAWorldsVisions();
 		SelectingGodFathersAction();
+	}
+	
+	
+	public void updateIAWorldsVisions(){
+		for(PlayerController pc: playerControllers.values()){
+			((IAController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+		}
 	}
 	
 	
@@ -355,7 +396,7 @@ public class GameController {
 		//set the last player boolean "lastPlayer" to true
 		this.players.get(this.numberOfPlayer).setLastPlayer(true);
 		//set the role for the first player to GodFather
-		this.players.get(1).setRole(new GodFather());
+		this.players.get(1).setRole(new GodFather(App.rules.getNumberOfJokers()));
 	}
 	
 	
@@ -465,6 +506,7 @@ public class GameController {
 	public void beginSecondHalf(){
 		this.updateRules();
 		this.updateControllers();
+		this.giveTheBoxToGodFather();
 	}
 	
 	
