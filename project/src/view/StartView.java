@@ -72,18 +72,11 @@ public class StartView extends View{
 		});
 		
 		btnRules.setOnAction((event)->{
-			Stage stage = new Stage();
-			stage.setTitle("Règles");
-			Pane layout = new Pane();
-			//TODO
-//			layout.getChildren().add(rv.getPanel());
-			Scene scene = new Scene(layout);
-			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-			App.loadCSS("css/app.css", scene);
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(Theme.pathMainLogo1));
-			stage.setResizable(false);
-	        stage.show();
+			try {
+				App.changePanel(super.getPanel(), App.rv.getPanel());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		});
 		
 		

@@ -37,8 +37,8 @@ public class GameController {
 	private int actualTurn;
 	private int numberOfPlayer;
 	private int humanPosition;
-	private HashMap<Integer, Player> players;
-	private HashMap<Integer, PlayerController> playerControllers;
+	private HashMap<Integer, Player> players = new HashMap<Integer,Player>();
+	private HashMap<Integer, PlayerController> playerControllers = new HashMap<Integer, PlayerController>();
 	private ArrayList<Question> questions;
 	private ArrayList<Answer> answers;
 	private ArrayList<Talk> gameHistory;
@@ -61,7 +61,7 @@ public class GameController {
 		//for the first part of the game, the godFather doesn't play
 		this.tokenHidden = null;
 		diamondsHidden = 0;
-		this.actualPlayer = 2;
+		this.actualPlayer = 1;
 		this.actualTurn = 0;
 		this.firstHalf = true;
 		this.numberOfThievesCaught = 0;
@@ -184,7 +184,7 @@ public class GameController {
 	 */
 	private void prepareBox(){
 		if(this.isActualPlayerHuman()){
-			//TODO call the view to display choices
+			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
 			thread.start();
@@ -212,7 +212,7 @@ public class GameController {
 	 */
 	private void nextTurn(){
 		if(this.isActualPlayerHuman()){
-			//TODO call the view to display choices
+			App.gv.playerPickView();
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
 			thread.start();
@@ -281,7 +281,7 @@ public class GameController {
 	
 	public void SelectingGodFathersAction(){
 		if(humanPosition == this.actualPlayer){
-			//TODO : call the view to display questions
+			App.gv.displayGFQuestions();
 		}else{
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
 			thread.start();
@@ -306,7 +306,7 @@ public class GameController {
 	public void askTo(Question questionToAsk){
 		//TODO display pop up informing everyone on the question asked
 		if(humanPosition == this.actualPlayer){
-			//TODO : call the view to display answers
+			App.gv.displayPlayerAnswers();
 		}else{
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTagetPlayer()), questionToAsk, answers));
 			thread.start();
@@ -537,6 +537,14 @@ public class GameController {
 	
 	public int getNbThiefsCaught(){
 		return numberOfThievesCaught;
+	}
+	
+	public Box getBox(){
+		return box ;
+	}
+	
+	public ArrayList<Answer> getAnswers(){
+		return answers;
 	}
 
 }

@@ -1,3 +1,4 @@
+
 package view;
 
 import java.io.IOException;
@@ -495,12 +496,13 @@ public class OptionView extends View{
 		// go to game view
 		valider.setOnAction((event)->{
 			try {
+				App.gv.setInitialGameView();
 				App.changePanel(this.getPanel(), App.gv.getPanel());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			//launch game controller
-			//App.gameController.begin();
+			App.gameController.beginFirstHalf();
 		});
 		
 		//*********************************************************//

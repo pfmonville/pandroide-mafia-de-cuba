@@ -27,7 +27,6 @@ public class Theme {
 	public static String pathReplayIcon = "image/replay-arrow.png";
 	public static String pathInspectIcon="image/search.png";
 	public static String pathRulesIcon = "image/open-book.png";
-	public static String pathQuitIcon = "image/cross-circular-button.png";
 	
 	public static String pathPlayerShape = "image/player_shape.png";
 	public static String pathBrownHairShape = "image/brown_hair_shape.png";
@@ -54,8 +53,11 @@ public class Theme {
 	public static String pathBoaShapeBig = "image/boa_shape_big.png";
 	public static String pathOldManShapeBig = "image/old_man_shape_big.png";
 	
+	public static String pathParain = "image/parain.png";
+	public static String pathParainBig = "image/parain_big.png";
 	public static String pathEmptyPocket = "image/target-of-audience.png";
 	public static String pathAskQuestion = "image/ask_question.png" ;
+	public static String pathBox = "image/boite.png";
 	
 	
 	//Resolution

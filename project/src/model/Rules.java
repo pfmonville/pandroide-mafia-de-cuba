@@ -51,7 +51,7 @@ public class Rules {
 		this.nameCleaner = "Nettoyeur";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
-		this.nameDriver = "chauffeur";
+		this.nameDriver = "Chauffeur";
 		this.nameThief= "Voleur";
 		this.nameStreetUpchin = "Enfant des Rues";
 		
