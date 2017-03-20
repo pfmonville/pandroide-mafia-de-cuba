@@ -21,6 +21,7 @@ import controller.runnable.EmptyPocketsRunnable;
 import controller.runnable.GetBackTheBoxRunnable;
 import controller.runnable.PickSomethingRunnable;
 import controller.runnable.PrepareBoxRunnable;
+import javafx.application.Platform;
 import model.Answer;
 import model.Box;
 import model.GodFather;
@@ -60,7 +61,7 @@ public class GameController {
 	private void getRules(){
 		//for the first part of the game, the godFather doesn't play
 		this.tokenHidden = null;
-		diamondsHidden = 0;
+		setDiamondsHidden(0);
 		this.actualPlayer = 1;
 		this.actualTurn = 0;
 		this.firstHalf = true;
@@ -80,13 +81,13 @@ public class GameController {
 	 * after the first half, call this method to update the number of thieves
 	 */
 	private void updateRules(){
-		int numberOfTheives = 0;
+		int numberOfThieves = 0;
 		for(Player player: players.values()){
 			if(player.isThief()){
-				numberOfTheives ++;
+				numberOfThieves ++;
 			}
 		}
-		this.numberOfThieves = numberOfTheives;
+		this.numberOfThieves = numberOfThieves;
 		this.firstHalf = false;
 	}
 	
@@ -187,7 +188,8 @@ public class GameController {
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
-			thread.start();
+			//thread.start();
+			Platform.runLater(thread);
 		}
 	}
 	
@@ -200,7 +202,7 @@ public class GameController {
 			//TODO : raise PrepareBoxStrategyError("you can't hide this much of diamonds")
 		}else{
 			this.box.removeDiamonds(numberOfDiamondsHidden);
-			this.diamondsHidden = numberOfDiamondsHidden;
+			this.setDiamondsHidden(numberOfDiamondsHidden);
 			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
 		this.actualPlayer = 2;
@@ -215,7 +217,8 @@ public class GameController {
 			App.gv.playerPickView();
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
-			thread.start();
+			//thread.start();
+			Platform.runLater(thread);
 		}
 	}
 	
@@ -276,7 +279,8 @@ public class GameController {
 	
 	private void giveTheBoxToGodFather(){
 		Thread thread = new Thread(new GetBackTheBoxRunnable(playerControllers.get(1), this.box));
-		thread.start();
+		//thread.start();
+		Platform.runLater(thread);
 	}
 	
 	public void SelectingGodFathersAction(){
@@ -547,4 +551,17 @@ public class GameController {
 		return answers;
 	}
 
+
+	public int getDiamondsHidden() {
+		return diamondsHidden;
+	}
+
+
+	public void setDiamondsHidden(int diamondsHidden) {
+		this.diamondsHidden = diamondsHidden;
+	}
+	
+	public Player getHumanPlayer(){
+		return players.get(humanPosition);
+	}
 }

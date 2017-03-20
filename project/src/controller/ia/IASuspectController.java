@@ -26,7 +26,7 @@ public class IASuspectController extends IAController{
 	public Object[] pickSomething(int position, Box box){
 		Object[] result = new Object[3];
 		result[0] = 1;
-		result[1] = "coucou";
+		result[1] = null;
 		result[2] = null;
 		
 		return result;

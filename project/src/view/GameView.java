@@ -507,7 +507,7 @@ public class GameView extends View{
 	 */
 	public void createInfoBoxHumanPlayer(){
 		info = new HBox();
-		info.setSpacing(50);
+		info.setSpacing(60);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
 		HBox whatPlayerPicked = new HBox(),infoAboutBox = new HBox(), infoAboutGame = new HBox();
 		infoAboutBox.setSpacing(15); infoAboutGame.setSpacing(15);
@@ -515,7 +515,7 @@ public class GameView extends View{
 		//WHAT PLAYER HAS PICKED
 		if(App.rules.getHumanPosition()!=1){
 			String token=null ; Label diamonds = new Label();
-			String role = App.gameController.getActualPlayer().getRole().getName();
+			String role = App.gameController.getHumanPlayer().getRole().getName();
 			if(role.equals("Fidèle"))
 				token = Theme.pathLoyalHencman;
 			if(role.equals("Chauffeur"))
@@ -528,18 +528,18 @@ public class GameView extends View{
 				token = Theme.pathThief; //TODO image enfant des rues
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
-				diamonds.setText(App.gameController.getActualPlayer().getRole().getNbDiamondsStolen()+"");
+				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
 			}
 			Label playerRole = new Label();
 			playerRole.setGraphic(new ImageView( new Image(token)));
-			playerRole.setTooltip(super.createStandardTooltip(App.gameController.getActualPlayer().getRole().getName()));
+			playerRole.setTooltip(super.createStandardTooltip(App.gameController.getHumanPlayer().getRole().getName()));
 			
 			whatPlayerPicked.getChildren().addAll(playerRole, diamonds);
 		}
 		// GAME INFO
 		diamondsBack = new Label("0"); //nb diams got back by godfather
 		if(App.rules.getHumanPosition()==1){
-			diamondsAway = new Label("5"); // nb diams hidden by godfather 
+			diamondsAway = new Label(App.gameController.getDiamondsHidden()+""); // nb diams hidden by godfather 
 			diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
 			diamondsAway.setTooltip(super.createStandardTooltip("Diamonds removed"));
 			diamondsAway.setStyle("-fx-text-fill:white;");
@@ -553,7 +553,10 @@ public class GameView extends View{
 		jokers.setStyle("-fx-text-fill:white;");
 		diamondsBack.setStyle("-fx-text-fill:white;");
 		
-		infoAboutGame.getChildren().addAll(diamondsAway, diamondsBack, jokers);
+		if(diamondsAway!=null)
+			infoAboutGame.getChildren().addAll(diamondsAway, diamondsBack, jokers);
+		else
+			infoAboutGame.getChildren().addAll(diamondsBack, jokers);
 		
 		//BOX INFO
 		// get what is in the box
@@ -858,22 +861,30 @@ public class GameView extends View{
 		valider.setOnAction((event)->{
 			String tokenHidden = null; 
 			// if 1st player
-			if(App.rules.getHumanPosition()-1==1){
+			if(App.rules.getHumanPosition()==2){
 				tokenHidden = chooseToken.getValue();
 				if(tokenHidden.equals("Aucun"))
 					tokenHidden = null ;
+				else{
+					if(tokenHidden.equals("Agent"))
+						tokenHidden = "FBI" ;
+					}
 			}
-			Button picked = (Button) pickGroup.getSelectedToggle() ;
+			RadioButton picked = (RadioButton) pickGroup.getSelectedToggle() ;
 			if(picked.equals(diams))
-				App.gameController.endTurn(App.rules.getHumanPosition()-1, Integer.parseInt(nb.getValue()), null, tokenHidden);
+				App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
 			if(picked.equals(henchman))
-				App.gameController.endTurn(App.rules.getHumanPosition()-1, 0, "Fidèle", tokenHidden);
+				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
 			if(picked.equals(driver))
-				App.gameController.endTurn(App.rules.getHumanPosition()-1, 0, "Chauffeur", tokenHidden);
-			if(picked.equals(agent))
-				App.gameController.endTurn(App.rules.getHumanPosition()-1, 0, "Agent", tokenHidden);
+				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
+			if(picked.equals(agent)){
+				if(tokenHidden != null && tokenHidden.equals("FBI"))
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "CIA", tokenHidden);
+				else 
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "FBI", tokenHidden);
+			}
 			if(picked.equals(cleaner))
-				App.gameController.endTurn(App.rules.getHumanPosition()-1, 0, "Nettoyeur", tokenHidden);
+				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
 			//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
 			cleanGameView();
 			createInfoBoxHumanPlayer();
@@ -886,6 +897,7 @@ public class GameView extends View{
 		questionsArea.setMargin(mainVBox, new Insets(10,0,0,0));
 		pocket.getChildren().add(valider);
 		pocket.setAlignment(Pos.CENTER);
+
 	}
 	
 	
@@ -972,6 +984,7 @@ public class GameView extends View{
 		pocket.getChildren().addAll(emptyPocket, askQuestion);
 		pocket.setMargin(emptyPocket, new Insets(0,0,0,5));
 		pocket.setMargin(askQuestion, new Insets(10,0,0,5));
+		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
 	}
@@ -1029,9 +1042,7 @@ public class GameView extends View{
 		}
 		else {
 			//if human player
-			createIAButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());
-			displayPlayerAnswers();
-		
+			createIAButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
 		}
 	}
 	
@@ -1043,6 +1054,7 @@ public class GameView extends View{
 	public void cleanGameView(){
 		questionsArea.getChildren().clear();
 		pocket.getChildren().clear();
+		themeButtons.getChildren().clear();
 		if (info !=null)
 			info.getChildren().clear();
 	}

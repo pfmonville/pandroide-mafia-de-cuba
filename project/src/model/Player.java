@@ -49,7 +49,7 @@ public class Player {
 	
 	public void takeToken(String token){
 		switch (token) {
-			case "LoyalHenchman" :
+			case "Fidèle" :
 				role = new LoyalHenchman();
 				break ;
 			case "FBI" :
@@ -60,10 +60,10 @@ public class Player {
 				break; 
 			case "Agent":
 				role = new Agent(App.rules.getNameAgentLambda());
-			case "Cleaner" :
+			case "Nettoyeur" :
 				role = new Cleaner() ;
 				break ;
-			case "Driver" :
+			case "Chauffeur" :
 				role = new Driver(position-1);
 				break;
 			default :

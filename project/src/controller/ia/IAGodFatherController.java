@@ -15,6 +15,7 @@ public class IAGodFatherController extends IAController{
 	
 	public IAGodFatherController(Player player){
 		super(player);
+		strategy = new GodFatherStrategy();
 	}
 	
 	public void addStrategy(IGodFatherStrategy strategy){
