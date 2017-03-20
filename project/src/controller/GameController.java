@@ -23,9 +23,9 @@ import sun.audio.AudioStream;
 
 
 public class GameController {
-	private int actualPlayer;
-	private int actualTurn;
-	private int numberOfPlayers;
+	private static int currentPlayer;
+	private static int currentTurn;
+	private static int numberOfPlayers;
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;
@@ -33,7 +33,7 @@ public class GameController {
 	private ArrayList<Talk> gameHistory;
 	private boolean firstHalf;
 	private int numberOfThieves;
-	private int numberOfThievesCaught;
+	private static int numberOfThievesCaught;
 	
 	private Rules rules = new Rules();
 	private Box box /*= new Box(rules.getNumberOfDiamonds(), rules.getTokensFor(numberOfPlayers))*/;
@@ -61,13 +61,13 @@ public class GameController {
 	
 	
 	/**
-	 * update the actualPlayer attribute to match the next player number for the first part of the game
+	 * update the currentPlayer attribute to match the next player number for the first part of the game
 	 */
 	public void nextPlayer(){
-		if (this.actualPlayer == this.numberOfPlayers){ 
-			this.actualPlayer = 1;
+		if (this.currentPlayer == this.numberOfPlayers){ 
+			this.currentPlayer = 1;
 		}else{
-			this.actualPlayer += 1;
+			this.currentPlayer += 1;
 		}
 	}
 	
@@ -77,7 +77,7 @@ public class GameController {
 	 * @return Player
 	 */
 	public Player getActualPlayer(){
-		return players.get(this.actualPlayer);
+		return players.get(this.currentPlayer);
 	}
 	
 	/**
@@ -85,14 +85,14 @@ public class GameController {
 	 * @return int : the index of the player
 	 */
 	public int getActualPlayerNumber(){
-		return this.actualPlayer;
+		return this.currentPlayer;
 	}
 	
 	/**
 	 * get the number of players
 	 * @return the number of players
 	 */
-	public int getNumberOfPlayer(){
+	public static int getNumberOfPlayers(){
 		return numberOfPlayers ;
 	}
 	
@@ -100,9 +100,9 @@ public class GameController {
 	 * 
 	 */
 	public void startGame(){
-		this.actualTurn = 1;
+		this.currentTurn = 1;
 		if(!this.isActualPlayerHuman()){
-			Thread thread = new Thread((IAController)(this.playerControllers.get(this.actualPlayer)));
+			Thread thread = new Thread((IAController)(this.playerControllers.get(this.currentPlayer)));
 			thread.start();
 		}
 	}
@@ -114,7 +114,7 @@ public class GameController {
 	 * @return true if the player is human false otherwise
 	 */
 	public boolean isActualPlayerHuman(){
-		return this.isPlayerHuman(this.actualPlayer);
+		return this.isPlayerHuman(this.currentPlayer);
 	}
 	
 	
@@ -155,7 +155,7 @@ public class GameController {
 	 */
 	public void validClick(int ID){
 		//TODO
-		Thread thread = new Thread((HumanController)(this.playerControllers.get(this.actualPlayer)));
+		Thread thread = new Thread((HumanController)(this.playerControllers.get(this.currentPlayer)));
 		thread.start();
 	}
 	
@@ -249,7 +249,7 @@ public class GameController {
 	public void finish(){
 		playerControllers = new ArrayList<>();
 		players = new ArrayList<>();
-		actualPlayer = 0;
+		currentPlayer = 0;
 		//App.pv.resetCursor();
 //		if(App.gv.getPanel().getChildren().contains(App.gv.getCursor())){
 //			App.gv.removeWaitingCursor();
