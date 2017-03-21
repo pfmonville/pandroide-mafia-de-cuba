@@ -106,7 +106,13 @@ public class IAController implements PlayerController {
 		
 		for(List<String> roles : recursiveResult){
 			for(int i = 0 ; i <= roles.size() ; i++){
+
 				ArrayList<String> tmp = new ArrayList<String>(roles);
+				
+				//to avoid some duplicates
+				if(i < roles.size() && tmp.get(i).equals(firstRole)){
+					continue;
+				}
 				tmp.add(i, firstRole);
 				result.add(tmp);			
 				
@@ -157,7 +163,7 @@ public class IAController implements PlayerController {
 		/**
 		 * TODO
 		 * gestions des dernieres positions
-		 * ex : no token in the box => All the players before have taken a token
+		 * 
 		 */		
 		
 		//No tokens left in the box and the first player may have hidden one
@@ -187,9 +193,10 @@ public class IAController implements PlayerController {
 	public static void main(String[] args){
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add("chauffeur");
-		stringList.add("agent");
 		stringList.add("fidele");
-		stringList.add("voleur");
+		//stringList.add("agent");
+		stringList.add("fidele");
+		//stringList.add("voleur");
 		
 		List<ArrayList<String>> result = IAController.permutation(stringList);
 		
@@ -201,6 +208,7 @@ public class IAController implements PlayerController {
 	        }
 	        System.out.println();
 	    }
+		System.out.println("nb config:"+result.size() );
 		
 	}
 	
