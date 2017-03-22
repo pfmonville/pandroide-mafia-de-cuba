@@ -1,22 +1,23 @@
 package controller.ia;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import controller.App;
-import controller.GameController;
-import controller.PlayerController;
 import model.Box;
 import model.Player;
 import model.SecretID;
 import model.Talk;
+import controller.App;
+import controller.GameController;
+import controller.PlayerController;
 
 public class IAController implements PlayerController {
 
 	
-	private Player player;
+	private static Player player;
 	
 	
 	public IAController(Player player) {
@@ -24,6 +25,13 @@ public class IAController implements PlayerController {
 	}
 
 	public void createWorldsVision(Box box){
+		/**
+		 * TODO
+		 * 
+		 */
+	}
+	
+	public static List<ArrayList<String>> rolesDistribution(Box box){
 		
 		int nbTokensBeforeStart = App.rules.getTokensFor(GameController.getNumberOfPlayers()).size();
 		
@@ -36,72 +44,97 @@ public class IAController implements PlayerController {
 			rolesTaken.remove(s);
 		}
 		
-//		rolesLeft.add(App.rules.getNameStreetUpchin());
-//		if(box.getDiamonds() != 0){
-//			rolesLeft.add(App.rules.getNameThief());
-//		}
-		
 		/**
 		 * TODO
-		 * quand le joueur reÃ§oit la boite :
+		 * quand le joueur reçoit la boite :
 		 * si il y a 15 diamants, le joueur sait si un role a ete ecarte => un seul appel de permutation dans le cas ou aucun role n'a ete ecarte, sinon boucle for
 		 * si il y a moins de 10 diamants => AU MOINS 1 voleur, deduire le nombre max de voleurs possibles
 		 * si il y a entre 10 et 15 diamants => voleurs potentiels, deduire le nombre max de voleurs possibles
 		 */
 		
+		/*
+		 * Creation des mondes possibles pour les joueurs avant le joueur courant
+		 */
 		List<ArrayList<String>> configBefore = new ArrayList<ArrayList<String>>();
 		
-		//all the diamonds are still in the box
-		if(box.getDiamonds() == App.rules.getNumberOfDiamonds()){
-			//no token has been hidden
-			if(nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
+		//set of all the possible types for the hidden token
+		Set<String> typesOfTokensBefore = new HashSet<String>();
+		typesOfTokensBefore.addAll(rolesTaken);		
+		
+		if(player.getPosition() != 1){
+			
+			//All the diamonds are still in the box AND no token has been hidden 
+			if(box.getDiamonds() == App.rules.getNumberOfDiamonds() && nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
 				configBefore = permutation(rolesTaken);
 			}
-			//one token has been hidden
-			else{
-				//set of all the possible types for the hidden token
-				Set<String> typesOfTokensBefore = new HashSet<String>();
-				typesOfTokensBefore.addAll(rolesTaken);
+			// All the players before have taken a token AND a token was moved aside by the first player
+			else if(nbTokensBeforeStart - (player.getPosition() - 1) - 1 == box.getTokens().size()){
 				
 				//add permutations for each possible hidden token 
 				for(String role : typesOfTokensBefore){
 					ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
 					tmp.remove(role);
+					configBefore.addAll(permutation(tmp));			
+				}
+			}
+			/*
+			 * All the players before the current player have stolen
+			 * OR
+			 * If there is only one token missing. The current player assumes that the first player hid a token,
+			 * so all previous players are thieves.
+			 */ 
+			else if(box.getTokens().size() == nbTokensBeforeStart || box.getTokens().size() == nbTokensBeforeStart - 1){
+				ArrayList<String> thievesList = new ArrayList<String>(Collections.nCopies(player.getPosition() - 1, App.rules.getNameThief()));
+				configBefore.add(thievesList);
+			}
+			/* 
+			 * The current player assumes that the first player moved aside a token,
+			 * to get the upper bound of the number of thieves.
+			 * So even if everybody took a token and the first player didn't remove a token,
+			 * The current player will assume that the first player took away one token.
+			 */
+			else{
+				int thievesUpperBound = (player.getPosition() - 1) - (nbTokensBeforeStart - box.getTokens().size() - 1);
+				int thievesLowerBound = thievesUpperBound - 1;
+				
+				ArrayList<String> tmp1 = new ArrayList<String>(Collections.nCopies(thievesLowerBound, App.rules.getNameThief()));
+				ArrayList<String> tmp2 = new ArrayList<String>(Collections.nCopies(thievesUpperBound, App.rules.getNameThief()));
+			
+				tmp1.addAll(rolesTaken);
+				configBefore.addAll(permutation(tmp1));
+				tmp2.addAll(rolesTaken);
+				
+				//add permutations for each possible hidden token 
+				for(String role : typesOfTokensBefore){
+					ArrayList<String> tmp = new ArrayList<String>(tmp2);
+					tmp.remove(role);
 					configBefore.addAll(permutation(tmp));
-					
 				}
 				
 			}
+			
+			/**
+			 * TODO
+			 * Voir s'il est possible de determiner si un role a ete ecarte ou non
+			 */
 		}
 		
-		//
-		else{
-			int thievesUpperBound = ThievesUpperBound(box);
-			
-			if(thievesUpperBound == 0){
-				configBefore.addAll(permutation(rolesTaken));
-			}
-			else{
-				for(int i=1; i <= thievesUpperBound; i++){
-					
-				}
-			}
-			
-		}
-		
+	
 		/**
 		 * TODO
-		 * Voir s'il est possible de determiner si un role a ete ecarte ou non
+		 * configAfter
 		 */
-	
-		
-		
+		return configBefore;
 	}
 	
 	/**
 	 * all the possible permutations for a given list of roles
 	 */
 	public static List<ArrayList<String>> permutation(List<String> rolesTaken){
+		
+		if(rolesTaken.size() != player.getPosition()){
+			System.out.println("error in permutation: wrong number of elements");
+		}
 		
 		List<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		
@@ -132,57 +165,6 @@ public class IAController implements PlayerController {
 		
 	}
 	
-	public int ThievesUpperBound(Box box){
-		
-		int nbTokensBeforeStart = App.rules.getTokensFor(GameController.getNumberOfPlayers()).size();
-		
-		// The player is the first player
-		if(player.getPosition() == 1){
-			return 0;
-		}
-		// All the diamonds are still in the box
-		else if(box.getDiamonds() == App.rules.getNumberOfDiamonds()){
-			return 0;
-		}
-		// All the players before the current player have stolen
-		else if(box.getTokens().size() == nbTokensBeforeStart){
-			return player.getPosition() - 1;
-		}
-		//There is only one token missing. If the first player hid a token, all previous players are thieves
-		else if(box.getTokens().size() == nbTokensBeforeStart - 1){
-			return player.getPosition() - 1;
-		}
-		
-		// Case of a player at the "start" of the table, where for each player the choice to take a token was always available
-		if(player.getPosition() <= nbTokensBeforeStart){ 
-			//  Case where all the players before have taken a token plus a token was moved aside by the first player
-			if(nbTokensBeforeStart - (player.getPosition() - 1) - 1 == box.getTokens().size()){
-				return 0;
-			}
-			/* Critical case: the current player assume that the first player moved aside a token
-			 * to get the upper bound of the thieves' number.
-			 * So even if everybody took a token and the first player didn't removed a token,
-			 * The current player will assume that the first player took away one token and
-			 * that there is one thief among the players
-			 */ 
-			else{
-				return (player.getPosition() - 1) - (nbTokensBeforeStart - box.getTokens().size() - 1);
-			}
-		}
-		
-		/**
-		 * TODO
-		 * gestions des dernieres positions
-		 * 
-		 */		
-		
-		//No tokens left in the box and the first player may have hidden one
-		if(box.getTokens().isEmpty()){
-			return player.getPosition() - 1 - (nbTokensBeforeStart - 1);
-		}		
-		return 0;
-	}
-	
 	/**
 	 * Reflechir a la possibilite d'eliminer les doublons
 	 * @return
@@ -204,11 +186,13 @@ public class IAController implements PlayerController {
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add("chauffeur");
 		stringList.add("fidele");
-		//stringList.add("agent");
-		stringList.add("fidele");
+		stringList.add("agent");
+		//stringList.add("fidele");
 		//stringList.add("voleur");
 		
-		List<ArrayList<String>> result = IAController.permutation(stringList);
+		Box testBox = new Box(15, stringList);
+		
+		List<ArrayList<String>> result = IAController.rolesDistribution(testBox);
 		
 		for (List<String> al : result) {
 	        String appender = "";
