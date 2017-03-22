@@ -25,7 +25,10 @@ import sun.audio.AudioStream;
 public class GameController {
 	private static int currentPlayer;
 	private static int currentTurn;
-	private static int numberOfPlayers;
+	/*
+	 * AJOUT DE LA VALEUR POUR LE DEBUG DE LA CLASSE IACONTROLLER VIA LA CLASSE MAINTESTIACONTROLLER
+	 */
+	private static int numberOfPlayers = 6;
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;
@@ -39,8 +42,7 @@ public class GameController {
 	private Box box /*= new Box(rules.getNumberOfDiamonds(), rules.getTokensFor(numberOfPlayers))*/;
 	
 	public GameController(){
-	}
-	
+	}	
 	
 	/**
 	 * get the updated rules by the the user after the optionview panel
