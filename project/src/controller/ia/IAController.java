@@ -36,12 +36,6 @@ public class IAController implements PlayerController {
 			rolesTaken.remove(s);
 		}
 		
-		/**
-		 * TODO deduire le nombre possibles de voleurs et generer les mondes en consequence
-		 */		
-		int maxNbThieves = ThievesUpperBound(box);
-		
-		
 //		rolesLeft.add(App.rules.getNameStreetUpchin());
 //		if(box.getDiamonds() != 0){
 //			rolesLeft.add(App.rules.getNameThief());
@@ -69,6 +63,7 @@ public class IAController implements PlayerController {
 				Set<String> typesOfTokensBefore = new HashSet<String>();
 				typesOfTokensBefore.addAll(rolesTaken);
 				
+				//add permutations for each possible hidden token 
 				for(String role : typesOfTokensBefore){
 					ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
 					tmp.remove(role);
@@ -77,6 +72,21 @@ public class IAController implements PlayerController {
 				}
 				
 			}
+		}
+		
+		//
+		else{
+			int thievesUpperBound = ThievesUpperBound(box);
+			
+			if(thievesUpperBound == 0){
+				configBefore.addAll(permutation(rolesTaken));
+			}
+			else{
+				for(int i=1; i <= thievesUpperBound; i++){
+					
+				}
+			}
+			
 		}
 		
 		/**
