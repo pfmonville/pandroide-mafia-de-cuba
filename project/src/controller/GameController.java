@@ -60,13 +60,13 @@ public class GameController {
 	 */
 	private void getRules(){
 		//for the first part of the game, the godFather doesn't play
-		this.tokenHidden = null;
+		this.setTokenHidden(null);
 		setDiamondsHidden(0);
 		this.actualPlayer = 1;
 		this.actualTurn = 0;
 		this.firstHalf = true;
 		this.numberOfThievesCaught = 0;
-		this.diamondsTakenBack = 0;
+		this.setDiamondsTakenBack(0);
 		this.numberOfPlayer = App.rules.getCurrentNumberOfPlayer();
 		this.gameHistory = new ArrayList<>();
 		this.humanPosition = App.rules.getHumanPosition();
@@ -184,6 +184,7 @@ public class GameController {
 	 * ask to the godFather how many diamonds he wants to hide
 	 */
 	private void prepareBox(){
+		App.gv.displayBoxAnimation(1);
 		if(this.isActualPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
@@ -213,6 +214,7 @@ public class GameController {
 	 * Start the next turn in the first half of the game
 	 */
 	private void nextTurn(){
+		App.gv.displayBoxAnimation(this.actualPlayer);
 		if(this.isActualPlayerHuman()){
 			App.gv.playerPickView();
 		}else{
@@ -228,7 +230,7 @@ public class GameController {
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden){
 		if(tokenHidden != null){
 			if(players.get(this.actualPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
-				this.tokenHidden = tokenHidden;
+				this.setTokenHidden(tokenHidden);
 			}else{
 				//TODO raise pickingStrategyError("either you're not the first player or the token name is not valid")
 			}
@@ -261,8 +263,11 @@ public class GameController {
 		
 		//if this is the last player then start the second half
 		if(players.get(this.actualPlayer).isLastPlayer()){
+			App.gv.displayBoxAnimation(1);
 			this.actualPlayer = 1;
 			this.actualTurn = 1;
+			if(App.rules.isAllIA())
+				App.gv.createInfoBoxIA();
 			beginSecondHalf();
 		}else{
 			this.actualPlayer ++;
@@ -326,7 +331,7 @@ public class GameController {
 		}
 		if(secret.getRole() == App.rules.getNameThief()){
 			this.numberOfThievesCaught += 1;
-			this.diamondsTakenBack += secret.getDiamondsTaken();
+			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			//update the number of diamonds taken back in display
 			if(hasGodFatherWon()){
 				//TODO display winning 
@@ -563,5 +568,25 @@ public class GameController {
 	
 	public Player getHumanPlayer(){
 		return players.get(humanPosition);
+	}
+
+
+	public String getTokenHidden() {
+		return tokenHidden;
+	}
+
+
+	public void setTokenHidden(String tokenHidden) {
+		this.tokenHidden = tokenHidden;
+	}
+
+
+	public int getDiamondsTakenBack() {
+		return diamondsTakenBack;
+	}
+
+
+	public void setDiamondsTakenBack(int diamondsTakenBack) {
+		this.diamondsTakenBack = diamondsTakenBack;
 	}
 }

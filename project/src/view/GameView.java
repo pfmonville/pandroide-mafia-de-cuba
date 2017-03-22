@@ -2,6 +2,8 @@ package view;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -59,6 +61,8 @@ public class GameView extends View{
 	
 	private Button box, player, other, emptyPocket, askQuestion, answerTo ;
 	private Button replay, inspect, rules;
+	
+	private ImageView boxOnTable;
 	
 	private int target, qrID ;
 
@@ -270,7 +274,7 @@ public class GameView extends View{
 		indexImgPath.add(0);indexImgPath.add(1);indexImgPath.add(2);indexImgPath.add(3);
 		indexImgPath.add(4);indexImgPath.add(5);indexImgPath.add(6);indexImgPath.add(7);
 		indexImgPath.add(8);indexImgPath.add(9);indexImgPath.add(10);
-		
+ 		
 		for (int i = 1; i < nbPlayers; i++){
 			Button b = new Button();
 			b.setPrefSize(super.getWidth()/14, super.getHeight()/12);
@@ -475,9 +479,9 @@ public class GameView extends View{
 		info = new HBox();
 		info.setSpacing(50);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
-		info.setAlignment(Pos.CENTER_RIGHT);
-		diamondsBack = new Label("0"); //nb diams get back
-		diamondsAway = new Label("5"); // nb diams hidden by godfather 
+		info.setAlignment(Pos.CENTER);
+		diamondsBack = new Label(""+App.gameController.getDiamondsTakenBack()); //nb diams get back
+		diamondsAway = new Label(""+App.gameController.getDiamondsHidden()); // nb diams hidden by godfather 
 		jokers = new Label(App.rules.getNumberOfJokers()+"");
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
 		diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
@@ -493,10 +497,78 @@ public class GameView extends View{
 		info.getChildren().addAll(diamondsAway, diamondsBack, jokers);
 
 		info.setId("info");
+
+		//BOX INFO
+		HBox infoAboutBox= new HBox();
+		infoAboutBox.setSpacing(15); infoAboutBox.setAlignment(Pos.CENTER_LEFT);
+		int nbLoyal = 0, nbDriver =0, nbAgent=0, nbCleaner = 0;
+		ArrayList<String>  tokens= App.gameController.getBox().getTokens();
+		for (String tok : tokens){
+			if (tok.equals("Fidèle"))
+				nbLoyal++;
+			if(tok.equals("Chauffeur"))
+				nbDriver++;
+			if(tok.equals("FBI") || tok.equals("CIA"))
+				nbAgent++;
+			if(tok.equals("Nettoyeur"))
+				nbCleaner++;
+		}
+		Label boxImg = new Label();
+		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
+		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que le Parrain a reçu :"));
+		Label box = new Label(":"); 
+		box.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+		infoAboutBox.getChildren().addAll(boxImg, box);
 		
-		questionsArea.getChildren().add(info);
+		if(App.gameController.getBox().getDiamonds()>0){
+			Label diamImg = new Label();
+			diamImg.setGraphic(new ImageView(new Image(Theme.pathDiamond)));
+			diamImg.setTooltip(super.createStandardTooltip("Diamants"));
+			Label diamNb = new Label("x "+App.gameController.getBox().getDiamonds());
+			diamNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+			
+			infoAboutBox.getChildren().addAll(diamImg,diamNb);
+		}
+		
+		if(nbLoyal > 0){
+			Label loyalImg = new Label();
+			loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
+			loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
+			Label loyalNb = new Label("x "+nbLoyal); 
+			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			
+			infoAboutBox.getChildren().addAll(loyalImg,loyalNb);
+		}
+		if(nbDriver > 0){
+			Label driverImg = new Label();
+			driverImg.setGraphic(new ImageView( new Image(Theme.pathDriver)));
+			driverImg.setTooltip(super.createStandardTooltip("Chauffeur"));
+			Label driverNb = new Label("x "+nbDriver); 
+			driverNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			
+			infoAboutBox.getChildren().addAll(driverImg,driverNb);
+		}
+		if(nbAgent > 0){
+			Label agentImg = new Label();
+			agentImg.setGraphic(new ImageView( new Image(Theme.pathAgent)));
+			agentImg.setTooltip(super.createStandardTooltip("Agent"));
+			Label agentNb = new Label("x "+nbAgent); 
+			agentNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			
+			infoAboutBox.getChildren().addAll(agentImg,agentNb);
+		}
+		if(nbCleaner > 0){
+			Label cleanerImg = new Label();
+			cleanerImg.setGraphic(new ImageView( new Image(Theme.pathCleaner)));
+			cleanerImg.setTooltip(super.createStandardTooltip("Nettoyeur"));
+			Label cleanerNb = new Label("x "+nbCleaner); 
+			cleanerNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+			
+			infoAboutBox.getChildren().addAll(cleanerImg,cleanerNb);		
+		}
+		
+		questionsArea.getChildren().addAll(infoAboutBox,info);
 		questionsArea.setAlignment(Pos.CENTER);
-		//TODO pour les ia, afficher le contenu de la boite que le parain a récupéré
 	}
 	
 	
@@ -510,7 +582,7 @@ public class GameView extends View{
 		info.setSpacing(60);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
 		HBox whatPlayerPicked = new HBox(),infoAboutBox = new HBox(), infoAboutGame = new HBox();
-		infoAboutBox.setSpacing(15); infoAboutGame.setSpacing(15);
+		infoAboutBox.setSpacing(15); infoAboutGame.setSpacing(15); whatPlayerPicked.setSpacing(10);
 		int nbLoyal = 0, nbDriver =0, nbAgent=0, nbCleaner = 0;
 		//WHAT PLAYER HAS PICKED
 		if(App.rules.getHumanPosition()!=1){
@@ -529,15 +601,35 @@ public class GameView extends View{
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
 				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
+				diamonds.setStyle("-fx-text-fill:white;-fx-font: 25px Tahoma;");
 			}
-			Label playerRole = new Label();
+			Label playerRole = new Label(), tokenHidden=null ;
 			playerRole.setGraphic(new ImageView( new Image(token)));
-			playerRole.setTooltip(super.createStandardTooltip(App.gameController.getHumanPlayer().getRole().getName()));
+			playerRole.setTooltip(super.createStandardTooltip("Vous êtes "+role));
 			
-			whatPlayerPicked.getChildren().addAll(playerRole, diamonds);
+			if(App.rules.getHumanPosition()==2 && App.gameController.getTokenHidden()!=null){
+				tokenHidden=new Label();
+				String tH = App.gameController.getTokenHidden();
+				String img =null;
+				if(tH.equals("Fidèle"))
+					img= Theme.pathLoyalHencman;
+				if(tH.equals("Chauffeur"))
+					img = Theme.pathDriver;
+				if(tH.equals("FBI") || tH.equals("CIA"))
+					img = Theme.pathAgent;
+				if(tH.equals("Nettoyeur"))
+					img = Theme.pathCleaner;
+				tokenHidden.setGraphic(new ImageView( new Image(img)));
+				tokenHidden.setTooltip(super.createStandardTooltip("Vous avez écarté : "+tH));
+			}
+			
+			if(tokenHidden != null)
+				whatPlayerPicked.getChildren().addAll(tokenHidden,playerRole, diamonds);
+			else 
+				whatPlayerPicked.getChildren().addAll(playerRole, diamonds);
 		}
 		// GAME INFO
-		diamondsBack = new Label("0"); //nb diams got back by godfather
+		diamondsBack = new Label(App.gameController.getDiamondsTakenBack()+""); //nb diams got back by godfather
 		if(App.rules.getHumanPosition()==1){
 			diamondsAway = new Label(App.gameController.getDiamondsHidden()+""); // nb diams hidden by godfather 
 			diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
@@ -1036,15 +1128,68 @@ public class GameView extends View{
 	 */
 	public void setInitialGameView(){
 		// if only IA
-		if (App.rules.isAllIA()){
+		if (App.rules.isAllIA())
 			createIAButton(App.rules.getCurrentNumberOfPlayer(),-1);
-			createInfoBoxIA();
-		}
-		else {
+		else 
 			//if human player
 			createIAButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
-		}
 	}
+	
+	
+	
+	
+	
+	/**
+	 * show the box around the table
+	 */
+	public void displayBoxAnimation(int position){
+//		int top=0,left=-500;
+//		if(boxOnTable != null)
+//			table.getChildren().remove(boxOnTable);
+//		boxOnTable = new ImageView(new Image(Theme.pathBox));
+//		
+//		if(position==1){
+//			top = super.getHeight()/40;
+//		} else {
+//			/*
+//			 * si il y a <= 9 joueurs : pour les 4 premiers (de 2 à 5) top à une meme position et left incrémenté
+//			 * 							(de 6 à 9) top meme position et left décrémenté
+//			 */ 
+//			if(App.rules.getCurrentNumberOfPlayer()<=9){			
+//				if(position <= 5){
+//					top =-200;
+//					left=-500+(250*(position-1));					
+//				} else {
+//					top = 200;
+//					left=500-(250*(position%5));
+//				}
+//			/*
+//			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 à 5 et de 9 à 12)
+//			 * 						  pour les joueurs de droite (6 à 8) left est le meme et top incrémenté
+//			 */
+//			} else {
+//				if(position <= 5){
+//					top =-200;
+//					left=-500+(250*(position-1));					
+//				} else {
+//					if(position==6 || (position ==7 && App.rules.getCurrentNumberOfPlayer()==11) || (position==8 &&App.rules.getCurrentNumberOfPlayer()==12)){
+//						left = 500;
+//						top = -200+(150*(position%6));
+//					} else {
+//						top = 200;
+//						left=500-(250*(position%9));
+//					}
+//				}
+//			}
+//		}
+//		
+//		StackPane.setMargin(boxOnTable, new Insets(top,0,0,left));
+//		table.getChildren().add(boxOnTable);
+//	
+
+	}
+	
+	
 	
 	
 	
@@ -1064,5 +1209,4 @@ public class GameView extends View{
 
  
 	//TODO affichage boite en train de circuler
-	//TODO après validation, affichage fenetre des réponses + infos du jeu + ce qu'on a pris
 }
