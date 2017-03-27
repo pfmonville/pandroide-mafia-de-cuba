@@ -11,15 +11,15 @@ public class MainTestIAController {
 
 	public static void main(String[] args){
 		ArrayList<String> stringList = new ArrayList<String>();
-		stringList.add(App.rules.getNameDriver());
-		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameDriver());
+//		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgent());
 		
 		
 		int nombreDeDiamantsDansBoite = 11;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
-		int positionDuJoueur = 3;
+		int positionDuJoueur = 5;
 		
 		IAController iac = new IAController(new Player(null, positionDuJoueur, false, false));
 		

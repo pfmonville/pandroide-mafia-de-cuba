@@ -53,7 +53,7 @@ public class IAController implements PlayerController {
 		
 		/**
 		 * TODO
-		 * quand le joueur reçoit la boite :
+		 * quand le joueur reï¿½oit la boite :
 		 * si il y a 15 diamants, le joueur sait si un role a ete ecarte => un seul appel de permutation dans le cas ou aucun role n'a ete ecarte, sinon boucle for
 		 * si il y a moins de 10 diamants => AU MOINS 1 voleur, deduire le nombre max de voleurs possibles
 		 * si il y a entre 10 et 15 diamants => voleurs potentiels, deduire le nombre max de voleurs possibles
@@ -70,39 +70,68 @@ public class IAController implements PlayerController {
 		
 		if(player.getPosition() != 1){
 			
-			//All the diamonds are still in the box AND no token has been hidden 
-			if(box.getDiamonds() == App.rules.getNumberOfDiamonds() && nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
-				configBefore = permutation(rolesTaken);
-			}
-			else{
-				//All the previous players have taken a token
-				if(App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds() <= box.getDiamonds() && nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
-					System.out.println("cas optimiste");
-					configBefore = permutation(rolesTaken);
-					
-					//TODO cas ou un jeton a ete ecarte
+			// All the players before have taken a token AND a token was moved aside by the first player
+			if(nbTokensBeforeStart - box.getTokens().size() - 1 == player.getPosition() - 1){
+				System.out.println("tous les joueurs on pris un token et un token a ete ecarte");
+				//add permutations for each possible hidden token 
+				for(String role : typesOfTokensBefore){
+					ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
+					tmp.remove(role);
+					configBefore.addAll(permutation(tmp));			
 				}
-				// All the players before have taken a token AND a token was moved aside by the first player
-				if(nbTokensBeforeStart - (player.getPosition() - 1) - 1 == box.getTokens().size()){
-					System.out.println("tous les joueurs on pris un token et un token a ete ecarte");
-					//add permutations for each possible hidden token 
+			}
+			// Number of missing tokens = Number of previous players 
+			else if(nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
+				// All the diamonds are still in the box => no thief
+				if(box.getDiamonds() == App.rules.getNumberOfDiamonds()){
+					configBefore.addAll(permutation(rolesTaken));
+				}
+				// Number of diamonds in [10 ; 15] => 1 possible thief
+				else if(App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds() <= box.getDiamonds()){
+					// Optimistic case: All the previous players have taken a token
+					ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
+					configBefore.addAll(permutation(tmp));
+					
+					// Pessimistic case: The first player hid a token => There is one thief
+					// Add permutations for each possible hidden token
+					
+					for(String role : typesOfTokensBefore){
+						tmp = new ArrayList<String>(rolesTaken);
+						tmp.remove(role);
+						tmp.add(App.rules.getNameThief());
+						configBefore.addAll(permutation(tmp));
+					}
+				}
+				// Number of diamonds < 10 => 1 thief for sure + 1 hidden token
+				else{
+					// Add permutations for each possible hidden token 
 					for(String role : typesOfTokensBefore){
 						ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
 						tmp.remove(role);
-						configBefore.addAll(permutation(tmp));			
+						tmp.add(App.rules.getNameThief());
+						configBefore.addAll(permutation(tmp));
 					}
-				}
-				/*
-				 * All the players before the current player have stolen
-				 * OR
-				 * If there is only one token missing. The current player assumes that the first player hid a token,
-				 * so all previous players are thieves.
-				 */ 
-				else if(box.getTokens().size() == nbTokensBeforeStart || box.getTokens().size() == nbTokensBeforeStart - 1){
-					System.out.println("tous des voleurs OU  seul token manquant => tous des voleurs");
+				}			
+			}
+			// Number of missing tokens < Number of previous players => there is some filthy thieves!
+			else{				
+				// All previous players are thieves
+				if(box.getTokens().size() == nbTokensBeforeStart){
 					ArrayList<String> thievesList = new ArrayList<String>(Collections.nCopies(player.getPosition() - 1, App.rules.getNameThief()));
 					configBefore.add(thievesList);
 				}
+				// One token missing => 1 token hidden and only thieves OR no token hidden so 1 player with a token, the others are thieves
+//				else if(box.getTokens().size() == nbTokensBeforeStart - 1){
+//					ArrayList<String> thievesList = new ArrayList<String>(Collections.nCopies(player.getPosition() - 1, App.rules.getNameThief()));
+//					configBefore.add(thievesList);
+//					
+//					thievesList.remove(0);
+//					thievesList.addAll(rolesTaken);
+//					
+//					// TODO va generer BEAUCOUP de doublons... ameliorer la fonction permutation 
+//					configBefore.addAll(permutation(thievesList));
+//					
+//				}
 				/* 
 				 * The current player assumes that the first player moved aside a token,
 				 * to get the upper bound of the number of thieves.
@@ -110,7 +139,6 @@ public class IAController implements PlayerController {
 				 * The current player will assume that the first player took away one token.
 				 */
 				else{
-					System.out.println("cas pessimiste");
 					int thievesUpperBound = (player.getPosition() - 1) - (nbTokensBeforeStart - box.getTokens().size() - 1);
 					int thievesLowerBound = thievesUpperBound - 1;
 					
@@ -129,13 +157,13 @@ public class IAController implements PlayerController {
 					}
 					
 				}
-				
-				/**
-				 * TODO
-				 * Voir s'il est possible de determiner si un role a ete ecarte ou non
-				 */
 			}
 		}
+		
+		/**
+		 * TODO
+		 * Voir s'il est possible de determiner si un role a ete ecarte ou non
+		 */
 			
 		/**
 		 * TODO
@@ -174,7 +202,9 @@ public class IAController implements PlayerController {
 					continue;
 				}
 				tmp.add(i, firstRole);
-				result.add(tmp);			
+				if(!result.contains(tmp)){
+					result.add(tmp);
+				}
 				
 			}
 		}
