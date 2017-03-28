@@ -4,6 +4,7 @@ import controller.App;
 import controller.IAController;
 import controller.PlayerController;
 import controller.ia.IAGodFatherController;
+import error.PrepareBoxStrategyError;
 import model.Box;
 
 public class PrepareBoxRunnable implements Runnable{
@@ -19,7 +20,12 @@ public class PrepareBoxRunnable implements Runnable{
 	@Override
 	public void run() {
 		int response = ((IAGodFatherController)playerController).chooseHowManyDiamondsToHide(box);
-		App.gameController.responsePrepareBox(response);
+		try {
+			App.gameController.responsePrepareBox(response);
+		} catch (PrepareBoxStrategyError e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
