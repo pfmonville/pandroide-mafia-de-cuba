@@ -574,10 +574,13 @@ public class GameView extends View{
 	
 	
 	
+	
+	
 	/**
 	 * display information about the game (number of jokers, number of diamonds got back etc..) for human players
 	 */
 	public void createInfoBoxHumanPlayer(){
+
 		info = new HBox();
 		info.setSpacing(60);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
@@ -601,7 +604,7 @@ public class GameView extends View{
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
 				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
-				diamonds.setStyle("-fx-text-fill:white;-fx-font: 25px Tahoma;");
+				diamonds.setStyle("-fx-text-fill:white;-fx-font: 22px Tahoma;");
 			}
 			Label playerRole = new Label(), tokenHidden=null ;
 			playerRole.setGraphic(new ImageView( new Image(token)));
@@ -652,8 +655,7 @@ public class GameView extends View{
 		
 		//BOX INFO
 		// get what is in the box
-		//TODO récupérer ce qu'il y a dans la box QUAND le joueur l'a reçue
-		ArrayList<String>  tokens= App.gameController.getBox().getTokens();
+		ArrayList<String>  tokens= App.gameController.getHumanPlayer().getBox().getTokens();
 		for (String tok : tokens){
 			if (tok.equals("Fidèle"))
 				nbLoyal++;
@@ -668,15 +670,15 @@ public class GameView extends View{
 		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
 		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que vous avez reçue :"));
 		Label box = new Label(":"); 
-		box.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+		box.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
 		infoAboutBox.getChildren().addAll(boxImg, box);
 		
-		if(App.gameController.getBox().getDiamonds()>0){
+		if(App.gameController.getHumanPlayer().getBox().getDiamonds()>0){
 			Label diamImg = new Label();
 			diamImg.setGraphic(new ImageView(new Image(Theme.pathDiamond)));
 			diamImg.setTooltip(super.createStandardTooltip("Diamants"));
-			Label diamNb = new Label("x "+App.gameController.getBox().getDiamonds());
-			diamNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+			Label diamNb = new Label("x "+App.gameController.getHumanPlayer().getBox().getDiamonds());
+			diamNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
 			
 			infoAboutBox.getChildren().addAll(diamImg,diamNb);
 		}
@@ -686,7 +688,7 @@ public class GameView extends View{
 			loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
 			loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
 			Label loyalNb = new Label("x "+nbLoyal); 
-			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(loyalImg,loyalNb);
 		}
@@ -695,7 +697,7 @@ public class GameView extends View{
 			driverImg.setGraphic(new ImageView( new Image(Theme.pathDriver)));
 			driverImg.setTooltip(super.createStandardTooltip("Chauffeur"));
 			Label driverNb = new Label("x "+nbDriver); 
-			driverNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			driverNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(driverImg,driverNb);
 		}
@@ -704,7 +706,7 @@ public class GameView extends View{
 			agentImg.setGraphic(new ImageView( new Image(Theme.pathAgent)));
 			agentImg.setTooltip(super.createStandardTooltip("Agent"));
 			Label agentNb = new Label("x "+nbAgent); 
-			agentNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
+			agentNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(agentImg,agentNb);
 		}
@@ -713,7 +715,7 @@ public class GameView extends View{
 			cleanerImg.setGraphic(new ImageView( new Image(Theme.pathCleaner)));
 			cleanerImg.setTooltip(super.createStandardTooltip("Nettoyeur"));
 			Label cleanerNb = new Label("x "+nbCleaner); 
-			cleanerNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
+			cleanerNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
 			
 			infoAboutBox.getChildren().addAll(cleanerImg,cleanerNb);		
 		}
@@ -834,7 +836,7 @@ public class GameView extends View{
 		//**********************************
 		// if first player, can hide a token
 		ComboBox<String> chooseToken = new ComboBox<String>(FXCollections.observableArrayList("Aucun"));
-		if(App.rules.getHumanPosition()-1==1){
+		if(App.rules.getHumanPosition()==2){
 			Label instruction = new Label("Quel jeton voulez-vous écarter ?");
 			instruction.setStyle("-fx-text-fill:white; -fx-font: 25px Tahoma;");
 			if(NBLOYAL>0)
@@ -1138,6 +1140,7 @@ public class GameView extends View{
 	
 	
 	
+	//TODO affichage boite en train de circuler
 	
 	/**
 	 * show the box around the table
@@ -1202,11 +1205,5 @@ public class GameView extends View{
 		themeButtons.getChildren().clear();
 		if (info !=null)
 			info.getChildren().clear();
-	}
-	
-	
-	
-
- 
-	//TODO affichage boite en train de circuler
+	} 
 }

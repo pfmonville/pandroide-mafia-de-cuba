@@ -9,6 +9,7 @@ public class Player {
 	private boolean human;
 	private boolean lastPlayer;
 	private boolean thief;
+	private Box box ;
 	
 	
 	public Player(int pos, boolean human, boolean lastPlayer){
@@ -119,7 +120,13 @@ public class Player {
 		return thief;
 	}
 	
+	public Box getBox(){
+		return box ;
+	}
 	
+	public void setBox(Box box){
+		this.box = box ;
+	}
 	
 	
 }

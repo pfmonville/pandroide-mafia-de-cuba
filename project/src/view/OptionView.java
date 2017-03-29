@@ -160,6 +160,7 @@ public class OptionView extends View{
 		Image iconHU = new Image(Theme.pathHumanIcon);
 		Image iconIA = new Image(Theme.pathIAIcon);
 		
+		//TODO probleme : quand on sélectionne IA, prend en compte la position du joueur--> a desactiver 
 		
 		Label typeOfPlayerLabel = new Label();
 		Image imageJ1 = new Image(Theme.pathTypeOfPlayer);

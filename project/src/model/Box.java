@@ -56,4 +56,8 @@ public class Box {
 		}
 		return false;
 	}
+	
+	public Box clone(){
+		return new Box(diamonds, (ArrayList<String>) tokens.clone());
+	}
 }

@@ -185,6 +185,7 @@ public class GameController {
 	 */
 	private void prepareBox(){
 		App.gv.displayBoxAnimation(1);
+		this.getActualPlayer().setBox(box.clone());
 		if(this.isActualPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
@@ -228,9 +229,11 @@ public class GameController {
 	 * End this turn of the first half
 	 */
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden){
+		this.getActualPlayer().setBox(box.clone()); 
 		if(tokenHidden != null){
 			if(players.get(this.actualPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
+				this.box.removeToken(tokenHidden);
 			}else{
 				//TODO raise pickingStrategyError("either you're not the first player or the token name is not valid")
 			}
@@ -260,10 +263,10 @@ public class GameController {
 			//TODO : raise pickingStrategyError("you have to choose either to pick dimaonds or a token")
 		}
 	
-		
 		//if this is the last player then start the second half
 		if(players.get(this.actualPlayer).isLastPlayer()){
 			App.gv.displayBoxAnimation(1);
+			this.players.get(1).setBox(box.clone());
 			this.actualPlayer = 1;
 			this.actualTurn = 1;
 			if(App.rules.isAllIA())
