@@ -3,7 +3,6 @@ package controller.ia;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import model.Box;
@@ -38,7 +37,7 @@ public class IAController implements PlayerController {
 		 */
 	}
 	
-	public List<ArrayList<String>> rolesDistribution(Box box){
+	public ArrayList<ArrayList<String>> rolesDistribution(Box box){
 		
 		int nbTokensBeforeStart = App.rules.getTokensFor(GameController.getNumberOfPlayers()).size();
 		
@@ -51,18 +50,10 @@ public class IAController implements PlayerController {
 			rolesTaken.remove(s);
 		}
 		
-		/**
-		 * TODO
-		 * quand le joueur re�oit la boite :
-		 * si il y a 15 diamants, le joueur sait si un role a ete ecarte => un seul appel de permutation dans le cas ou aucun role n'a ete ecarte, sinon boucle for
-		 * si il y a moins de 10 diamants => AU MOINS 1 voleur, deduire le nombre max de voleurs possibles
-		 * si il y a entre 10 et 15 diamants => voleurs potentiels, deduire le nombre max de voleurs possibles
-		 */
-		
 		/*
 		 * Creation des mondes possibles pour les joueurs avant le joueur courant
 		 */
-		List<ArrayList<String>> configBefore = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> configBefore = new ArrayList<ArrayList<String>>();
 		
 		//set of all the possible types for the hidden token
 		Set<String> typesOfTokensBefore = new HashSet<String>();
@@ -110,7 +101,12 @@ public class IAController implements PlayerController {
 						tmp.remove(role);
 						tmp.add(App.rules.getNameThief());
 						configBefore.addAll(permutation(tmp));
+						
 					}
+					/*
+					 * TODO: si en plus ndDiamonds == 0 -> le joueur courant et tous les joueurs après sont des enfants des rues
+					 * TODO: si il y d diamants, avec d petit (par ex d = 2), il ne peut y avoir au plus que d voleurs parmi le joueur courant et tous les joueurs suivants.
+					 */					
 				}			
 			}
 			// Number of missing tokens < Number of previous players => there is some filthy thieves!
@@ -120,50 +116,82 @@ public class IAController implements PlayerController {
 					ArrayList<String> thievesList = new ArrayList<String>(Collections.nCopies(player.getPosition() - 1, App.rules.getNameThief()));
 					configBefore.add(thievesList);
 				}
-				// One token missing => 1 token hidden and only thieves OR no token hidden so 1 player with a token, the others are thieves
-//				else if(box.getTokens().size() == nbTokensBeforeStart - 1){
-//					ArrayList<String> thievesList = new ArrayList<String>(Collections.nCopies(player.getPosition() - 1, App.rules.getNameThief()));
-//					configBefore.add(thievesList);
-//					
-//					thievesList.remove(0);
-//					thievesList.addAll(rolesTaken);
-//					
-//					// TODO va generer BEAUCOUP de doublons... ameliorer la fonction permutation 
-//					configBefore.addAll(permutation(thievesList));
-//					
-//				}
+				
 				/* 
-				 * The current player assumes that the first player moved aside a token,
-				 * to get the upper bound of the number of thieves.
-				 * So even if everybody took a token and the first player didn't remove a token,
+				 * The current player assumes both cases where the first player moved aside a token or not,
+				 * to get the upper and the lower bounds of the number of thieves.
+				 * Remark: So even if everybody took a token and the first player didn't remove a token,
 				 * The current player will assume that the first player took away one token.
 				 */
 				else{
 					int thievesUpperBound = (player.getPosition() - 1) - (nbTokensBeforeStart - box.getTokens().size() - 1);
 					int thievesLowerBound = thievesUpperBound - 1;
 					
-					ArrayList<String> tmp1 = new ArrayList<String>(Collections.nCopies(thievesLowerBound, App.rules.getNameThief()));
-					ArrayList<String> tmp2 = new ArrayList<String>(Collections.nCopies(thievesUpperBound, App.rules.getNameThief()));
+					// TODO peut generer BEAUCOUP de doublons... ameliorer la fonction permutation
+					ArrayList<String> upperBoundThievesList = new ArrayList<String>(Collections.nCopies(thievesUpperBound, App.rules.getNameThief()));
+					ArrayList<String> lowerBoundThievesList = new ArrayList<String>(Collections.nCopies(thievesLowerBound, App.rules.getNameThief()));
+					
+					ArrayList<String> tmpUpperBound = new ArrayList<String>(upperBoundThievesList);
+					ArrayList<String> tmpLowerBound = new ArrayList<String>(lowerBoundThievesList);
+					
 				
-					tmp1.addAll(rolesTaken);
-					configBefore.addAll(permutation(tmp1));
-					tmp2.addAll(rolesTaken);
+					tmpLowerBound.addAll(rolesTaken);
+					configBefore.addAll(permutation(tmpLowerBound));
+					tmpUpperBound.addAll(rolesTaken);
 					
 					//add permutations for each possible hidden token 
 					for(String role : typesOfTokensBefore){
-						ArrayList<String> tmp = new ArrayList<String>(tmp2);
+						ArrayList<String> tmp = new ArrayList<String>(tmpUpperBound);
 						tmp.remove(role);
 						configBefore.addAll(permutation(tmp));
+					}
+					
+					if(box.isEmpty()){
+						tmpUpperBound = new ArrayList<String>(upperBoundThievesList);
+						tmpLowerBound = new ArrayList<String>(lowerBoundThievesList);
+						ArrayList<String> streetUrchinsList = new ArrayList<String>();
+						
+						if(tmpLowerBound.size() > 1){
+							
+							while(tmpLowerBound.size() > 1){
+								tmpLowerBound.remove(0);
+								streetUrchinsList.add(App.rules.getNameStreetUpchin());
+								
+								ArrayList<ArrayList<String>> subset = new ArrayList<ArrayList<String>>();
+								ArrayList<String> param = new ArrayList<String>(tmpLowerBound);
+								param.addAll(rolesTaken);
+								subset.addAll(permutation(param));
+								
+								for(ArrayList<String> list : subset){
+									list.addAll(streetUrchinsList);
+								}
+								configBefore.addAll(subset);
+							}
+						}
+						
+						streetUrchinsList = new ArrayList<String>();
+						while(tmpUpperBound.size() > 1){
+							tmpUpperBound.remove(0);
+							streetUrchinsList.add(App.rules.getNameStreetUpchin());
+							
+							ArrayList<ArrayList<String>> subset = new ArrayList<ArrayList<String>>();
+							for(String role : typesOfTokensBefore){
+								ArrayList<String> param = new ArrayList<String>(tmpUpperBound);
+								param.addAll(rolesTaken);									
+								param.remove(role);
+								subset.addAll(permutation(param));
+							}
+						
+							for(ArrayList<String> list : subset){
+								list.addAll(streetUrchinsList);
+							}
+							configBefore.addAll(subset);
+						}
 					}
 					
 				}
 			}
 		}
-		
-		/**
-		 * TODO
-		 * Voir s'il est possible de determiner si un role a ete ecarte ou non
-		 */
 			
 		/**
 		 * TODO
@@ -175,13 +203,13 @@ public class IAController implements PlayerController {
 	/**
 	 * all the possible permutations for a given list of roles
 	 */
-	public List<ArrayList<String>> permutation(List<String> rolesTaken){
+	public ArrayList<ArrayList<String>> permutation(ArrayList<String> rolesTaken){
 		
 //		if(rolesTaken.size() != player.getPosition() - 1){
 //		System.out.println("error in permutation: wrong number of elements");
 //	}
 		
-		List<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
+		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		
 		if(rolesTaken.isEmpty()){
 			result.add(new ArrayList<String>());
@@ -190,9 +218,9 @@ public class IAController implements PlayerController {
 		
 		String firstRole = rolesTaken.remove(0);
 		
-		List<ArrayList<String>> recursiveResult = permutation(rolesTaken);
+		ArrayList<ArrayList<String>> recursiveResult = permutation(rolesTaken);
 		
-		for(List<String> roles : recursiveResult){
+		for(ArrayList<String> roles : recursiveResult){
 			for(int i = 0 ; i <= roles.size() ; i++){
 
 				ArrayList<String> tmp = new ArrayList<String>(roles);

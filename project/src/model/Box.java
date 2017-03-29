@@ -35,4 +35,8 @@ public class Box {
 		tokens = newTokens ;
 	}
 	
+	public boolean isEmpty(){
+		return diamonds == 0 && tokens.isEmpty();
+	}
+	
 }
