@@ -21,6 +21,8 @@ import controller.runnable.EmptyPocketsRunnable;
 import controller.runnable.GetBackTheBoxRunnable;
 import controller.runnable.PickSomethingRunnable;
 import controller.runnable.PrepareBoxRunnable;
+import error.PickingStrategyError;
+import error.PrepareBoxStrategyError;
 import javafx.application.Platform;
 import model.Answer;
 import model.Box;
@@ -190,22 +192,23 @@ public class GameController {
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
-			//thread.start();
-			Platform.runLater(thread);
+			thread.start();
+			//Platform.runLater(thread);
 		}
 	}
 	
 	/**
 	 * receive the number of diamonds hidden by the godFather and start passing the box
 	 * @param numberOfDiamondsHidden
+	 * @throws PrepareBoxStrategyError 
 	 */
-	public void responsePrepareBox(int numberOfDiamondsHidden){
+	public void responsePrepareBox(int numberOfDiamondsHidden) throws PrepareBoxStrategyError{
 		if(numberOfDiamondsHidden > App.rules.getMaxHiddenDiamonds() || App.rules.getNumberOfDiamonds() - numberOfDiamondsHidden < 0){
-			//TODO : raise PrepareBoxStrategyError("you can't hide this much of diamonds")
+			throw new PrepareBoxStrategyError("you can't hide this much of diamonds");
 		}else{
 			this.box.removeDiamonds(numberOfDiamondsHidden);
 			this.setDiamondsHidden(numberOfDiamondsHidden);
-			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
+			((GodFather)players.get(0).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
 		this.actualPlayer = 2;
 		this.nextTurn();
@@ -215,52 +218,61 @@ public class GameController {
 	 * Start the next turn in the first half of the game
 	 */
 	private void nextTurn(){
+		//Forcing pause (only for testing)
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		App.gv.displayBoxAnimation(this.actualPlayer);
 		if(this.isActualPlayerHuman()){
 			App.gv.playerPickView();
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
-			//thread.start();
-			Platform.runLater(thread);
+			thread.start();
+			//Platform.runLater(thread);
 		}
 	}
 	
 	/**
 	 * End this turn of the first half
+	 * @throws PickingStrategyError 
 	 */
-	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden){
+	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden) throws PickingStrategyError{
+
 		this.getActualPlayer().setBox(box.clone()); 
 		if(tokenHidden != null){
 			if(players.get(this.actualPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
 				this.box.removeToken(tokenHidden);
 			}else{
-				//TODO raise pickingStrategyError("either you're not the first player or the token name is not valid")
+				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
 			}
 		}
 		if(diamondsPicked > 0 && tokenPicked != null){
-			//TODO : raise pickingStrategyError("you can't take a token and steal diamonds")
+			throw new PickingStrategyError("you can't take a token and steal diamonds");
 		}
 		if(tokenPicked != null){
 			if(App.rules.isAValidToken(tokenPicked)){
 				if(!this.box.removeToken(tokenPicked)){
-//					TODO: raise pickingStrategyError("this token is not in the box")
+					throw new PickingStrategyError("this token is not in the box");
 				}
 				players.get(position).takeToken(tokenPicked);
 				
 			}else{
-				//TODO : raise pickingStrategyError("not a valid token")
+				throw new PickingStrategyError("not a valid token");
 			}
 		}else if(diamondsPicked > 0){
 			if(!this.box.removeDiamonds(diamondsPicked)){
-//				TODO : raise pickingStrategyError("there is not enough diamonds in the box")
+				throw new PickingStrategyError("there is not enough diamonds in the box");
 			}
 			players.get(position).takeDiamonds(diamondsPicked);
 		}else if(this.box.isEmpty()){
 			//since tokenPicked is null takeToken automatically assigns streetUpchin to this player
 			players.get(position).takeToken(tokenPicked);
 		}else{
-			//TODO : raise pickingStrategyError("you have to choose either to pick dimaonds or a token")
+			throw new PickingStrategyError("you have to choose either to pick dimaonds or a token");
 		}
 	
 		//if this is the last player then start the second half
@@ -287,8 +299,8 @@ public class GameController {
 	
 	private void giveTheBoxToGodFather(){
 		Thread thread = new Thread(new GetBackTheBoxRunnable(playerControllers.get(1), this.box));
-		//thread.start();
-		Platform.runLater(thread);
+		thread.start();
+		//Platform.runLater(thread);
 	}
 	
 	public void SelectingGodFathersAction(){
@@ -397,8 +409,7 @@ public class GameController {
 	 * gets informations from the updating rules after the option view and creates corresponding players
 	 */
 	private void getPlayers(){
-		
-		for(int i = 1; i <= this.numberOfPlayer; i++){
+		for(int i = 0; i < this.numberOfPlayer; i++){
 			if(this.humanPosition == i){
 				this.players.put(i, new Player(i, true, false));
 			}else{
@@ -406,9 +417,9 @@ public class GameController {
 			}
 		}
 		//set the last player boolean "lastPlayer" to true
-		this.players.get(this.numberOfPlayer).setLastPlayer(true);
+		this.players.get(this.numberOfPlayer-1).setLastPlayer(true);
 		//set the role for the first player to GodFather
-		this.players.get(1).setRole(new GodFather(App.rules.getNumberOfJokers()));
+		this.players.get(0).setRole(new GodFather(App.rules.getNumberOfJokers()));
 	}
 	
 	
@@ -455,6 +466,10 @@ public class GameController {
 			Player player = entry.getValue();
 			int position = entry.getKey();
 			if (!player.isHuman()){
+				System.out.println("player = " + player.toString() +" position"+ player.getPosition());
+				//problème le rôle est vide ???
+				System.out.println(" role = " + player.getRole().toString());
+				System.out.println( " roleName = " + player.getRole().getName());
 				switch(player.getRole().getName()){
 				case("GodFather"):
 					((IAGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());

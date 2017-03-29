@@ -68,6 +68,7 @@ public class Rules {
 		this.firstPlayerCanHide = true;
 		this.minimumNumberOfPlayer = 6;
 		this.maximumNumberOfPlayer = 12;
+		this.currentNumberOfPlayer = 6;
 		
 		this.numberOfLoyalHenchmen = 1;
 		this.numberOfCleaners = 0;

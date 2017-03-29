@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import controller.App;
+import error.PickingStrategyError;
+import error.PrepareBoxStrategyError;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -751,7 +753,15 @@ public class GameView extends View{
 		validation.setPrefSize(100, 60);
 		
 		validation.setOnAction((event)->{
-			App.gameController.responsePrepareBox(Integer.parseInt(chooseNumber.getValue()));
+			try {
+				App.gameController.responsePrepareBox(Integer.parseInt(chooseNumber.getValue()));
+			} catch (NumberFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (PrepareBoxStrategyError e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			cleanGameView();
 		});
 		
@@ -965,20 +975,25 @@ public class GameView extends View{
 					}
 			}
 			RadioButton picked = (RadioButton) pickGroup.getSelectedToggle() ;
-			if(picked.equals(diams))
-				App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
-			if(picked.equals(henchman))
-				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
-			if(picked.equals(driver))
-				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
-			if(picked.equals(agent)){
-				if(tokenHidden != null && tokenHidden.equals("FBI"))
-					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "CIA", tokenHidden);
-				else 
-					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "FBI", tokenHidden);
+			try{
+				if(picked.equals(diams))
+					App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
+				if(picked.equals(henchman))
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
+				if(picked.equals(driver))
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
+				if(picked.equals(agent)){
+					if(tokenHidden != null && tokenHidden.equals("FBI"))
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "CIA", tokenHidden);
+					else 
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "FBI", tokenHidden);
+				}
+				if(picked.equals(cleaner))
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
+			}catch(NumberFormatException|PickingStrategyError e){
+				e.printStackTrace();
+				//TODO
 			}
-			if(picked.equals(cleaner))
-				App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
 			//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
 			cleanGameView();
 			createInfoBoxHumanPlayer();

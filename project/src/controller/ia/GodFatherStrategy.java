@@ -1,6 +1,7 @@
 package controller.ia;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import model.Box;
 import model.Question;
@@ -30,7 +31,8 @@ public class GodFatherStrategy implements IGodFatherStrategy {
 	@Override
 	public Question chooseQuestion(ArrayList<Question> questions) {
 		// TODO Auto-generated method stub
-		return null;
+		int rand = new Random().nextInt(questions.size());
+		return questions.get(rand);
 	}
 
 }
