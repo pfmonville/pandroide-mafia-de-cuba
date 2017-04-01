@@ -28,7 +28,7 @@ public class Rules {
 	private String nameAgent;
 	private String nameDriver;
 	private String nameThief;
-	private String nameStreetUpchin;
+	private String nameStreetUrchin;
 	
 	//Value for the game initialize in the OptionView
 	private int numberOfLoyalHenchmen;
@@ -43,13 +43,13 @@ public class Rules {
 	
 	public Rules() {
 		
-		this.nameGodFather = "Parrain";
-		this.nameLoyalHenchman = "Fidèle";
-		this.nameCleaner = "Nettoyeur";
+		this.nameGodFather = "GodFather";
+		this.nameLoyalHenchman = "LoyalHenchman";
+		this.nameCleaner = "Cleaner";
 		this.nameAgent = "Agent";
-		this.nameDriver = "Chauffeur";
-		this.nameThief= "Voleur";
-		this.nameStreetUpchin = "Enfant des Rues";
+		this.nameDriver = "Driver";
+		this.nameThief= "Thief";
+		this.nameStreetUrchin = "StreetUrchin";
 		
 		this.defaultNumberOfLoyalHenchmen = Arrays.asList(1,2,3,4,4,4,5);
 		this.defaultNumberOfCleaners = Arrays.asList(0,0,0,0,0,0,0);
@@ -345,14 +345,14 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 
 
 
-	public String getNameStreetUpchin() {
-		return nameStreetUpchin;
+	public String getNameStreetUrchin() {
+		return nameStreetUrchin;
 	}
 
 
 
-	public void setNameStreetUpchin(String nameStreetUpchin) {
-		this.nameStreetUpchin = nameStreetUpchin;
+	public void setNameStreetUrchin(String nameStreetUrchin) {
+		this.nameStreetUrchin = nameStreetUrchin;
 	}
 
 

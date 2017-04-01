@@ -5,4 +5,7 @@
 <fullyQualifiedTypeName name="model.Player"/>
 <fullyQualifiedTypeName name="controller.App"/>
 <fullyQualifiedTypeName name="java.lang.System"/>
+<fullyQualifiedTypeName name="model.Role"/>
+<fullyQualifiedTypeName name="controller.GameController"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
 </qualifiedTypeNameHistroy>

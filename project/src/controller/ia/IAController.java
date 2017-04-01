@@ -43,17 +43,23 @@ public class IAController implements PlayerController {
 		
 		// Roles still available in the box
 		ArrayList<String> rolesLeft = (ArrayList<String>) box.getTokens();
-		
+				
 		// Roles already taken (or hidden) by previous players
 		ArrayList<String> rolesTaken = App.rules.getTokensFor(GameController.getNumberOfPlayers());
 		for(String s : rolesLeft){
 			rolesTaken.remove(s);
 		}
-		
+		rolesLeft.remove(player.getRole().getName());
+
 		/*
-		 * Creation des mondes possibles pour les joueurs avant le joueur courant
+		 * Lists of the possible distributions for the previous players
 		 */
 		ArrayList<ArrayList<String>> configBefore = new ArrayList<ArrayList<String>>();
+		
+		/*
+		 * Lists of the possible distributions for the next players
+		 */
+		ArrayList<ArrayList<String>> configAfter = new ArrayList<ArrayList<String>>();
 		
 		//set of all the possible types for the hidden token
 		Set<String> typesOfTokensBefore = new HashSet<String>();
@@ -63,7 +69,6 @@ public class IAController implements PlayerController {
 			
 			// All the players before have taken a token AND a token was moved aside by the first player
 			if(nbTokensBeforeStart - box.getTokens().size() - 1 == player.getPosition() - 1){
-				System.out.println("tous les joueurs on pris un token et un token a ete ecarte");
 				//add permutations for each possible hidden token 
 				for(String role : typesOfTokensBefore){
 					ArrayList<String> tmp = new ArrayList<String>(rolesTaken);
@@ -103,10 +108,6 @@ public class IAController implements PlayerController {
 						configBefore.addAll(permutation(tmp));
 						
 					}
-					/*
-					 * TODO: si en plus ndDiamonds == 0 -> le joueur courant et tous les joueurs après sont des enfants des rues
-					 * TODO: si il y d diamants, avec d petit (par ex d = 2), il ne peut y avoir au plus que d voleurs parmi le joueur courant et tous les joueurs suivants.
-					 */					
 				}			
 			}
 			// Number of missing tokens < Number of previous players => there is some filthy thieves!
@@ -155,7 +156,7 @@ public class IAController implements PlayerController {
 							
 							while(tmpLowerBound.size() > 1){
 								tmpLowerBound.remove(0);
-								streetUrchinsList.add(App.rules.getNameStreetUpchin());
+								streetUrchinsList.add(App.rules.getNameStreetUrchin());
 								
 								ArrayList<ArrayList<String>> subset = new ArrayList<ArrayList<String>>();
 								ArrayList<String> param = new ArrayList<String>(tmpLowerBound);
@@ -172,7 +173,7 @@ public class IAController implements PlayerController {
 						streetUrchinsList = new ArrayList<String>();
 						while(tmpUpperBound.size() > 1){
 							tmpUpperBound.remove(0);
-							streetUrchinsList.add(App.rules.getNameStreetUpchin());
+							streetUrchinsList.add(App.rules.getNameStreetUrchin());
 							
 							ArrayList<ArrayList<String>> subset = new ArrayList<ArrayList<String>>();
 							for(String role : typesOfTokensBefore){
@@ -197,7 +198,99 @@ public class IAController implements PlayerController {
 		 * TODO
 		 * configAfter
 		 */
-		return configBefore;
+		
+		int nbPlayersAfter = GameController.getNumberOfPlayers() - player.getPosition() - 1;
+		/*
+		 * TODO: si en plus ndDiamonds == 0 -> le joueur courant et tous les joueurs apres sont des enfants des rues
+		 * TODO: si il y d diamants, avec d petit (par ex d = 2), il ne peut y avoir au plus que d voleurs parmi le joueur courant et tous les joueurs suivants.
+		 */	
+		
+		Box boxAfter = box.clone();
+		boxAfter.setTokens(rolesLeft);
+		System.out.println("player.getRole().getName() : "+player.getRole().getName());
+		System.out.println("App.rules.getNameThief() : "+App.rules.getNameThief());
+		if(player.getRole().getName().equals(App.rules.getNameThief())){
+			boxAfter.setDiamonds(box.getDiamonds() - player.getRole().getNbDiamondsStolen());
+			System.out.println(boxAfter.getDiamonds());
+		}
+		
+		
+		if(boxAfter.isEmpty()){
+			ArrayList<String> StreetUrchinsList = new ArrayList<String>(Collections.nCopies(nbPlayersAfter, App.rules.getNameStreetUrchin()));
+			configAfter.add(StreetUrchinsList);
+		}
+		
+		/*
+		 * if there is only diamonds in the box, there can only be thieves and street urchins (SU) after the current player
+		 * two possibilities:
+		 * - 1. there is enough diamonds for everyone to steal
+		 * - 2. there is not enough diamonds and the current player knows the lower bound of SU
+		 * With those informations he can generate all the possible distributions of thieves and SU  
+		 */
+		else if(boxAfter.getTokens().isEmpty()){
+			ArrayList<String> tmp = new ArrayList<String>();
+			int thievesUpperBound = (boxAfter.getDiamonds() >= nbPlayersAfter) ? nbPlayersAfter : boxAfter.getDiamonds() ;
+			ArrayList<String> playersAfter = new ArrayList<String>(Collections.nCopies(thievesUpperBound, App.rules.getNameThief()));
+			
+			// Situation of the second to last player. The last player can only be thief or street urchin
+			if(player.getPosition() == GameController.getNumberOfPlayers() - 2){
+				tmp.add(App.rules.getNameThief());
+				configAfter.add(tmp);
+				
+				tmp = new ArrayList<String>();
+				tmp.add(App.rules.getNameStreetUrchin());
+				configAfter.add(tmp);
+			}
+			/*
+			 * Not enough diamonds for all the players
+			 */
+			else{
+				int streetUrchinsLowerBound = nbPlayersAfter - thievesUpperBound;
+				playersAfter.addAll(new ArrayList<String>(Collections.nCopies(streetUrchinsLowerBound, App.rules.getNameStreetUrchin())));
+				tmp = new ArrayList<>(playersAfter);
+				configAfter.add(tmp);
+				
+				for(int i=0; i < thievesUpperBound - 1; i++){
+					playersAfter.remove(0);
+					playersAfter.add(App.rules.getNameStreetUrchin());
+					tmp = new ArrayList<>(playersAfter);
+					configAfter.add(tmp);
+				}				
+			}
+
+		}
+		// Only tokens in the box and no diamonds
+		else if(boxAfter.getDiamonds() == 0){
+			/*
+			 * Less tokens than players
+			 */
+			if(boxAfter.getTokens().size() < nbPlayersAfter){
+				ArrayList<String> tmp = new ArrayList<String>(rolesLeft);				
+				int nbStreetUrchins = nbPlayersAfter - boxAfter.getTokens().size(); 
+				ArrayList<String> streetUrchinsList = new ArrayList<String>(Collections.nCopies(nbStreetUrchins, App.rules.getNameStreetUrchin()));
+				ArrayList<ArrayList<String>> subset = new ArrayList<ArrayList<String>>();
+				
+				subset.addAll(permutation(tmp));
+				
+				for(ArrayList<String> list : subset){
+					list.addAll(streetUrchinsList);
+				}
+				configAfter.addAll(subset);				
+			}
+			/*
+			 * More tokens than players
+			 */
+			else{
+				ArrayList<String> tmp = new ArrayList<String>(rolesLeft);
+				// TODO : methode de combinaison entre les role pris  par les joueurs et les roles totaux
+				// TODO : Gerer le cas dernier joueurs qui peux prendre ou non un jeton (mondes a ajouter).
+			}
+			
+		}
+		//TODO: il faut retourner configBefore ET configAfter
+		//reflechir s'il faut retourner une seule liste de config sachant qu'il peut travailler avec les deux listes de facons independantes
+//		return configBefore;
+		return configAfter;
 	}
 	
 	/**

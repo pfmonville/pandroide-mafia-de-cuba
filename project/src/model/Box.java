@@ -8,7 +8,6 @@ public class Box {
 	private ArrayList<String> tokens;
 	
 	public Box(int diamonds, ArrayList<String> tokens){
-
 		this.diamonds = diamonds ;
 		this.tokens = tokens ;
 	}
@@ -39,4 +38,7 @@ public class Box {
 		return diamonds == 0 && tokens.isEmpty();
 	}
 	
+	public Box clone(){
+		return new Box(this.getDiamonds(), new ArrayList<String>(this.getTokens()));
+	}
 }

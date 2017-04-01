@@ -44,7 +44,7 @@ public class Player {
 				role = new Driver(new Player(null,position-1,false,false));
 				break;
 			default :
-				role = new StreetUpchin() ;
+				role = new StreetUrchin() ;
 				break;
 		}
 	}
@@ -53,7 +53,7 @@ public class Player {
 		if(role instanceof Thief)
 			return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
 		else {
-			if(role instanceof StreetUpchin)
+			if(role instanceof StreetUrchin)
 				return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
 		}
 		return new SecretID(role.getName(),role.getNbDiamondsStolen(),role.getName());
