@@ -49,6 +49,8 @@ public class IAController implements PlayerController {
 		for(String s : rolesLeft){
 			rolesTaken.remove(s);
 		}
+		
+		// TODO : Pour les tests des configAfter, le joueur prend un role. Quid s'il recoit une boite vide ?
 		rolesLeft.remove(player.getRole().getName());
 
 		/*
@@ -121,7 +123,7 @@ public class IAController implements PlayerController {
 				/* 
 				 * The current player assumes both cases where the first player moved aside a token or not,
 				 * to get the upper and the lower bounds of the number of thieves.
-				 * Remark: So even if everybody took a token and the first player didn't remove a token,
+				 * Remark: So even if everybody took a token and the first player hasn't remove a token,
 				 * The current player will assume that the first player took away one token.
 				 */
 				else{
@@ -135,9 +137,11 @@ public class IAController implements PlayerController {
 					ArrayList<String> tmpUpperBound = new ArrayList<String>(upperBoundThievesList);
 					ArrayList<String> tmpLowerBound = new ArrayList<String>(lowerBoundThievesList);
 					
-				
+					// Creation of the configurations where the first player hasn't remove a token				
 					tmpLowerBound.addAll(rolesTaken);
 					configBefore.addAll(permutation(tmpLowerBound));
+					
+					// Creation of the configurations where the first player has removed a token
 					tmpUpperBound.addAll(rolesTaken);
 					
 					//add permutations for each possible hidden token 

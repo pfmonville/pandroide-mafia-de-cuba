@@ -17,10 +17,10 @@ public class MainTestIAController {
 		stringList.add(App.rules.getNameAgent());
 		
 		
-		int nombreDeDiamantsDansBoite = 3;
+		int nombreDeDiamantsDansBoite = 5;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
-		int positionDuJoueur = 2;
+		int positionDuJoueur = 3;
 		
 		// Joueur voleur
 		Player p = new Player(null, positionDuJoueur, false, false);

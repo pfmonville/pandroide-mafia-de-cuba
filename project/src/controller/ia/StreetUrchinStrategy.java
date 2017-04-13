@@ -3,7 +3,7 @@ package controller.ia;
 import model.Answer;
 import model.Question;
 
-public class StreetUpchinStrategy implements ISuspectStrategy {
+public class StreetUrchinStrategy implements ISuspectStrategy {
 
 	@Override
 	public Answer chooseAnswer(Question question) {

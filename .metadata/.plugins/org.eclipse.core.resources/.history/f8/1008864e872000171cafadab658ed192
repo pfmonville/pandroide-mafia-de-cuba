@@ -199,7 +199,7 @@ public class GameController {
 				case("Thief"):
 					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new ThiefStrategy()));
 					break;
-				case("StreetUrchin"):
+				case("StreetUpchin"):
 					playerControllers.add((PlayerController) new IASuspectController(player, box, rules, numberOfPlayers, new StreetUrchinStrategy()));
 					break;
 				case("Agent"):
