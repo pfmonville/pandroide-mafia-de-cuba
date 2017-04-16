@@ -13,14 +13,14 @@ public class MainTestIAController {
 	public static void main(String[] args){
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add(App.rules.getNameDriver());
-//		stringList.add(App.rules.getNameLoyalHenchman());
-		stringList.add(App.rules.getNameAgent());
+		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameAgent());
 		
 		
-		int nombreDeDiamantsDansBoite = 0;
+		int nombreDeDiamantsDansBoite = 10;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
-		int positionDuJoueur = 2;
+		int positionDuJoueur = 7;
 		
 		// Joueur voleur
 //		Player p = new Player(null, positionDuJoueur, false, false);
@@ -67,3 +67,5 @@ public class MainTestIAController {
 	}
 
 }
+
+
