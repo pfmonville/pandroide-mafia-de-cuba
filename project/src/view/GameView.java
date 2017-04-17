@@ -1,11 +1,15 @@
 package view;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+
+import org.controlsfx.control.Notifications;
 
 import controller.App;
 import error.PickingStrategyError;
@@ -130,18 +134,19 @@ public class GameView extends View{
 		});
 		
 		rules.setOnAction((event)->{
-			Stage stage = new Stage();
-			stage.setTitle("Réglages");
-			Pane layout = new Pane();
-			//TODO
-//			layout.getChildren().add(rv.getPanel());
-			Scene scene = new Scene(layout);
-			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-			App.loadCSS("css/app.css", scene);
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(Theme.pathMainLogo1));
-			stage.setResizable(false);
-	        stage.show();
+			if (Desktop.isDesktopSupported()) {
+			    try {
+			        File myFile = new File(Theme.pathToRules);
+			        Desktop.getDesktop().open(myFile);
+			    } catch (IOException ex) {
+			        // no application registered for PDFs
+			    	System.out.println(ex.toString());
+			    	Notifications.create()
+		              .title("File Error")
+		              .text("Aucun logiciel n'est renseigné pour ouvrir les PDF")
+		              .showWarning();
+			    }
+			}
 		});
 		
 		toolBar.getItems().addAll(new Separator(),replay,inspect,rules, new Separator());
@@ -277,7 +282,7 @@ public class GameView extends View{
 		indexImgPath.add(4);indexImgPath.add(5);indexImgPath.add(6);indexImgPath.add(7);
 		indexImgPath.add(8);indexImgPath.add(9);indexImgPath.add(10);
  		
-		for (int i = 1; i < nbPlayers; i++){
+		for (int i = 2; i < nbPlayers+1; i++){
 			Button b = new Button();
 			b.setPrefSize(super.getWidth()/14, super.getHeight()/12);
 			b.setId(""+i);
@@ -292,6 +297,9 @@ public class GameView extends View{
 				b.setTooltip(super.createStandardTooltip("Vous"));
 				iaButtons.add(b);
 				continue ;
+			}
+			else{
+				b.setTooltip(super.createStandardTooltip("Joueur " + i));
 			}
 			b.getStyleClass().add("player");
 			//action
@@ -857,7 +865,7 @@ public class GameView extends View{
 				chooseToken.getItems().add("Agent");
 			if(NBCLEANER>0)
 				chooseToken.getItems().add("Nettoyeur");
-			chooseToken.setVisibleRowCount(2);
+			chooseToken.setVisibleRowCount(5);
 			chooseToken.setValue("Aucun");
 			
 			forFirstPlayer.getChildren().addAll(instruction, chooseToken);
@@ -909,7 +917,7 @@ public class GameView extends View{
 		for (int i=1; i<=App.gameController.getBox().getDiamonds(); i++){
 			nb.getItems().add(i+"");
 		}
-		nb.setVisibleRowCount(2);
+		nb.setVisibleRowCount(5);
 		nb.setValue("1");
 		nb.setDisable(true);
 		
@@ -1084,7 +1092,7 @@ public class GameView extends View{
 		askQuestion = new Button();
 		askQuestion.setPrefSize(super.getWidth()/10, super.getHeight()/10);
 		askQuestion.setGraphic(new ImageView( new Image(Theme.pathAskQuestion)));
-		askQuestion.setTooltip(super.createStandardTooltip("Ask a question"));
+		askQuestion.setTooltip(super.createStandardTooltip("Poser une question au joueur selectionné"));
 		
 		askQuestion.setOnAction((event)->{
 			App.gameController.askTo(App.gameController.getQuestions().get(qrID));

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.controlsfx.control.Notifications;
+
 import controller.ia.AgentStrategy;
 import controller.ia.CleanerStrategy;
 import controller.ia.DriverStrategy;
@@ -24,6 +26,7 @@ import controller.runnable.PrepareBoxRunnable;
 import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import model.Answer;
 import model.Box;
 import model.GodFather;
@@ -208,7 +211,7 @@ public class GameController {
 		}else{
 			this.box.removeDiamonds(numberOfDiamondsHidden);
 			this.setDiamondsHidden(numberOfDiamondsHidden);
-			((GodFather)players.get(0).getRole()).hideDiamonds(numberOfDiamondsHidden);
+			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
 		this.actualPlayer = 2;
 		this.nextTurn();
@@ -227,7 +230,7 @@ public class GameController {
 		
 		App.gv.displayBoxAnimation(this.actualPlayer);
 		if(this.isActualPlayerHuman()){
-			App.gv.playerPickView();
+			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
 			thread.start();
@@ -305,7 +308,7 @@ public class GameController {
 	
 	public void SelectingGodFathersAction(){
 		if(humanPosition == this.actualPlayer){
-			App.gv.displayGFQuestions();
+			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else{
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
 			thread.start();
@@ -329,10 +332,15 @@ public class GameController {
 	
 	public void askTo(Question questionToAsk){
 		//TODO display pop up informing everyone on the question asked
+		Notifications.create()
+        	.title("Action en cours")
+        	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + "la question suivante :\n" + questionToAsk.getContent())
+        	.position(Pos.CENTER)
+        	.showInformation();
 		if(humanPosition == this.actualPlayer){
 			App.gv.displayPlayerAnswers();
 		}else{
-			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTagetPlayer()), questionToAsk, answers));
+			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));
 			thread.start();
 		}
 	}
@@ -352,14 +360,17 @@ public class GameController {
 				//TODO display winning 
 			}
 		}else{
+			System.out.println("role du joueur ciblé " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
+				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
 					((IAController)pc).updateWorldsVision(secret);
 				}
 				SelectingGodFathersAction();
 			}else{
 				//TODO : display losing : thieves have won
+				System.out.println("le parrain a perdu");
 			}
 		}
 	}
@@ -409,17 +420,18 @@ public class GameController {
 	 * gets informations from the updating rules after the option view and creates corresponding players
 	 */
 	private void getPlayers(){
-		for(int i = 0; i < this.numberOfPlayer; i++){
+		for(int i = 1; i < this.numberOfPlayer+1; i++){
 			if(this.humanPosition == i){
+				System.out.println("joueur humain en position " + i);
 				this.players.put(i, new Player(i, true, false));
 			}else{
 				this.players.put(i, new Player(i, false, false));
 			}
 		}
 		//set the last player boolean "lastPlayer" to true
-		this.players.get(this.numberOfPlayer-1).setLastPlayer(true);
+		this.players.get(this.numberOfPlayer).setLastPlayer(true);
 		//set the role for the first player to GodFather
-		this.players.get(0).setRole(new GodFather(App.rules.getNumberOfJokers()));
+		this.players.get(1).setRole(new GodFather(App.rules.getNumberOfJokers()));
 	}
 	
 	
@@ -466,8 +478,7 @@ public class GameController {
 			Player player = entry.getValue();
 			int position = entry.getKey();
 			if (!player.isHuman()){
-				System.out.println("player = " + player.toString() +" position"+ player.getPosition());
-				//problème le rôle est vide ???
+				System.out.println("player = " + player.toString() +" position "+ player.getPosition() + " isHuman " + player.isHuman());
 				System.out.println(" role = " + player.getRole().toString());
 				System.out.println( " roleName = " + player.getRole().getName());
 				switch(player.getRole().getName()){

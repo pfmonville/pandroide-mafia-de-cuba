@@ -77,6 +77,7 @@ public class Rules {
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
 		this.allIA = false;
+		this.humanPosition = 1;
 	}
 	
 	

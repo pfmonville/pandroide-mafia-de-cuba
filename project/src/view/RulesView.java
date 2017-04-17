@@ -37,7 +37,7 @@ public class RulesView extends View{
 		rules = new TextArea();
 		rules.setPrefHeight(3*y/4);
 		rules.setMaxWidth(3*x/5);
-		rules.setStyle("-fx-opacity:0.2; -fx-border-color:black; -fx-border-width:3px"); 
+		rules.setStyle("-fx-opacity:0.2; -fx-border-color:black; -fx-border-width:3px;"); 
 		rules.setEditable(false); 
 		rules.setWrapText(true);
 		rules.setScrollLeft(50);

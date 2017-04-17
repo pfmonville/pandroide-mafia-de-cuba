@@ -497,6 +497,9 @@ public class OptionView extends View{
 		// go to game view
 		valider.setOnAction((event)->{
 			try {
+				if(plHU.isSelected()){
+					App.rules.setHumanPosition(Integer.parseInt(pos.getSelectedToggle().getUserData().toString()));
+				}
 				App.gv.setInitialGameView();
 				App.changePanel(this.getPanel(), App.gv.getPanel());
 			} catch (IOException e) {

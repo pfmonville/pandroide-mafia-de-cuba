@@ -2,6 +2,10 @@ package model;
 
 public class Theme {
 
+	//Path for files
+	
+	public static String pathToRules = "src/files/rules.pdf";
+	
 	//All paths for Images
 	public static String pathBackground = "image/bg-1.jpg";
 	
