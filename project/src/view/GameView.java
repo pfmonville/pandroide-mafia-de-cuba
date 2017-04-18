@@ -110,6 +110,7 @@ public class GameView extends View{
 				if(button == ButtonType.OK){
 					try {
 						cleanGameView();
+						App.gameController.setForAnimation(1);
 						App.changePanel(super.getPanel(), App.ov.getPanel());
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -1163,7 +1164,6 @@ public class GameView extends View{
 	
 	
 	
-	//TODO affichage boite en train de circuler
 	
 	/**
 	 * show the box around the table

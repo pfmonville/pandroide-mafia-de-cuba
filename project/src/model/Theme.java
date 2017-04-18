@@ -4,6 +4,7 @@ public class Theme {
 
 	//Path for files
 	
+	//chez moi il faut mettre project/src ...
 	public static String pathToRules = "src/files/rules.pdf";
 	
 	//All paths for Images

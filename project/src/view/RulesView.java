@@ -1,5 +1,7 @@
 package view;
 
+import com.sun.prism.paint.Color;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -37,11 +39,11 @@ public class RulesView extends View{
 		rules = new TextArea();
 		rules.setPrefHeight(3*y/4);
 		rules.setMaxWidth(3*x/5);
-		rules.setStyle("-fx-opacity:0.2; -fx-border-color:black; -fx-border-width:3px;"); 
+		rules.setStyle("-fx-opacity:0.5; -fx-border-color:black; -fx-border-width:3px;"); 
 		rules.setEditable(false); 
 		rules.setWrapText(true);
 		rules.setScrollLeft(50);
-		
+
 		rules.setText("LE PARRAIN : il a sacrifié beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !Le Parrain gagne s’il retrouve tous les diamants volés. Il arbitre les débats, veille à ce que chacun"
 +"s’exprime, et exige un respect obséquieux de la part de ses hommes !"
 +"Attention, le Parrain doit accuser uniquement les Voleurs pour éviter de perdre ses Jokers et"
