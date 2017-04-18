@@ -197,9 +197,9 @@ public class GameView extends View{
 		tableV.setFitWidth(super.getWidth()/2);
 		table.getChildren().add(tableV);	
 		table.getChildren().add(answerArea);		
-	
-		imgAtCenter.setCenter(table);
 		
+		imgAtCenter.setCenter(table);
+
 		leftPart.getChildren().add(imgAtCenter);
 		
 		//*********************************
@@ -292,7 +292,7 @@ public class GameView extends View{
 			indexImgPath.remove(index);
 			b.setGraphic(new ImageView( new Image(imgPath[index])));
 			// if human has chosen this position (not godfather's one)-> different button
-			if(humanPosition!=1 && i == humanPosition-1){
+			if(humanPosition!=1 && i == humanPosition){
 				b.getStyleClass().add("humanPlayer");
 				b.setTooltip(super.createStandardTooltip("Vous"));
 				iaButtons.add(b);
@@ -323,7 +323,7 @@ public class GameView extends View{
 		//if player is not the Godfather, disable all buttons except the one at player's position
 		if(humanPosition!=1){
 			for (Button ia : iaButtons){
-				if(! ia.getId().equals(humanPosition-1+""))
+				if(! ia.getId().equals(humanPosition+""))
 					ia.setDisable(true);
 			}
 		}
@@ -1168,50 +1168,69 @@ public class GameView extends View{
 	/**
 	 * show the box around the table
 	 */
-	public void displayBoxAnimation(int position){
-//		int top=0,left=-500;
-//		if(boxOnTable != null)
-//			table.getChildren().remove(boxOnTable);
-//		boxOnTable = new ImageView(new Image(Theme.pathBox));
-//		
-//		if(position==1){
-//			top = super.getHeight()/40;
-//		} else {
-//			/*
-//			 * si il y a <= 9 joueurs : pour les 4 premiers (de 2 à 5) top à une meme position et left incrémenté
-//			 * 							(de 6 à 9) top meme position et left décrémenté
-//			 */ 
-//			if(App.rules.getCurrentNumberOfPlayer()<=9){			
-//				if(position <= 5){
-//					top =-200;
-//					left=-500+(250*(position-1));					
-//				} else {
-//					top = 200;
-//					left=500-(250*(position%5));
-//				}
-//			/*
-//			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 à 5 et de 9 à 12)
-//			 * 						  pour les joueurs de droite (6 à 8) left est le meme et top incrémenté
-//			 */
-//			} else {
-//				if(position <= 5){
-//					top =-200;
-//					left=-500+(250*(position-1));					
-//				} else {
-//					if(position==6 || (position ==7 && App.rules.getCurrentNumberOfPlayer()==11) || (position==8 &&App.rules.getCurrentNumberOfPlayer()==12)){
-//						left = 500;
-//						top = -200+(150*(position%6));
-//					} else {
-//						top = 200;
-//						left=500-(250*(position%9));
-//					}
-//				}
-//			}
-//		}
-//		
-//		StackPane.setMargin(boxOnTable, new Insets(top,0,0,left));
-//		table.getChildren().add(boxOnTable);
-//	
+	public void displayBoxAnimation(){
+		
+		int top=0,left=-500;
+		int nbPlayers = App.rules.getCurrentNumberOfPlayer();
+		int topPlayers =0, rightPlayers = 0;
+		int position = App.gameController.getForAnimation();
+		
+		if(position > nbPlayers){
+			//Box for Godfather again
+			position = 1 ;
+			App.gameController.setForAnimation(position);
+		}
+		
+		if(boxOnTable != null)
+			table.getChildren().remove(boxOnTable);
+		boxOnTable = new ImageView(new Image(Theme.pathBox));
+
+		if(position==1){
+			top = super.getHeight()/40;
+		} else {
+			/*
+			 * si il y a <= 9 joueurs : pour les 4 premiers (de 2 à 5) top à une meme position et left incrémenté
+			 * 							(de 6 à 9) top meme position et left décrémenté
+			 * 
+			 */ 
+			if(nbPlayers<=9){
+				topPlayers = (nbPlayers-1)/2 ;
+				if(position <= topPlayers+1){
+					top =-200;
+					left=-500+(200*(position-1));	
+				} else {
+					top = 200;
+					left=-500+(200*(nbPlayers-position+1));
+				}
+			/*
+			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 à 5 et de 9 à 12)
+			 * 						  pour les joueurs de droite (6 à 8) left est le meme et top incrémenté
+			 */
+			} else {
+				rightPlayers = nbPlayers-9;
+				int playersTopBot = (nbPlayers-1) - rightPlayers ;
+				topPlayers = playersTopBot/2;
+			
+				if(position <= topPlayers+1){
+					top =-200;
+					left=-500+(200*(position-1));					
+				} else {
+					if(position> topPlayers+rightPlayers+1){
+						top = 200;
+						left=-500+(200*(nbPlayers-position+1));
+					} else {
+						//players on side
+						left = 500;
+						top = -200+(200*(position%6));
+					}
+				}
+			}
+		}
+		
+		StackPane.setMargin(boxOnTable, new Insets(top,0,0,left));
+		App.gameController.setForAnimation(position+1);
+		table.getChildren().add(boxOnTable);
+	
 
 	}
 	

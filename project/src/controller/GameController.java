@@ -55,10 +55,18 @@ public class GameController {
 	private Box box;
 	private String tokenHidden;
 	private int diamondsHidden;
+	private int forAnimation = 1 ;
 	
 	public GameController(){
 	}
 	
+	
+	public int getForAnimation(){
+		return forAnimation;
+	}
+	public void setForAnimation(int n){
+		forAnimation=n;
+	}
 	
 	/**
 	 * get the updated rules by the the user after the optionview panel
@@ -189,14 +197,19 @@ public class GameController {
 	 * ask to the godFather how many diamonds he wants to hide
 	 */
 	private void prepareBox(){
-		App.gv.displayBoxAnimation(1);
+		Platform.runLater( ()-> App.gv.displayBoxAnimation());
+		//PAUSE
+		try {
+			Thread.sleep(300);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		this.getActualPlayer().setBox(box.clone());
 		if(this.isActualPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
 			thread.start();
-			//Platform.runLater(thread);
 		}
 	}
 	
@@ -227,14 +240,12 @@ public class GameController {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
-		App.gv.displayBoxAnimation(this.actualPlayer);
+		Platform.runLater( ()-> App.gv.displayBoxAnimation());
 		if(this.isActualPlayerHuman()){
 			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
 			thread.start();
-			//Platform.runLater(thread);
 		}
 	}
 	
@@ -280,7 +291,13 @@ public class GameController {
 	
 		//if this is the last player then start the second half
 		if(players.get(this.actualPlayer).isLastPlayer()){
-			App.gv.displayBoxAnimation(1);
+			//Forcing pause (only for testing)
+			try {
+				Thread.sleep(300);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			Platform.runLater(() ->App.gv.displayBoxAnimation());
 			this.players.get(1).setBox(box.clone());
 			this.actualPlayer = 1;
 			this.actualTurn = 1;
