@@ -12,13 +12,6 @@ public class Answer extends Phrase{
 		setCorrespondingQuestionIDList(questionsIDs) ;
 	}
 	
-	/**
-	 * Construteur pour le test
-	 * A supprimer après
-	 */
-	public Answer(){
-		super(0,"Une tres tres longue reponse qui prend de la place");
-	}
 
 	public ArrayList<Integer> getCorrespondingQuestionIDList() {
 		return correspondingQuestionIDList;

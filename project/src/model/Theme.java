@@ -6,6 +6,8 @@ public class Theme {
 	
 	//chez moi il faut mettre project/src ...
 	public static String pathToRules = "src/files/rules.pdf";
+	public static String pathToQuestions  = "project/src/files/questions.txt" ;
+	public static String pathToAnswers = "project/src/files/answers.txt" ;
 	
 	//All paths for Images
 	public static String pathBackground = "image/bg-1.jpg";

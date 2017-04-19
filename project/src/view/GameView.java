@@ -71,6 +71,7 @@ public class GameView extends View{
 	private ImageView boxOnTable;
 	
 	private int target, qrID ;
+	private int forAnimation = 1 ;
 
 	// for css
 	protected static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected"); 
@@ -110,7 +111,7 @@ public class GameView extends View{
 				if(button == ButtonType.OK){
 					try {
 						cleanGameView();
-						App.gameController.setForAnimation(1);
+						forAnimation=1;
 						App.changePanel(super.getPanel(), App.ov.getPanel());
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -187,7 +188,7 @@ public class GameView extends View{
 		answerPicture = new FlowPane();
 		answerPicture.setAlignment(Pos.CENTER);
 		answerPicture.setPrefSize(super.getWidth()/12, super.getHeight()/5);
-		answer = new Label ("Answer expected");
+		answer = new Label ();
 		answer.setId("answer");
 		answer.setPrefSize(super.getWidth()/4, super.getHeight()/5);
 		
@@ -445,6 +446,7 @@ public class GameView extends View{
 			RadioButton b = new RadioButton(q.getContent());
 			b.setPrefHeight(45);
 			b.setWrapText(true);
+			b.setId(q.getId()+"");
 			b.setToggleGroup(questionsGroup);
 			b.getStyleClass().add("question");
 			if(index%2==0 && index!=0)
@@ -458,6 +460,7 @@ public class GameView extends View{
 			RadioButton b = new RadioButton(q.getContent());
 			b.setPrefHeight(45);
 			b.setWrapText(true);
+			b.setId(q.getId()+"");
 			b.setToggleGroup(questionsGroup);
 			b.getStyleClass().add("question");
 			if(index%2==0 && index!=0)
@@ -596,7 +599,7 @@ public class GameView extends View{
 		info.setSpacing(60);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
 		HBox whatPlayerPicked = new HBox(),infoAboutBox = new HBox(), infoAboutGame = new HBox();
-		infoAboutBox.setSpacing(15); infoAboutGame.setSpacing(15); whatPlayerPicked.setSpacing(10);
+		infoAboutBox.setSpacing(12); infoAboutGame.setSpacing(12); whatPlayerPicked.setSpacing(10);
 		int nbLoyal = 0, nbDriver =0, nbAgent=0, nbCleaner = 0;
 		//WHAT PLAYER HAS PICKED
 		if(App.rules.getHumanPosition()!=1){
@@ -615,7 +618,7 @@ public class GameView extends View{
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
 				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
-				diamonds.setStyle("-fx-text-fill:white;-fx-font: 22px Tahoma;");
+				diamonds.setStyle("-fx-text-fill:white;-fx-font: 20px Tahoma;");
 			}
 			Label playerRole = new Label(), tokenHidden=null ;
 			playerRole.setGraphic(new ImageView( new Image(token)));
@@ -681,7 +684,7 @@ public class GameView extends View{
 		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
 		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que vous avez reçue :"));
 		Label box = new Label(":"); 
-		box.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
+		box.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");
 		infoAboutBox.getChildren().addAll(boxImg, box);
 		
 		if(App.gameController.getHumanPlayer().getBox().getDiamonds()>0){
@@ -689,7 +692,7 @@ public class GameView extends View{
 			diamImg.setGraphic(new ImageView(new Image(Theme.pathDiamond)));
 			diamImg.setTooltip(super.createStandardTooltip("Diamants"));
 			Label diamNb = new Label("x "+App.gameController.getHumanPlayer().getBox().getDiamonds());
-			diamNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
+			diamNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");
 			
 			infoAboutBox.getChildren().addAll(diamImg,diamNb);
 		}
@@ -699,7 +702,7 @@ public class GameView extends View{
 			loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
 			loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
 			Label loyalNb = new Label("x "+nbLoyal); 
-			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
+			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(loyalImg,loyalNb);
 		}
@@ -708,7 +711,7 @@ public class GameView extends View{
 			driverImg.setGraphic(new ImageView( new Image(Theme.pathDriver)));
 			driverImg.setTooltip(super.createStandardTooltip("Chauffeur"));
 			Label driverNb = new Label("x "+nbDriver); 
-			driverNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
+			driverNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(driverImg,driverNb);
 		}
@@ -717,7 +720,7 @@ public class GameView extends View{
 			agentImg.setGraphic(new ImageView( new Image(Theme.pathAgent)));
 			agentImg.setTooltip(super.createStandardTooltip("Agent"));
 			Label agentNb = new Label("x "+nbAgent); 
-			agentNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");	
+			agentNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");	
 			
 			infoAboutBox.getChildren().addAll(agentImg,agentNb);
 		}
@@ -726,7 +729,7 @@ public class GameView extends View{
 			cleanerImg.setGraphic(new ImageView( new Image(Theme.pathCleaner)));
 			cleanerImg.setTooltip(super.createStandardTooltip("Nettoyeur"));
 			Label cleanerNb = new Label("x "+nbCleaner); 
-			cleanerNb.setStyle("-fx-text-fill:white;-fx-font : 22px Tahoma;");
+			cleanerNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");
 			
 			infoAboutBox.getChildren().addAll(cleanerImg,cleanerNb);		
 		}
@@ -765,10 +768,8 @@ public class GameView extends View{
 			try {
 				App.gameController.responsePrepareBox(Integer.parseInt(chooseNumber.getValue()));
 			} catch (NumberFormatException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (PrepareBoxStrategyError e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			cleanGameView();
@@ -1001,7 +1002,6 @@ public class GameView extends View{
 					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
 			}catch(NumberFormatException|PickingStrategyError e){
 				e.printStackTrace();
-				//TODO
 			}
 			//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
 			cleanGameView();
@@ -1060,9 +1060,9 @@ public class GameView extends View{
 		questionsBox = new GridPane();
 		questionsPlayers = new GridPane();
 		questionsOthers = new GridPane();
-		questionsBox.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
-		questionsPlayers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
-		questionsOthers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
+		questionsBox.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
+		questionsPlayers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
+		questionsOthers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
 		questionsBox.setVgap(2); questionsBox.setHgap(3);
 		questionsPlayers.setVgap(2); questionsPlayers.setHgap(3);
 		questionsOthers.setVgap(2); questionsOthers.setHgap(3);
@@ -1071,11 +1071,8 @@ public class GameView extends View{
 //		//*********************************
 //		// Radiobuttons to select a question
 //		//*********************************		
-//		//createQRButtons(App.gameController.getQuestions(),true);
-		ArrayList<Question> quest = new ArrayList<Question>(); //test
-		quest.add(new Question()); quest.add(new Question()); quest.add(new Question());//test
-		quest.add(new Question());quest.add(new Question());quest.add(new Question());quest.add(new Question());//test
-		createQRButtons(quest, true) ; //test
+		createQRButtons(App.gameController.getQuestions(),true);
+
 		//**********************************
 		//button "Empty your pocket"
 		//**********************************
@@ -1096,12 +1093,14 @@ public class GameView extends View{
 		askQuestion.setTooltip(super.createStandardTooltip("Poser une question au joueur selectionné"));
 		
 		askQuestion.setOnAction((event)->{
-			App.gameController.askTo(App.gameController.getQuestions().get(qrID));
+			Question q = App.gameController.getQuestions().get(qrID);
+			q.setTargetPlayer(target);
+			App.gameController.askTo(q);
 		});
 		
 		pocket.getChildren().addAll(emptyPocket, askQuestion);
-		pocket.setMargin(emptyPocket, new Insets(0,0,0,5));
-		pocket.setMargin(askQuestion, new Insets(10,0,0,5));
+		pocket.setMargin(emptyPocket, new Insets(0,0,0,3));
+		pocket.setMargin(askQuestion, new Insets(10,0,0,3));
 		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
@@ -1122,12 +1121,8 @@ public class GameView extends View{
 		answers.setVgap(2); answers.setHgap(3);
 		
 		questionsArea.getChildren().add(answers);
-		
-		//createQRButtons(App.gameController.getAnswers(), false);
-		ArrayList<Answer> quest = new ArrayList<Answer>(); //test
-		quest.add(new Answer()); quest.add(new Answer()); quest.add(new Answer());//test
-		quest.add(new Answer());quest.add(new Answer());quest.add(new Answer());quest.add(new Answer());//test
-		createQRButtons(quest, false);
+		//TODO il ne faut pas récupérer toutes les questions mais seulement celles concernées par la question précedente
+		createQRButtons(App.gameController.getAnswers(), false);
 		
 		//**********************************
 		//button "Answer"
@@ -1173,12 +1168,12 @@ public class GameView extends View{
 		int top=0,left=-500;
 		int nbPlayers = App.rules.getCurrentNumberOfPlayer();
 		int topPlayers =0, rightPlayers = 0;
-		int position = App.gameController.getForAnimation();
+		int position = forAnimation;
 		
 		if(position > nbPlayers){
 			//Box for Godfather again
 			position = 1 ;
-			App.gameController.setForAnimation(position);
+			forAnimation=1;
 		}
 		
 		if(boxOnTable != null)
@@ -1228,7 +1223,7 @@ public class GameView extends View{
 		}
 		
 		StackPane.setMargin(boxOnTable, new Insets(top,0,0,left));
-		App.gameController.setForAnimation(position+1);
+		forAnimation++;
 		table.getChildren().add(boxOnTable);
 	
 

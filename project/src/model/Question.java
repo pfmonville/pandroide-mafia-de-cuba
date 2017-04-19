@@ -21,23 +21,6 @@ public class Question extends Phrase{
 		this.setCategory(category) ;
 	}
 	
-	/**
-	 * Construteur pour le test
-	 * A supprimer après
-	 */
-	public Question(){
-		super(0,"Une tres tres longue question qui prend de la place?");
-		Random r = new Random();
-		if (r.nextDouble()<= 0.33)
-			category=0;
-		else{
-			if(r.nextDouble()<=0.66)
-				category = 1;
-			else
-				category = 2;
-		}
-	}
-	
 	public ArrayList<Integer> getAnswersExpected() {
 		return answersExpected;
 	}

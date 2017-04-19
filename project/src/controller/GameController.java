@@ -55,18 +55,10 @@ public class GameController {
 	private Box box;
 	private String tokenHidden;
 	private int diamondsHidden;
-	private int forAnimation = 1 ;
 	
 	public GameController(){
 	}
 	
-	
-	public int getForAnimation(){
-		return forAnimation;
-	}
-	public void setForAnimation(int n){
-		forAnimation=n;
-	}
 	
 	/**
 	 * get the updated rules by the the user after the optionview panel
@@ -84,9 +76,8 @@ public class GameController {
 		this.gameHistory = new ArrayList<>();
 		this.humanPosition = App.rules.getHumanPosition();
 		this.box = App.rules.getBox();
-		//TODO
-//		this.questions = App.rules.getQuestions;
-//		this.answers = App.rules.getAnswers;
+		this.questions = App.rules.getQuestions();
+		this.answers = App.rules.getAnswers();
 	}
 	
 	
@@ -302,7 +293,7 @@ public class GameController {
 			this.actualPlayer = 1;
 			this.actualTurn = 1;
 			if(App.rules.isAllIA())
-				App.gv.createInfoBoxIA();
+				Platform.runLater(()->App.gv.createInfoBoxIA());
 			beginSecondHalf();
 		}else{
 			this.actualPlayer ++;
@@ -351,10 +342,10 @@ public class GameController {
 		//TODO display pop up informing everyone on the question asked
 		Notifications.create()
         	.title("Action en cours")
-        	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + "la question suivante :\n" + questionToAsk.getContent())
+        	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent())
         	.position(Pos.CENTER)
         	.showInformation();
-		if(humanPosition == this.actualPlayer){
+		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));

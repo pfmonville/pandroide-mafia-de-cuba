@@ -1,5 +1,12 @@
 package model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -555,6 +562,111 @@ public class Rules {
 		this.currentNumberOfPlayer = currentNumberOfPlayer;
 	}
 	
+	//TODO
+	/**
+	 * Questions' instanciation
+	 * @return a list of questions
+	 */
+	public ArrayList<Question> getQuestions(){
+		ArrayList<Question> questList = new ArrayList<>();
+		//lire le fichier des questions 
+		BufferedReader file=null;
+		String line ;
+		
+		try {
+			file = new BufferedReader(new FileReader(new File(Theme.pathToQuestions)));
+			// on saute les lignes d'introduction
+			do {
+				line = file.readLine();
+			}while(!line.contains("*"));
+			
+			line = file.readLine();
+			while(line != null){
+				//identifier les différents éléments de la ligne
+				String[] elem = line.split(":");
+				int index = Integer.parseInt(elem[0].trim());
+				int category = Integer.parseInt(elem[2].trim());
+				//  le dernier élément est la liste des ids des réponses
+				String[] idsTab = elem[elem.length-1].trim().split(",");
+				ArrayList<Integer> ids = new ArrayList<Integer>();
+				for(int i=0 ; i<idsTab.length;i++){
+					ids.add(new Integer(Integer.parseInt(idsTab[i])));
+				}
+				
+				questList.add(new Question(index,elem[1].trim(),ids,category));
+				
+				line = file.readLine();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		/*
+		 * certaines questions demandent de l'interaction (as tu pris ce jeton, quel est le rôle de cette personne )
+		 * comme les réponses : il y avait [nb] diamands
+		 * rajouter un boolean en parametre : interactive = true or false ?
+		 * si true, quand on clique dessus ça entraînera une autre fenêtre d'interaction
+		 */
+		return questList;
+	}
+	
+	//TODO
+	/**
+	 * Answers' instanciation
+	 * @return a list of Answer
+	 */
+	public ArrayList<Answer> getAnswers(){
+		ArrayList<Answer> answerList = new ArrayList<Answer>();
+		//lire le fichier des réponses
+				BufferedReader file=null;
+				String line ;
+				
+				try {
+					file = new BufferedReader(new FileReader(new File(Theme.pathToAnswers)));
+					// on saute les lignes d'introduction
+					do {
+						line = file.readLine();
+					}while(!line.contains("*"));
+					
+					line = file.readLine();
+					while(line != null){
+						//identifier les différents éléments de la ligne
+						String[] elem = line.split(":");
+						int index = Integer.parseInt(elem[0].trim());
+						//  le dernier élément est la liste des ids des questions
+						String[] idsTab = elem[elem.length-1].trim().split(",");
+						ArrayList<Integer> ids = new ArrayList<Integer>();
+						for(int i=0 ; i<idsTab.length;i++){
+							ids.add(new Integer(Integer.parseInt(idsTab[i])));
+						}
+						
+						answerList.add(new Answer(index,elem[1].trim(),ids));
+						
+						line = file.readLine();
+					}
+					
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally{
+					try {
+						file.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+		return answerList;
+	}
 	
 	
 }

@@ -159,9 +159,7 @@ public class OptionView extends View{
 		//the part where the user chooses to play or watch ia
 		Image iconHU = new Image(Theme.pathHumanIcon);
 		Image iconIA = new Image(Theme.pathIAIcon);
-		
-		//TODO probleme : quand on sélectionne IA, prend en compte la position du joueur--> a desactiver 
-		
+				
 		Label typeOfPlayerLabel = new Label();
 		Image imageJ1 = new Image(Theme.pathTypeOfPlayer);
 		typeOfPlayerLabel.setGraphic(new ImageView(imageJ1));
@@ -214,6 +212,7 @@ public class OptionView extends View{
 		
 		plIA.setOnAction((event)->{
 			App.rules.setAllIA(true);
+			App.rules.setHumanPosition(-1);
 				for(int i = 0; i < App.rules.getMaximumNumberOfPlayer(); i++){
 					((RadioButton) pos.getToggles().get(i)).setDisable(true);
 				}
