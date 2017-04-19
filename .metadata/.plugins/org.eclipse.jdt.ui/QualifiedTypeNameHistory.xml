@@ -8,4 +8,5 @@
 <fullyQualifiedTypeName name="model.Role"/>
 <fullyQualifiedTypeName name="controller.GameController"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.lang.String"/>
 </qualifiedTypeNameHistroy>

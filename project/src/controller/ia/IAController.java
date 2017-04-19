@@ -233,7 +233,6 @@ public class IAController implements PlayerController {
 			 */
 			if(player.getRole().getName().equals(App.rules.getNameThief())){
 				boxAfter.setDiamonds(box.getDiamonds() - player.getRole().getNbDiamondsStolen());
-				System.out.println("Nombre de diamants dans la boite apres le vol du joueur courant : "+ boxAfter.getDiamonds());
 			}
 			
 			//si boite vide -> le joueur courant et tous les joueurs apres sont des enfants des rues
@@ -429,8 +428,7 @@ public class IAController implements PlayerController {
 				tmp.add(i, firstRole);
 				if(!result.contains(tmp)){
 					result.add(tmp);
-				}
-				
+				}	
 			}
 		}
 		return result;
@@ -448,7 +446,8 @@ public class IAController implements PlayerController {
 		ArrayList<ArrayList<String>> result = new ArrayList<ArrayList<String>>();
 		
 		if(nbPlayers == 1){
-			for(String r : rolesList){
+			Set<String> tmp = new HashSet<String>(rolesList);
+			for(String r : tmp){
 				ArrayList<String> list = new ArrayList<String>();
 				list.add(r);
 				result.add(list);
@@ -458,12 +457,14 @@ public class IAController implements PlayerController {
 		
 		ArrayList<ArrayList<String>> recursiveResult = partialPermutation(rolesList , nbPlayers - 1);
 		
-		ArrayList<ArrayList<String>> complementaryLists = new ArrayList<ArrayList<String>>();
+		ArrayList<Set<String>> complementaryLists = new ArrayList<Set<String>>();
+		
 		for(ArrayList<String> list : recursiveResult){
-			ArrayList<String> tmp = new ArrayList<String>(rolesList);
+			ArrayList<String> rolesCopy = new ArrayList<>(rolesList);
 			for(String roleName : list){
-				tmp.remove(roleName);
-			}
+				rolesCopy.remove(roleName);
+			}			
+			Set<String> tmp = new HashSet<String>(rolesCopy);
 			complementaryLists.add(tmp);
 		}
 		
@@ -476,11 +477,7 @@ public class IAController implements PlayerController {
 				if (! result.contains(tmp)){
 					result.add(tmp);
 				}
-				
-			}
-			
-			
-			
+			}	
 		}
 		return result;		
 	}
