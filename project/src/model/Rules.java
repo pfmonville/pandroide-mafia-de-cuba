@@ -30,6 +30,16 @@ public class Rules {
 	private String nameThief;
 	private String nameStreetUrchin;
 	
+	// Corresponding value of each role
+	private final Integer numberGodfather = 0;
+	private final Integer numberLoyalHenchman = 1;
+	private final Integer numberCleaner = 6;
+	private final Integer numberAgent = 3;
+	private final Integer numberDriver = 2;
+	private final Integer numberThief = 4;
+	private final Integer numberStreetUrchin = 5;
+	
+	
 	//Value for the game initialize in the OptionView
 	private int numberOfLoyalHenchmen;
 	private int numberOfCleaners;
@@ -479,5 +489,92 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	public boolean getFirstPlayerCanHide(){
 		return firstPlayerCanHide ;
 	}
+
+
+	public Integer getNumberGodfather() {
+		return numberGodfather;
+	}
+
+
+	public Integer getNumberLoyalHenchman() {
+		return numberLoyalHenchman;
+	}
+
+
+	public Integer getNumberCleaner() {
+		return numberCleaner;
+	}
+
+
+	public Integer getNumberAgent() {
+		return numberAgent;
+	}
+
+
+	public Integer getNumberDriver() {
+		return numberDriver;
+	}
+
+
+	public Integer getNumberThief() {
+		return numberThief;
+	}
+
+
+	public Integer getNumberStreetUrchin() {
+		return numberStreetUrchin;
+	}
 	
+	public Integer convertRoleNameIntoNumber(String role){
+
+		if(role.equals(nameAgent)){
+			return numberAgent;
+		}
+		else if(role.equals(nameLoyalHenchman)){
+			return numberLoyalHenchman;
+		}
+		else if(role.equals(nameCleaner)){
+			return numberCleaner;
+		}
+		else if(role.equals(nameDriver)){
+			return numberDriver;
+		}
+		else if(role.equals(nameStreetUrchin)){
+			return numberStreetUrchin;
+		}
+		else if(role.equals(nameThief)){
+			return numberThief;
+		}
+		else if(role.equals(nameGodFather)){
+			return numberGodfather;
+		}
+		
+		return null;
+	}
+	
+	public String convertNumberIntoRoleName(Integer number){
+		
+		if(number == numberAgent){
+			return nameAgent;
+		}
+		else if(number == numberCleaner){
+			return nameCleaner;
+		}
+		else if(number == numberDriver){
+			return nameDriver;
+		}
+		else if(number == numberGodfather){
+			return nameGodFather;
+		}
+		else if(number == numberLoyalHenchman){
+			return nameLoyalHenchman;
+		}
+		else if(number == numberStreetUrchin){
+			return nameStreetUrchin;
+		}
+		else if(number == numberThief){
+			return nameThief;
+		}
+		return null;
+	}
 }

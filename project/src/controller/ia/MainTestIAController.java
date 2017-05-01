@@ -13,20 +13,20 @@ public class MainTestIAController {
 	public static void main(String[] args){
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add(App.rules.getNameLoyalHenchman());
-		stringList.add(App.rules.getNameLoyalHenchman());
-		stringList.add(App.rules.getNameLoyalHenchman());
-		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
-		stringList.add(App.rules.getNameAgent());
-		stringList.add(App.rules.getNameAgent());
-		stringList.add(App.rules.getNameDriver());
+//		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameAgent());
+//		stringList.add(App.rules.getNameAgent());
+//		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
 		
 		
-		int nombreDeDiamantsDansBoite = 15;
+		int nombreDeDiamantsDansBoite = 10;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
-		int positionDuJoueur = 1;
+		int positionDuJoueur = 2; // inclus dans [1 ; n-1], le parrain est le joueur 0
 		
 		// Joueur voleur
 //		Player p = new Player(null, positionDuJoueur, false, false);
@@ -40,17 +40,17 @@ public class MainTestIAController {
 		IAController iac = new IAController(p);
 		
 		long start = System.currentTimeMillis();
-		ArrayList<ArrayList<String>> result = iac.rolesDistribution(testBox);
+		ArrayList<ArrayList<Integer>> result = iac.rolesDistribution(testBox);
 		long end = System.currentTimeMillis() - start;
 		
-//		for (ArrayList<String> al : result) {
-//	        String appender = "";
-//	        for (String i : al) {
-//	            System.out.print(appender + i);
-//	            appender = " ";
-//	        }
-//	        System.out.println();
-//	    }
+		for (ArrayList<Integer> al : result) {
+	        String appender = "";
+	        for (Integer i : al) {
+	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
+	            appender = " ";
+	        }
+	        System.out.println();
+	    }
 		System.out.println("nb config: "+result.size() );
 		System.out.println("temps d'execution : "+end);
 		

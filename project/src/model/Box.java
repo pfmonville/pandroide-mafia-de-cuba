@@ -41,4 +41,15 @@ public class Box {
 	public Box clone(){
 		return new Box(this.getDiamonds(), new ArrayList<String>(this.getTokens()));
 	}
+	
+	public String toString(){
+		String str = "";
+		str += "Box content:\n";
+		str += "\t number of diamonds: "+ diamonds +"\n";
+		str += "\t list of tokens:\t\t";
+		for(String tok : tokens){
+			str += tok+" ";
+		}
+		return str;
+	}
 }
