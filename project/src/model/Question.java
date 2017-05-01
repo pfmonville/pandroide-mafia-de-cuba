@@ -14,11 +14,18 @@ public class Question extends Phrase{
 	 * 2 : others
 	 */
 	private int category;
+	private int interactive=0; // = 1 quand question propose plusieurs choix d'intitulé
 	
 	public Question(int id, String content,ArrayList<Integer> answersIDs, int category) {
 		super(id, content);
 		setAnswersExpected(answersIDs) ;
 		this.setCategory(category) ;
+	}
+	
+	public Question(int id, String content, ArrayList<Integer> answersIDs,int category, int interactive){
+		this(id,content,answersIDs,category);
+		this.setInteractive(interactive) ;
+		
 	}
 	
 	public ArrayList<Integer> getAnswersExpected() {
@@ -43,6 +50,14 @@ public class Question extends Phrase{
 
 	public void setTargetPlayer(int tagetPlayer) {
 		this.targetPlayer = tagetPlayer;
+	}
+
+	public int getInteractive() {
+		return interactive;
+	}
+
+	public void setInteractive(int interactive) {
+		this.interactive = interactive;
 	}
 	
 	

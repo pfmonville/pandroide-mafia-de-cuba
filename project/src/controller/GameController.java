@@ -388,6 +388,7 @@ public class GameController {
 		//TODO update log creating a Talk
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);
+		Platform.runLater(() -> App.gv.displayGameHistory());
 		updateIAWorldsVisions();
 		SelectingGodFathersAction();
 	}

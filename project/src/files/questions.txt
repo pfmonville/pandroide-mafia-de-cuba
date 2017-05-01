@@ -1,5 +1,5 @@
 Format du fichier :
-Index de la question : Intitulé question : catégorie : index des réponses associées
+Index de la question : Intitulé question : catégorie : index des réponses associées : 1 si la question est interactive
 Catégorie : box=0, player=1, other=2
 Index des questions : de 0 à nombre de lignes
 ************************************************************
@@ -11,7 +11,7 @@ Index des questions : de 0 à nombre de lignes
 5 : Combien de personnages contenait la boîte quand tu l'as passée ? : 0 : 2,3,9
 6 : Quels rôles contenait la boîte quand tu l'as reçue ? : 0 : 2,3,10
 7 : Quels rôles contenait la boîte quand tu l'as passée ? : 0 : 2,3,11
-8 : Es tu un [rôle]? : 1 : 0,1,2,3,5
+8 : Es tu un ... : 1 : 0,1,2,3,5 : 1
 9 : Quel personnage es tu ? : 1 : 2,3,4
 10 : Qui dois-je accuser selon toi? : 1 : 2,3,15
 11 : Est-ce que tu sais quel est le rôle de cette personne? : 1 : 0,1,2,3

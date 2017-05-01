@@ -4,8 +4,6 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -35,6 +33,11 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -47,6 +50,7 @@ import javafx.stage.Stage;
 import model.Answer;
 import model.Phrase;
 import model.Question;
+import model.Talk;
 import model.Theme;
 
 public class GameView extends View{
@@ -62,6 +66,7 @@ public class GameView extends View{
 	private GridPane questionsBox, questionsPlayers, questionsOthers, answers ;
 
 	private ToggleGroup questionsGroup ;
+	private ComboBox<String> choices ; //pour questions interactives
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers ;
 	
@@ -207,15 +212,8 @@ public class GameView extends View{
 		//*********************************
 		//RIGHT PART
 		//*********************************
-		//TODO affichage du texte
 		logPart = new VBox();	
-		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2));
-		Label log = new Label("Log");
-		log.setPrefSize(super.getWidth()/3, (super.getHeight()/2));
-		
-		log.setId("log");
-
-		logPart.getChildren().add(log);
+		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/1.5));
 
 		top.getChildren().addAll(leftPart, logPart);
 		
@@ -223,7 +221,7 @@ public class GameView extends View{
 		//BOTTOM
 		//*********************************
 		themeButtons = new TilePane();
-		themeButtons.setPrefSize(super.getWidth()/12,(super.getHeight()/2));
+		themeButtons.setMaxSize(super.getWidth()/12,(super.getHeight()/2));
 		themeButtons.setVgap(10);
 		
 		//*********************************
@@ -393,6 +391,14 @@ public class GameView extends View{
 			@Override
 			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
 				qrID =Integer.parseInt(((RadioButton) questionsGroup.getSelectedToggle()).getId()) ;
+				for(int j=0; j<quest.size();j++){
+					if(quest.get(j) instanceof Question && quest.get(j).getId()==qrID){
+						if(((Question)quest.get(j)).getInteractive()==0){
+							choices.setDisable(true);
+						}
+						break;
+					}
+				}
 			}	
 		});
 		ArrayList<Question> box = new ArrayList<Question>(), players = new ArrayList<Question>(), others= new ArrayList<Question>();
@@ -415,7 +421,7 @@ public class GameView extends View{
 				Answer ans = (Answer)p;
 				int index=quest.indexOf(p);
 				RadioButton b = new RadioButton(ans.getContent());
-				b.setPrefHeight(45);
+				b.setPrefHeight(answers.getHeight()/5);
 				b.setWrapText(true);
 				b.setId(ans.getId()+"");
 				b.setToggleGroup(questionsGroup);
@@ -430,7 +436,7 @@ public class GameView extends View{
 		for (Question q : box){
 			int index=box.indexOf(q);
 			RadioButton b = new RadioButton(q.getContent());
-			b.setPrefHeight(45);
+			b.setPrefHeight(questionsBox.getHeight()/5);//45
 			b.setWrapText(true);
 			b.setId(q.getId()+"");
 			b.setToggleGroup(questionsGroup);
@@ -438,27 +444,53 @@ public class GameView extends View{
 			if(index%2==0 && index!=0)
 				i++;
 			questionsBox.add(b, index%nbCol, i );
-			questionsBox.setMargin(b, new Insets(5,0,0,5));
+			questionsBox.setMargin(b, new Insets(5,0,0,5));		
 		}
 		i =0;
 		for (Question q : players){
 			int index=players.indexOf(q);
-			RadioButton b = new RadioButton(q.getContent());
-			b.setPrefHeight(45);
-			b.setWrapText(true);
-			b.setId(q.getId()+"");
-			b.setToggleGroup(questionsGroup);
-			b.getStyleClass().add("question");
-			if(index%2==0 && index!=0)
-				i++;
-			questionsPlayers.add(b, index%nbCol,i);
-			questionsPlayers.setMargin(b, new Insets(5,0,0,5));
+			if(q.getInteractive()==0){
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsPlayers.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				if(index%2==0 && index!=0)
+					i++;
+				questionsPlayers.add(b, index%nbCol,i);
+				questionsPlayers.setMargin(b, new Insets(5,0,0,5));
+			}else{
+				//une question à choix multiple
+				HBox button = new HBox() ;
+				//le bouton radio de la question
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsBox.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				//la combo box
+				choices = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices.setVisibleRowCount(4);
+				choices.setDisable(true);
+				choices.getStyleClass().add("question_box");
+				b.setOnAction((event)->{
+					choices.setDisable(false);
+				});
+				button.getChildren().addAll(b,choices);
+				
+				if(index%2==0 && index!=0)
+					i++;
+				questionsPlayers.add(button, index%nbCol, i );
+				questionsPlayers.setMargin(button, new Insets(5,0,0,5));
+			}
 		}
 		i =0;
 		for (Question q : others){
 			int index= others.indexOf(q);
 			RadioButton b = new RadioButton(q.getContent());
-			b.setPrefHeight(45);
+			b.setPrefHeight(questionsOthers.getHeight()/5);
 			b.setWrapText(true);
 			b.setId(q.getId()+"");
 			b.setToggleGroup(questionsGroup);
@@ -1052,9 +1084,9 @@ public class GameView extends View{
 		other.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		
 		themeButtons.getChildren().addAll(box, player,other);
-		themeButtons.setMargin(box,new Insets(0,0,0,10));
-		themeButtons.setMargin(player,new Insets(0,0,0,10));
-		themeButtons.setMargin(other,new Insets(0,0,0,10));
+		themeButtons.setMargin(box,new Insets(0,0,0,5));
+		themeButtons.setMargin(player,new Insets(0,0,0,5));
+		themeButtons.setMargin(other,new Insets(0,0,0,5));
 		
 		//questions area
 		questionsBox = new GridPane();
@@ -1095,15 +1127,22 @@ public class GameView extends View{
 		askQuestion.setOnAction((event)->{
 			Question q = App.gameController.getQuestions().get(qrID);
 			q.setTargetPlayer(target);
-			App.gameController.askTo(q);
+			if(q.getInteractive()==0)
+				App.gameController.askTo(q);
+			else{
+				String intitule = q.getContent()+choices.getValue();
+				Question q2 = new Question(q.getId(), intitule,q.getAnswersExpected(), q.getCategory());
+				App.gameController.askTo(q2);
+			}
 		});
 		
-		pocket.getChildren().addAll(emptyPocket, askQuestion);
-		pocket.setMargin(emptyPocket, new Insets(0,0,0,3));
-		pocket.setMargin(askQuestion, new Insets(10,0,0,3));
+		pocket.getChildren().addAll( askQuestion,emptyPocket);
+		pocket.setMargin(emptyPocket, new Insets(10,0,0,3));
+		pocket.setMargin(askQuestion, new Insets(0,0,0,3));
 		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
+		logPart.setBackground(new Background(new BackgroundImage(new Image("image/confidentialfile.png",super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 	}
 	
 	
@@ -1115,7 +1154,6 @@ public class GameView extends View{
 	 * display the player's actions buttons
 	 */
 	public void displayPlayerAnswers(){
-		//TODO boutons  prendre la parole ?
 		answers = new GridPane();
 		answers.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
 		answers.setVgap(2); answers.setHgap(3);
@@ -1228,7 +1266,24 @@ public class GameView extends View{
 	
 
 	}
+
 	
+	/**
+	 * show the game history
+	 */
+	public void displayGameHistory(){		
+		ArrayList<Talk> history =App.gameController.getGameHistory();
+		
+		Label log = new Label();	
+		log.setId("log");
+		
+		if(! history.isEmpty()){
+			log.setText(history.get(0).getQuestion().getContent());
+		}
+
+		logPart.getChildren().add(log);
+		logPart.setMargin(log, new Insets(0,0,0,5));
+	}
 	
 	
 	
@@ -1240,7 +1295,11 @@ public class GameView extends View{
 		questionsArea.getChildren().clear();
 		pocket.getChildren().clear();
 		themeButtons.getChildren().clear();
+		if(answerPicture!=null)
+			answerPicture.getChildren().clear();
 		if (info !=null)
 			info.getChildren().clear();
+		logPart.getChildren().clear();
+		logPart.setBackground(null);
 	} 
 }
