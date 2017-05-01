@@ -46,7 +46,7 @@ public class Box {
 		String str = "";
 		str += "Box content:\n";
 		str += "\t number of diamonds: "+ diamonds +"\n";
-		str += "\t list of tokens:\t\t";
+		str += "\t list of tokens: ";
 		for(String tok : tokens){
 			str += tok+" ";
 		}

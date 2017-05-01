@@ -19,10 +19,15 @@ public class IAController implements PlayerController {
 
 	
 	private Player player;
+	// List for the roles still available in the box when the player receive the box
+	private ArrayList<String> rolesLeft;
+	private ArrayList<Integer> rolesNumberLeft;
 	
 	
 	public IAController(Player player) {
 		this.player = player;
+		this.rolesLeft = new ArrayList<String>();
+		this.rolesNumberLeft = new ArrayList<Integer>();
 	}
 	
 	public IAController(Player player2, Box box, Rules rules,
@@ -38,15 +43,13 @@ public class IAController implements PlayerController {
 		 */
 	}
 	
-	public ArrayList<ArrayList<Integer>> rolesDistribution(Box box){
-		
+	public ArrayList<ArrayList<Integer>> rolesDistributionBefore(Box box){
 		int nbTokensBeforeStart = App.rules.getTokensFor(GameController.getNumberOfPlayers()).size();
 		
-		// Roles still available in the box
-		ArrayList<String> rolesLeft = (ArrayList<String>) box.getTokens();
-		ArrayList<Integer> rolesNumberLeft = new ArrayList<Integer>();
+		// Roles still available in the box when the player receive the box
+		rolesLeft = (ArrayList<String>) box.getTokens();
 		
-		// Conversion
+		// Conversion of String into Integer
 		for(String roleName : rolesLeft){
 			rolesNumberLeft.add(App.rules.convertRoleNameIntoNumber(roleName));
 		}
@@ -55,36 +58,22 @@ public class IAController implements PlayerController {
 		ArrayList<String> rolesTaken = App.rules.getTokensFor(GameController.getNumberOfPlayers());
 		ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
 		
-		// Conversion
+		// Conversion of String into Integer
 		for(String s : rolesTaken){
 			rolesNumberTaken.add(App.rules.convertRoleNameIntoNumber(s));
 		}
-		
 		for(Integer i : rolesNumberLeft){
 			rolesNumberTaken.remove(i);
 		}
 		
-		
-		
-
 		/*
 		 * Lists of the possible distributions for the previous players
 		 */
 		ArrayList<ArrayList<Integer>> configBefore = new ArrayList<ArrayList<Integer>>();
 		
-		/*
-		 * Lists of the possible distributions for the next players
-		 */
-		ArrayList<ArrayList<Integer>> configAfter = new ArrayList<ArrayList<Integer>>();
-		
 		// Set of all the possible types for the hidden token
 		Set<Integer> typesOfTokensBefore = new HashSet<Integer>();
-		typesOfTokensBefore.addAll(rolesNumberTaken);	
-		
-		// Set of all the possibles types for the remaining tokens
-		Set<Integer> typesOfTokensAfter = new HashSet<Integer>();
-		typesOfTokensAfter.addAll(rolesNumberLeft);
-		
+		typesOfTokensBefore.addAll(rolesNumberTaken);			
 		
 		/**
 		 * configBefore
@@ -221,44 +210,64 @@ public class IAController implements PlayerController {
 							configBefore.addAll(subset);
 						}
 					}
-					
 				}
 			}
 		}
+		return configBefore;
+	}
+	
+	
+	public ArrayList<ArrayList<Integer>> rolesDistributionAfter(Box box){		
+		/*
+		 * Lists of the possible distributions for the next players
+		 */
+		ArrayList<ArrayList<Integer>> configAfter = new ArrayList<ArrayList<Integer>>();	
+		
+		// TODO: On ne l'utilise pas ??
+//		// Set of all the possibles types for the remaining tokens
+//		Set<Integer> typesOfTokensAfter = new HashSet<Integer>();
+//		typesOfTokensAfter.addAll(rolesNumberLeft);
 		
 		/*
 		 *  TODO : Pour les tests des configAfter, le joueur prend un role.
 		 *  Attention : s'il recoit une boite vide : rolesLeft est une liste vide.
 		 *  Donc pas de remove et le joueur devient Enfant des Rues.
-		 *  code en dur ici dans la methode, mais le choix du role devra etre fait differemment
-		 *  (appel d'une autre methode d'une autre classe ?)
+		 *  L'action de prendre un role est code en dur dans la methode main de la classe MainTestIAController,
+		 *  en initialisant l'attribut role de la classe Player du joueur courant
+		 *  mais le choix du role devra surement etre fait differemment (appel d'une autre methode d'une autre classe ?)
 		 */
-		rolesNumberLeft.remove(App.rules.convertRoleNameIntoNumber(player.getRole().getName()));
-		rolesLeft.remove(player.getRole().getName());
+		
+		Box boxAfter = box.clone();
+		boxAfter.setTokens(rolesLeft);
+		System.out.println("AVANT DE PRENDRE :");
+		System.out.println(boxAfter.toString());
+		
+		/*
+		 * Update of the roles left in the box after that the player took something (he has chosen a role)
+		 * TODO: Si le joueur est un voleur, mise a jour de l'etat de la boite concernant le nombre de diamants,
+		 * pour generer l'ensemble des configurations apres. LA MODIFICATION NE DOIT PAS SE FAIRE DANS CETTE METHODE
+		 */
+		if(player.getRole().getName().equals(App.rules.getNameThief())){
+			boxAfter.setDiamonds(box.getDiamonds() - player.getRole().getNbDiamondsStolen());
+		}else{
+			rolesLeft.remove(player.getRole().getName());
+			rolesNumberLeft.remove(App.rules.convertRoleNameIntoNumber(player.getRole().getName()));
+		}
+		
+		System.out.println("APRES AVOIR PRIS :");
+		System.out.println(boxAfter.toString());
+		
+		System.out.println("DEBUG : "+ boxAfter.getTokens());
 		
 		/**
-		 * TODO
 		 * configAfter
 		 */
 		
 		if(player.getPosition() != GameController.getNumberOfPlayers() - 1){
 			
 			int nbPlayersAfter = GameController.getNumberOfPlayers() - player.getPosition() - 1;
-			/*
-			 * TODO: si il y d diamants, avec d petit (par ex d = 2), il ne peut y avoir au plus que d voleurs parmi le joueur courant et tous les joueurs suivants.
-			 */	
 			
-			Box boxAfter = box.clone();
-			boxAfter.setTokens(rolesLeft);
-			System.out.println(boxAfter.toString());
-			
-			/*
-			 * Si le joueur est un voleur, mise a jour de l'etat de la boite concernant le nombre de diamants,
-			 * pour generer l'ensemble des configurations apres
-			 */
-
-
-			//si boite vide -> le joueur courant et tous les joueurs apres sont des enfants des rues
+			// If the box is empty, all the players after are street urchins
 			if(boxAfter.isEmpty()){
 				ArrayList<Integer> StreetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbPlayersAfter, App.rules.getNumberStreetUrchin()));
 				configAfter.add(StreetUrchinsList);
@@ -271,6 +280,7 @@ public class IAController implements PlayerController {
 			 * With those informations he can generate all the possible distributions of thieves and SU  
 			 */
 			else if(boxAfter.getTokens().isEmpty()){
+				System.out.println("pouet");
 				ArrayList<Integer> tmp = new ArrayList<Integer>();
 				int thievesUpperBound = Math.min(nbPlayersAfter, boxAfter.getDiamonds());
 				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
@@ -403,22 +413,11 @@ public class IAController implements PlayerController {
 							tmpList.set(list.size()-2, App.rules.getNumberStreetUrchin());
 							configAfter.add(tmpList);
 						}
-					}
-					
+					}	
 				}
-				
-				
-				
 			}
 		}
-		
-		
-		//TODO: il faut retourner configBefore ET configAfter
-		//reflechir s'il faut retourner une seule liste de config sachant qu'il peut travailler avec les deux listes de facons independantes
-//		return configBefore;
-		ArrayList<ArrayList<Integer>> allConfig = new ArrayList<ArrayList<Integer>>(configBefore);
-		allConfig.addAll(configAfter);
-		return allConfig;
+		return configAfter;
 	}
 	
 	/**
@@ -513,6 +512,10 @@ public class IAController implements PlayerController {
 	
 	public void updateWorldsVision(SecretID secret){
 		//TODO
+	}
+
+	public Player getPlayer() {
+		return player;
 	}	
 }
 
