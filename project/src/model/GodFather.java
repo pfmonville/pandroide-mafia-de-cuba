@@ -1,30 +1,46 @@
 package model;
 
+import controller.App;
+
 public class GodFather extends Role implements GodFatherSide{
 	
 	private int numberOfDiamondsHidden;
-	private int numberOfJoker;
+	private int jokers;
 	
-	public GodFather(int nbDiamonds, int nbJoker){
-		
-		super("GodFather");
-		numberOfDiamondsHidden = nbDiamonds ;
-		numberOfJoker = nbJoker ;
+	public GodFather(int nbDiamonds, int jokers){
+		super(App.rules.getNameGodFather());
+		this.numberOfDiamondsHidden = nbDiamonds;
+		this.jokers = jokers;
+	}
+	
+	public GodFather(int jokers){
+		super(App.rules.getNameGodFather());
+		this.jokers = jokers;
 	}
 	
 	public int getNbDiamondsHidden(){
 		return numberOfDiamondsHidden ;
 	}
 	
-	public int getNbJoker(){
-		return numberOfJoker ;
+	
+	public void hideDiamonds(int numberOfDiamondsToHide){
+		this.numberOfDiamondsHidden = numberOfDiamondsToHide;
 	}
 	
-	public void setNbDiamondsHidden(int nbDiamonds){
-		numberOfDiamondsHidden = nbDiamonds ;
+	public boolean isJokerLeft(){
+		if(this.jokers > 0){
+			return true;
+		}
+		return false;
 	}
 	
-	public void setNbJoker(int nbJoker) {
-		numberOfJoker = nbJoker ;
+	public boolean consumeJoker(){
+		if(isJokerLeft()){
+			this.jokers --;
+			return true;
+		}else{
+			return false;
+		}
 	}
+	
 }

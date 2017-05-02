@@ -2,7 +2,6 @@ package controller;
 
 import java.io.IOException;
 
-import controller.GameController;
 import javafx.application.Application;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -12,8 +11,9 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Rules;
 import model.Theme;
-import view.OptionView;
 import view.GameView;
+import view.OptionView;
+import view.RulesView;
 import view.StartView;
 
 public class App extends Application {
@@ -24,6 +24,7 @@ public class App extends Application {
 	public static OptionView ov;
 	public static StartView sv;
 	public static GameView gv;
+	public static RulesView rv ;
 	
 	public static Scene scene;
 	public static Cursor oldCursor;
@@ -46,6 +47,7 @@ public class App extends Application {
 		ov = new OptionView(Theme.windowWidth, Theme.windowHeight);
 		gv = new GameView(Theme.windowWidth, Theme.windowHeight);
 		sv = new StartView(Theme.windowWidth, Theme.windowHeight);
+		rv = new RulesView(Theme.windowWidth, Theme.windowHeight);
 
 		mainLayout = new Pane();
 		mainLayout.getChildren().add(sv.getPanel());

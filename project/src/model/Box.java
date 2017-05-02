@@ -35,11 +35,7 @@ public class Box {
 	}
 	
 	public boolean isEmpty(){
-		return diamonds == 0 && tokens.isEmpty();
-	}
-	
-	public Box clone(){
-		return new Box(this.getDiamonds(), new ArrayList<String>(this.getTokens()));
+		return this.diamonds == 0 && tokens.isEmpty();
 	}
 	
 	public String toString(){
@@ -51,5 +47,25 @@ public class Box {
 			str += tok+" ";
 		}
 		return str + "\n";
+	}
+	
+	public boolean removeToken(String tokenToRemove){
+		if(tokens.contains(tokenToRemove)){
+			tokens.remove(tokenToRemove);
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean removeDiamonds(int diamondsToRemove){
+		if(this.diamonds >= diamondsToRemove){
+			this.diamonds -= diamondsToRemove;
+			return true;
+		}
+		return false;
+	}
+	
+	public Box clone(){
+		return new Box(diamonds, (ArrayList<String>) tokens.clone());
 	}
 }

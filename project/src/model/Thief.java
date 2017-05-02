@@ -1,11 +1,13 @@
 package model;
 
+import controller.App;
+
 public class Thief extends Role implements ThiefSide{
 	
 	private int numberOfDiamondsStolen;
 	
 	public Thief(int nbDiamondsStolen){
-		super("Thief");
+		super(App.rules.getNameThief());
 		numberOfDiamondsStolen = nbDiamondsStolen;
 	}
 	

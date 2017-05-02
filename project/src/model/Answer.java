@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Answer extends Phrase{
 	
@@ -10,6 +11,7 @@ public class Answer extends Phrase{
 		super(id, content);
 		setCorrespondingQuestionIDList(questionsIDs) ;
 	}
+	
 
 	public ArrayList<Integer> getCorrespondingQuestionIDList() {
 		return correspondingQuestionIDList;

@@ -1,21 +1,23 @@
 package model;
 
+import controller.App;
+
 public class Driver extends Role {
 	
-	private Player protectedPlayer;
+	private int positionProtectedPlayer;
 	
-	public Driver(Player protectedPlayer){
+	public Driver(int positionProtectedPlayer){
 		
-		super("Driver");
-		this.protectedPlayer = protectedPlayer ;
+		super(App.rules.getNameDriver());
+		this.positionProtectedPlayer = positionProtectedPlayer ;
 	}
 	
-	public Player getProtectedPlayer(){
+	public int getProtectedPlayerPosition(){
 		
-		return protectedPlayer;
+		return positionProtectedPlayer;
 	}
 	
-	public void setProtectedPlayer(Player newProtected){
-		protectedPlayer = newProtected ;
+	public void setProtectedPlayerPosition(int newProtectedPosition){
+		positionProtectedPlayer = newProtectedPosition ;
 	}
 }

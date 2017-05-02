@@ -1,5 +1,12 @@
 package model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,7 +32,9 @@ public class Rules {
 	private String nameGodFather;
 	private String nameLoyalHenchman;
 	private String nameCleaner;
-	private String nameAgent;
+	private String nameAgentFBI;
+	private String nameAgentCIA;
+	private String nameAgentLambda;
 	private String nameDriver;
 	private String nameThief;
 	private String nameStreetUrchin;
@@ -49,14 +58,15 @@ public class Rules {
 	private int numberOfDiamonds;
 	private boolean allIA;
 	private int humanPosition;
+	private int currentNumberOfPlayer;
 
 	
 	public Rules() {
-		
 		this.nameGodFather = "GodFather";
 		this.nameLoyalHenchman = "LoyalHenchman";
 		this.nameCleaner = "Cleaner";
-		this.nameAgent = "Agent";
+		this.nameAgentFBI = "FBI";
+		this.nameAgentCIA = "CIA";
 		this.nameDriver = "Driver";
 		this.nameThief= "Thief";
 		this.nameStreetUrchin = "StreetUrchin";
@@ -74,6 +84,7 @@ public class Rules {
 		this.firstPlayerCanHide = true;
 		this.minimumNumberOfPlayer = 6;
 		this.maximumNumberOfPlayer = 12;
+		this.currentNumberOfPlayer = 6;
 		
 		this.numberOfLoyalHenchmen = 1;
 		this.numberOfCleaners = 0;
@@ -82,6 +93,7 @@ public class Rules {
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
 		this.allIA = false;
+		this.humanPosition = 1;
 	}
 	
 	
@@ -105,7 +117,7 @@ public class Rules {
 		this.allIA = false;
 	}
 	
-public ArrayList<String> getTokensFor(int numberOfPlayer){
+	public ArrayList<String> getTokensFor(int numberOfPlayer){
 		
 		ArrayList<String> tokens = new ArrayList<>();
 		for(int i = 0; i < this.defaultNumberOfLoyalHenchmen.get(numberOfPlayer - minimumNumberOfPlayer); i++){
@@ -115,7 +127,13 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 			tokens.add(nameCleaner);
 		}
 		for(int i = 0; i < this.defaultNumberOfAgents.get(numberOfPlayer - minimumNumberOfPlayer); i++){
-			tokens.add(nameAgent);
+			if(i ==0){
+				tokens.add(nameAgentFBI);
+			}else if(i == 1){
+				tokens.add(nameAgentCIA);
+			}else{
+				tokens.add(nameAgentLambda);
+			}
 		}
 		for(int i = 0; i < this.defaultNumberOfDrivers.get(numberOfPlayer - minimumNumberOfPlayer); i++){
 			tokens.add(nameDriver);
@@ -124,6 +142,42 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	}
 
 
+	public boolean isAValidToken(String token){
+		if(token.equals(nameDriver)||token.equals(nameLoyalHenchman)||token.equals(nameAgentFBI)|| token.equals(nameAgentCIA)|| token.equals(nameAgentLambda)){
+			return true;
+		}else if(this.numberOfCleaners > 0 && token.equals(nameCleaner)){
+			return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<String> getTokens(){
+		ArrayList<String> tokens = new ArrayList<>();
+		for(int i = 0; i < this.numberOfLoyalHenchmen; i++){
+			tokens.add(nameLoyalHenchman);
+		}
+		for(int i = 0; i < this.numberOfCleaners; i++){
+			tokens.add(nameCleaner);
+		}
+		for(int i = 0; i < this.numberOfAgents; i++){
+			if(i ==0){
+				tokens.add(nameAgentFBI);
+			}else if(i == 1){
+				tokens.add(nameAgentCIA);
+			}else{
+				tokens.add(nameAgentLambda);
+			}
+		}
+		for(int i = 0; i < this.numberOfDrivers; i++){
+			tokens.add(nameDriver);
+		}
+		return tokens;
+	}
+	
+	public Box getBox(){
+		return new Box(this.numberOfDiamonds, this.getTokens());
+	}
+	
 	public int getDefaultNumberOfLoyalHenchmenFor(int numberOfPlayer) {
 		return defaultNumberOfLoyalHenchmen.get(numberOfPlayer - minimumNumberOfPlayer);
 	}
@@ -319,14 +373,31 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 
 
 
-	public String getNameAgent() {
-		return nameAgent;
+	public String getNameAgentLambda() {
+		return nameAgentLambda;
+	} 
+
+
+	public void setNameAgentLambda(String nameAgent) {
+		this.nameAgentLambda = nameAgent;
 	}
+	
+	public String getNameAgentFBI() {
+		return nameAgentFBI;
+	} 
 
 
+	public void setNameAgentFBI(String nameAgent) {
+		this.nameAgentFBI = nameAgent;
+	}
+	
+	public String getNameAgentCIA() {
+		return nameAgentCIA;
+	} 
 
-	public void setNameAgent(String nameAgent) {
-		this.nameAgent = nameAgent;
+
+	public void setNameAgentCIA(String nameAgent) {
+		this.nameAgentCIA = nameAgent;
 	}
 
 
@@ -490,7 +561,6 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 		return firstPlayerCanHide ;
 	}
 
-
 	public Integer getNumberGodfather() {
 		return numberGodfather;
 	}
@@ -524,10 +594,121 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	public Integer getNumberStreetUrchin() {
 		return numberStreetUrchin;
 	}
+
+	public int getCurrentNumberOfPlayer() {
+		return currentNumberOfPlayer;
+	}
+
+
+	public void setCurrentNumberOfPlayer(int currentNumberOfPlayer) {
+		this.currentNumberOfPlayer = currentNumberOfPlayer;
+	}
+	
+
+	/**
+	 * Questions' instanciation
+	 * @return a list of questions
+	 */
+	public ArrayList<Question> getQuestions(){
+		ArrayList<Question> questList = new ArrayList<>();
+		//lire le fichier des questions 
+		BufferedReader file=null;
+		String line ;
+		
+		try {
+			file = new BufferedReader(new FileReader(new File(Theme.pathToQuestions)));
+			// on saute les lignes d'introduction
+			do {
+				line = file.readLine();
+			}while(!line.contains("*"));
+			
+			line = file.readLine();
+			while(line != null){
+				//identifier les différents éléments de la ligne
+				String[] elem = line.split(":");
+				int index = Integer.parseInt(elem[0].trim());
+				int category = Integer.parseInt(elem[2].trim());
+				//  le dernier élément est la liste des ids des réponses
+				String[] idsTab = elem[3].trim().split(",");
+				ArrayList<Integer> ids = new ArrayList<Integer>();
+				for(int i=0 ; i<idsTab.length;i++){
+					ids.add(new Integer(Integer.parseInt(idsTab[i])));
+				}
+				
+				if(elem.length == 4)
+					questList.add(new Question(index,elem[1].trim(),ids,category));
+				else 
+					questList.add(new Question(index, elem[1].trim(), ids, category, Integer.parseInt(elem[4].trim())));
+				
+				line = file.readLine();
+			}
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally{
+			try {
+				file.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return questList;
+	}
+	
+	
+	/**
+	 * Answers' instanciation
+	 * @return a list of Answer
+	 */
+	public ArrayList<Answer> getAnswers(){
+		ArrayList<Answer> answerList = new ArrayList<Answer>();
+		//lire le fichier des réponses
+				BufferedReader file=null;
+				String line ;
+				
+				try {
+					file = new BufferedReader(new FileReader(new File(Theme.pathToAnswers)));
+					// on saute les lignes d'introduction
+					do {
+						line = file.readLine();
+					}while(!line.contains("*"));
+					
+					line = file.readLine();
+					while(line != null){
+						//identifier les différents éléments de la ligne
+						String[] elem = line.split(":");
+						int index = Integer.parseInt(elem[0].trim());
+						//  le dernier élément est la liste des ids des questions
+						String[] idsTab = elem[elem.length-1].trim().split(",");
+						ArrayList<Integer> ids = new ArrayList<Integer>();
+						for(int i=0 ; i<idsTab.length;i++){
+							ids.add(new Integer(Integer.parseInt(idsTab[i])));
+						}
+						
+						answerList.add(new Answer(index,elem[1].trim(),ids));
+						
+						line = file.readLine();
+					}
+					
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally{
+					try {
+						file.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+		return answerList;
+	}
 	
 	public Integer convertRoleNameIntoNumber(String role){
 
-		if(role.equals(nameAgent)){
+		if(role.equals(nameAgentLambda)){
 			return numberAgent;
 		}
 		else if(role.equals(nameLoyalHenchman)){
@@ -555,7 +736,7 @@ public ArrayList<String> getTokensFor(int numberOfPlayer){
 	public String convertNumberIntoRoleName(Integer number){
 		
 		if(number == numberAgent){
-			return nameAgent;
+			return nameAgentLambda;
 		}
 		else if(number == numberCleaner){
 			return nameCleaner;

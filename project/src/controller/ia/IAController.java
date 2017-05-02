@@ -44,7 +44,7 @@ public class IAController implements PlayerController {
 	}
 	
 	public ArrayList<ArrayList<Integer>> rolesDistributionBefore(Box box){
-		int nbTokensBeforeStart = App.rules.getTokensFor(GameController.getNumberOfPlayers()).size();
+		int nbTokensBeforeStart = App.rules.getTokensFor(App.rules.getCurrentNumberOfPlayer()).size();
 		
 		// Roles still available in the box when the player receive the box
 		rolesLeft = (ArrayList<String>) box.getTokens();
@@ -55,7 +55,7 @@ public class IAController implements PlayerController {
 		}
 		
 		// Roles already taken (or hidden) by previous players
-		ArrayList<String> rolesTaken = App.rules.getTokensFor(GameController.getNumberOfPlayers());
+		ArrayList<String> rolesTaken = App.rules.getTokensFor(App.rules.getCurrentNumberOfPlayer());
 		ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
 		
 		// Conversion of String into Integer
@@ -261,9 +261,9 @@ public class IAController implements PlayerController {
 		 * configAfter
 		 */
 		
-		if(player.getPosition() != GameController.getNumberOfPlayers() - 1){
+		if(player.getPosition() != App.rules.getCurrentNumberOfPlayer() - 1){
 			
-			int nbPlayersAfter = GameController.getNumberOfPlayers() - player.getPosition() - 1;
+			int nbPlayersAfter = App.rules.getCurrentNumberOfPlayer() - player.getPosition() - 1;
 			
 			// If the box is empty, all the players after are street urchins
 			if(boxAfter.isEmpty()){
@@ -283,7 +283,7 @@ public class IAController implements PlayerController {
 				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
 				
 				// Specific situation of the second to last player. The last player can only be thief or SU
-				if(player.getPosition() == GameController.getNumberOfPlayers() - 2){
+				if(player.getPosition() == App.rules.getCurrentNumberOfPlayer() - 2){
 					tmp.add(App.rules.getNumberThief());
 					configAfter.add(tmp);
 					

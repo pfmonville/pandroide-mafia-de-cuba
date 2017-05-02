@@ -26,9 +26,9 @@
 
 #title{
 	-fx-font: 64px Tahoma;
-	-fx-text-alignment:center;
 	-fx-stroke: black;
 	-fx-stroke-width: 1;
+	-fx-text-fill : white ;
 }
 
 #stat{
@@ -64,9 +64,8 @@
 #answer{
 	-fx-text-alignment:center;
 	-fx-alignment:center;
-	-fx-text-fill:blue;
+	-fx-text-fill:white;
 	-fx-font : 28px Tahoma;
-	-fx-background-color:lightgrey;
 }
 
 #log{
@@ -78,6 +77,7 @@
 #info{
 	-fx-text-alignment:justify;
 	-fx-font : 20px Tahoma;
+	-fx-text-fill: white;
 }
 
 .player{
@@ -97,6 +97,25 @@
 	-fx-border-color:cyan;
 }
 
+.godFather{
+	-fx-background-color:dimgray;
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+.godFather:hover{
+	-fx-background-color:dimgray;
+}
+
+.humanPlayer{
+	-fx-background-color:rgb(62,240,120);
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+.humanPlayer:hover{
+	-fx-background-color: rgb(62,240,120);
+}
 .question{
 	-fx-font: 15px Tahoma;
 	-fx-background-color:linear-gradient(grey, black);
