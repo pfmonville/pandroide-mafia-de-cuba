@@ -28,7 +28,7 @@ public class GameController {
 	/*
 	 * AJOUT DE LA VALEUR POUR LE DEBUG DE LA CLASSE IACONTROLLER VIA LA CLASSE MAINTESTIACONTROLLER
 	 */
-	private static int numberOfPlayers = 6; // nombre de joueurs, parrain inclus
+	private static int numberOfPlayers = 10; // nombre de joueurs, parrain inclus
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;

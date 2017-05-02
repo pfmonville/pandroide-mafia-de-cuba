@@ -388,9 +388,8 @@ public class IAController implements PlayerController {
 					 * jetons = 2
 					 */
 					/*
-					 * Specific situation of the second to last player.
-					 * if all tokens have been taken and there is a thief before him
-					 * he can be a SU
+					 * If all the tokens have been taken and there is a thief before 
+					 * the second to last player, he can be a SU
 					 */
 					ArrayList<Integer> rolesLeftCopy;
 					List<Integer> subList;
@@ -413,6 +412,7 @@ public class IAController implements PlayerController {
 						}	
 					}
 				}
+				
 				/*
 				 * Specific case: Not enough items for everybody
 				 * ex: 6 players (god father included)
@@ -422,9 +422,25 @@ public class IAController implements PlayerController {
 				 */
 				else if(boxAfter.getTokens().size() + upperBoundThieves < nbPlayersAfter){
 					
-				}
+					ArrayList<Integer> tmp = new ArrayList<Integer>(rolesLeftEnhanced);
+					ArrayList<ArrayList<Integer>> tmpResult = permutation(tmp);
 
-				
+					//the last two players are SU
+					if(boxAfter.getTokens().size() + upperBoundThieves < nbPlayersAfter - 1){
+						for (ArrayList<Integer> list : tmpResult){
+							list.add(App.rules.getNumberStreetUrchin());
+							list.add(App.rules.getNumberStreetUrchin());
+						}						
+						configAfter.addAll(tmpResult);
+					}
+					//the last player is a SU
+					else{
+						for (ArrayList<Integer> list : tmpResult){
+							list.add(App.rules.getNumberStreetUrchin());
+						}						
+						configAfter.addAll(tmpResult);
+					}
+				}
 			}
 		}
 		return configAfter;

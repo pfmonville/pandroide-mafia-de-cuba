@@ -22,11 +22,11 @@ public class MainTestIAController {
 //		stringList.add(App.rules.getNameAgent());
 //		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 12;
+		int nombreDeDiamantsDansBoite = 15;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 2; // inclus dans [1 ; n-1], le parrain est le joueur 0
+		int positionDuJoueur = 6; // inclus dans [1 ; n-1], le parrain est le joueur 0
 		Player p = new Player(null, positionDuJoueur, false, false);
 		
 		IAController iac = new IAController(p);
@@ -38,12 +38,12 @@ public class MainTestIAController {
 		
 		// Le joueur choisi ce qu'il prend
 		// Joueur voleur
-		int nombreDeDiamantsVoles = 11;
-		iac.getPlayer().takeDiamonds(nombreDeDiamantsVoles);
+//		int nombreDeDiamantsVoles = 15;
+//		iac.getPlayer().takeDiamonds(nombreDeDiamantsVoles);
 		
 		// Joueur non voleur
-//		String nomDuRole = App.rules.getNameLoyalHenchman();
-//		iac.getPlayer().setRole(new Role(nomDuRole));
+		String nomDuRole = App.rules.getNameLoyalHenchman();
+		iac.getPlayer().setRole(new Role(nomDuRole));
 		
 		/*
 		 *  TODO: MAJ de l'etat de la boite (N'EST PAS SENSE ETRE FAIT DANS LA METHODE rolesDistributionBefore)
