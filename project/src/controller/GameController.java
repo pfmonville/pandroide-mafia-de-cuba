@@ -275,7 +275,7 @@ public class GameController {
 			players.get(position).takeDiamonds(diamondsPicked);
 		}else if(this.box.isEmpty()){
 			//since tokenPicked is null takeToken automatically assigns streetUpchin to this player
-			players.get(position).takeToken(tokenPicked);
+			players.get(position).takeToken("");
 		}else{
 			throw new PickingStrategyError("you have to choose either to pick dimaonds or a token");
 		}

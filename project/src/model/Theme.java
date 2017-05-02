@@ -30,6 +30,7 @@ public class Theme {
 	public static String pathLogo = "image/logoMafiaDeCuba1.png";
 	public static String pathMainLogo = "image/mafiaDeCubaLogo1.jpg";
 	public static String pathMainLogo1 = "image/diamond.png";
+	public static String pathGameHistory = "image/confidentialfile.png";
 	
 	public static String pathReplayIcon = "image/replay-arrow.png";
 	public static String pathInspectIcon="image/search.png";

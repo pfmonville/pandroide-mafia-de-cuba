@@ -80,6 +80,7 @@ public class StartView extends View{
 		
 		btnRules.setOnAction((event)->{
 			try {
+				App.rv.displayRules();
 				App.changePanel(super.getPanel(), App.rv.getPanel());
 			} catch (Exception e) {
 				e.printStackTrace();

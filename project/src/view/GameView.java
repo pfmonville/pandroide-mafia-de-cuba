@@ -4,6 +4,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
 
@@ -277,10 +278,7 @@ public class GameView extends View{
 								Theme.pathNecklaceShapeBig, Theme.pathGlassesShapeBig,
 								Theme.pathBeardShapeBig, Theme.pathLongHairNecklaceShapeBig,
 								Theme.pathBeretShapeBig, Theme.pathBoaShapeBig, Theme.pathOldManShapeBig};
-		ArrayList<Integer> indexImgPath = new ArrayList<Integer>();
-		indexImgPath.add(0);indexImgPath.add(1);indexImgPath.add(2);indexImgPath.add(3);
-		indexImgPath.add(4);indexImgPath.add(5);indexImgPath.add(6);indexImgPath.add(7);
-		indexImgPath.add(8);indexImgPath.add(9);indexImgPath.add(10);
+		ArrayList<Integer> indexImgPath = new ArrayList<Integer>(Arrays.asList(0,1,2,3,4,5,6,7,8,9,10));
  		
 		for (int i = 2; i < nbPlayers+1; i++){
 			Button b = new Button();
@@ -463,6 +461,7 @@ public class GameView extends View{
 			}else{
 				//une question à choix multiple
 				HBox button = new HBox() ;
+				button.setSpacing(2);
 				//le bouton radio de la question
 				RadioButton b = new RadioButton(q.getContent());
 				b.setPrefHeight(questionsBox.getHeight()/5);
@@ -934,119 +933,136 @@ public class GameView extends View{
 		//********************************
 		//CHOOSE WHAT TO PICK
 		//********************************
-		Label pickInstruction = new Label("Que voulez-vous prendre ?");
-		pickInstruction.setStyle("-fx-text-fill:white; -fx-font: 25px Tahoma;");
-		ToggleGroup pickGroup = new ToggleGroup();
-		
-		// for diamonds : when radiobutton selected, a new combobox appeared to choose the number of diamonds 
-		VBox onlyDiams = new VBox();  onlyDiams.setSpacing(10);
-		RadioButton diams = new RadioButton();
-		diams.setGraphic(new ImageView( new Image( Theme.pathDiamond)));
-		diams.setTooltip(super.createStandardTooltip("Diamants"));
-		diams.setToggleGroup(pickGroup);
-		if (App.gameController.getBox().getDiamonds()==0)
-			diams.setDisable(true);
-		
-		ComboBox<String> nb = new ComboBox<String>() ;
-		for (int i=1; i<=App.gameController.getBox().getDiamonds(); i++){
-			nb.getItems().add(i+"");
-		}
-		nb.setVisibleRowCount(5);
-		nb.setValue("1");
-		nb.setDisable(true);
-		
-		onlyDiams.getChildren().addAll(diams, nb);
-		
-		pickGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
-			@Override
-			public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-				if (pickGroup.getSelectedToggle().equals(diams))
-					nb.setDisable(false);
-				else
-					nb.setDisable(true);
-			}
-		});
-		
-		whatToPick.getChildren().addAll(pickInstruction, onlyDiams);
-		
-		//loyal henchman
-		henchman.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
-		henchman.setTooltip(super.createStandardTooltip("Fidèle"));
-		henchman.setToggleGroup(pickGroup);
-		//driver
-		driver.setGraphic(new ImageView( new Image( Theme.pathDriver)));
-		driver.setTooltip(super.createStandardTooltip("Chauffeur"));
-		driver.setToggleGroup(pickGroup);
-		//agent
-		agent.setGraphic(new ImageView( new Image( Theme.pathAgent)));
-		agent.setTooltip(super.createStandardTooltip("Agent"));
-		agent.setToggleGroup(pickGroup);
-		//cleaner
-		cleaner.setGraphic(new ImageView( new Image( Theme.pathCleaner)));
-		cleaner.setTooltip(super.createStandardTooltip("Nettoyeur"));
-		cleaner.setToggleGroup(pickGroup);
-		
-		if(NBLOYAL >0){
-			whatToPick.getChildren().add(henchman);
-		}
-		if(NBDRIVER > 0){
-			whatToPick.getChildren().add(driver);
-		}
-		if(NBAGENT > 0){
-			whatToPick.getChildren().add(agent);
-		}
-		if(NBCLEANER > 0){
-			whatToPick.getChildren().add(cleaner);
-		}
-
-		//************************************
-		//VALIDATION
-		//************************************
 		Button valider = new Button("Valider");
 		valider.setPrefSize(100, 60);
-		valider.setOnAction((event)->{
-			String tokenHidden = null; 
-			// if 1st player
-			if(App.rules.getHumanPosition()==2){
-				tokenHidden = chooseToken.getValue();
-				if(tokenHidden.equals("Aucun"))
-					tokenHidden = null ;
-				else{
-					if(tokenHidden.equals("Agent"))
-						tokenHidden = "FBI" ;
-					}
-			}
-			RadioButton picked = (RadioButton) pickGroup.getSelectedToggle() ;
-			try{
-				if(picked.equals(diams))
-					App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
-				if(picked.equals(henchman))
-					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
-				if(picked.equals(driver))
-					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
-				if(picked.equals(agent)){
-					if(tokenHidden != null && tokenHidden.equals("FBI"))
-						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "CIA", tokenHidden);
-					else 
-						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "FBI", tokenHidden);
+		
+		// if box is empty, player is a StreetUpchin
+		if(App.gameController.getBox().isEmpty()) {
+			Label emptyBox = new Label("La boîte est vide, vous êtes Enfant des rues.");
+			emptyBox.setStyle("-fx-text-fill:white; -fx-font: 30px Tahoma;");
+			whatToPick.getChildren().add(emptyBox);
+
+			valider.setOnAction((event)->{
+				try {
+					App.gameController.endTurn(App.rules.getHumanPosition(), 0, null, null);
+				} catch (PickingStrategyError e) {
+					e.printStackTrace();
 				}
-				if(picked.equals(cleaner))
-					App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
-			}catch(NumberFormatException|PickingStrategyError e){
-				e.printStackTrace();
+			});
+		} else {
+			
+			Label pickInstruction = new Label("Que voulez-vous prendre ?");
+			pickInstruction.setStyle("-fx-text-fill:white; -fx-font: 25px Tahoma;");
+			ToggleGroup pickGroup = new ToggleGroup();
+			
+			// for diamonds : when radiobutton selected, a new combobox appeared to choose the number of diamonds 
+			VBox onlyDiams = new VBox();  onlyDiams.setSpacing(10);
+			RadioButton diams = new RadioButton();
+			diams.setGraphic(new ImageView( new Image( Theme.pathDiamond)));
+			diams.setTooltip(super.createStandardTooltip("Diamants"));
+			diams.setToggleGroup(pickGroup);
+			if (App.gameController.getBox().getDiamonds()==0)
+				diams.setDisable(true);
+			
+			ComboBox<String> nb = new ComboBox<String>() ;
+			for (int i=1; i<=App.gameController.getBox().getDiamonds(); i++){
+				nb.getItems().add(i+"");
 			}
-			//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
-			cleanGameView();
-			createInfoBoxHumanPlayer();
-		});
-		
-		mainVBox.getChildren().addAll(boxInfo,forFirstPlayer, whatToPick);
-		
-		questionsArea.getChildren().add(mainVBox);
-		questionsArea.setAlignment(Pos.TOP_CENTER);
-		questionsArea.setMargin(mainVBox, new Insets(10,0,0,0));
-		pocket.getChildren().add(valider);
-		pocket.setAlignment(Pos.CENTER);
+			nb.setVisibleRowCount(5);
+			nb.setValue("1");
+			nb.setDisable(true);
+			
+			onlyDiams.getChildren().addAll(diams, nb);
+			
+			pickGroup.selectedToggleProperty().addListener(new ChangeListener<Toggle>() {
+				@Override
+				public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
+					if (pickGroup.getSelectedToggle().equals(diams))
+						nb.setDisable(false);
+					else
+						nb.setDisable(true);
+				}
+			});
+			
+			whatToPick.getChildren().addAll(pickInstruction, onlyDiams);
+			
+			//loyal henchman
+			henchman.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
+			henchman.setTooltip(super.createStandardTooltip("Fidèle"));
+			henchman.setToggleGroup(pickGroup);
+			//driver
+			driver.setGraphic(new ImageView( new Image( Theme.pathDriver)));
+			driver.setTooltip(super.createStandardTooltip("Chauffeur"));
+			driver.setToggleGroup(pickGroup);
+			//agent
+			agent.setGraphic(new ImageView( new Image( Theme.pathAgent)));
+			agent.setTooltip(super.createStandardTooltip("Agent"));
+			agent.setToggleGroup(pickGroup);
+			//cleaner
+			cleaner.setGraphic(new ImageView( new Image( Theme.pathCleaner)));
+			cleaner.setTooltip(super.createStandardTooltip("Nettoyeur"));
+			cleaner.setToggleGroup(pickGroup);
+			
+			if(NBLOYAL >0){
+				whatToPick.getChildren().add(henchman);
+			}
+			if(NBDRIVER > 0){
+				whatToPick.getChildren().add(driver);
+			}
+			if(NBAGENT > 0){
+				whatToPick.getChildren().add(agent);
+			}
+			if(NBCLEANER > 0){
+				whatToPick.getChildren().add(cleaner);
+			}
+	
+			//************************************
+			//VALIDATION
+			//************************************
+			valider.setOnAction((event)->{
+				String tokenHidden = null; 
+				// if 1st player
+				if(App.rules.getHumanPosition()==2){
+					tokenHidden = chooseToken.getValue();
+					if(tokenHidden.equals("Aucun"))
+						tokenHidden = null ;
+					else{
+						if(tokenHidden.equals("Agent"))
+							tokenHidden = "FBI" ;
+						}
+				}
+				RadioButton picked = (RadioButton) pickGroup.getSelectedToggle() ;
+				try{
+					if(picked.equals(diams))
+						App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
+					if(picked.equals(henchman))
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
+					if(picked.equals(driver))
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
+					if(picked.equals(agent)){
+						if(tokenHidden != null && tokenHidden.equals("FBI"))
+							App.gameController.endTurn(App.rules.getHumanPosition(), 0, "CIA", tokenHidden);
+						else 
+							App.gameController.endTurn(App.rules.getHumanPosition(), 0, "FBI", tokenHidden);
+					}
+					if(picked.equals(cleaner))
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Nettoyeur", tokenHidden);
+				}catch(NumberFormatException|PickingStrategyError e){
+					e.printStackTrace();
+				}
+				//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
+				cleanGameView();
+				createInfoBoxHumanPlayer();
+			});
+		}
+			
+			mainVBox.getChildren().addAll(boxInfo,forFirstPlayer, whatToPick);
+			
+			questionsArea.getChildren().add(mainVBox);
+			questionsArea.setAlignment(Pos.TOP_CENTER);
+			questionsArea.setMargin(mainVBox, new Insets(10,0,0,0));
+			pocket.getChildren().add(valider);
+			pocket.setAlignment(Pos.CENTER);
 
 	}
 	
@@ -1142,7 +1158,7 @@ public class GameView extends View{
 		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
-		logPart.setBackground(new Background(new BackgroundImage(new Image("image/confidentialfile.png",super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 	}
 	
 	
