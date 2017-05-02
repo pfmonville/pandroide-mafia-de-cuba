@@ -9,7 +9,7 @@ public class IAController implements PlayerController {
 
 	
 	private Player player;
-	
+	// toto
 	
 	public IAController(Player player) {
 		this.player = player;

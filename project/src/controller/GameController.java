@@ -132,7 +132,7 @@ public class GameController {
 	 * get the player whose turn it is
 	 * @return Player
 	 */
-	public Player getActualPlayer(){
+	public Player getCurrentPlayer(){
 		return players.get(this.currentPlayer);
 	}
 	
@@ -140,7 +140,7 @@ public class GameController {
 	 * get the player number whose turn it is
 	 * @return int : the index of the player
 	 */
-	public int getActualPlayerNumber(){
+	public int getCurrentPlayerNumber(){
 		return this.currentPlayer;
 	}
 	
@@ -196,7 +196,7 @@ public class GameController {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		this.getActualPlayer().setBox(box.clone());
+		this.getCurrentPlayer().setBox(box.clone());
 		if(this.isActualPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
@@ -247,7 +247,7 @@ public class GameController {
 	 */
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden) throws PickingStrategyError{
 
-		this.getActualPlayer().setBox(box.clone()); 
+		this.getCurrentPlayer().setBox(box.clone()); 
 		if(tokenHidden != null){
 			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
