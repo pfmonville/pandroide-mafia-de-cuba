@@ -11,7 +11,7 @@ import model.Role;
 public class MainTestIAController {
 
 	public static void main(String[] args){
-		// Initialisation de la boite
+		// Initialisation de la boite que recoit le joueur courant
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
@@ -25,7 +25,7 @@ public class MainTestIAController {
 		int nombreDeDiamantsDansBoite = 12;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
-		// Initialisation du joueur
+		// Initialisation du joueur courant
 		int positionDuJoueur = 2; // inclus dans [1 ; n-1], le parrain est le joueur 0
 		Player p = new Player(null, positionDuJoueur, false, false);
 		
@@ -65,6 +65,7 @@ public class MainTestIAController {
 	    }
 		System.out.println("nb configBefore: "+resultConfigBefore.size() );
 		System.out.println("temps d'execution : "+endConfigBefore);
+		System.out.println();
 		
 		// Affichage des configAfter
 		System.out.println("*** ConfigAfter ***");
@@ -78,6 +79,7 @@ public class MainTestIAController {
 	    }
 		System.out.println("nb configAfter: "+resultConfigAfter.size() );
 		System.out.println("temps d'execution : "+endConfigAfter);
+		System.out.println();
 		
 	}
 

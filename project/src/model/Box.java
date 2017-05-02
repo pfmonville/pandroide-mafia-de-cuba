@@ -50,6 +50,6 @@ public class Box {
 		for(String tok : tokens){
 			str += tok+" ";
 		}
-		return str;
+		return str + "\n";
 	}
 }

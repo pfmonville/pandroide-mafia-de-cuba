@@ -257,8 +257,6 @@ public class IAController implements PlayerController {
 		System.out.println("APRES AVOIR PRIS :");
 		System.out.println(boxAfter.toString());
 		
-		System.out.println("DEBUG : "+ boxAfter.getTokens());
-		
 		/**
 		 * configAfter
 		 */
@@ -280,7 +278,6 @@ public class IAController implements PlayerController {
 			 * With those informations he can generate all the possible distributions of thieves and SU  
 			 */
 			else if(boxAfter.getTokens().isEmpty()){
-				System.out.println("pouet");
 				ArrayList<Integer> tmp = new ArrayList<Integer>();
 				int thievesUpperBound = Math.min(nbPlayersAfter, boxAfter.getDiamonds());
 				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
@@ -352,18 +349,6 @@ public class IAController implements PlayerController {
 				}		
 			}
 			
-			
-			
-			// TODO : WORK IN PROGRESS !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-			/*
-			 * Rq de Bea : 
-			 * si le nb de jetons + 1 (le voleur) < nbJoueurapres - 1
-			 * 
-			 * nbJoueurapres = 5
-			 * jetons = 2
-			 * 
-			 */
-			
 			//there are both diamonds and tokens in the box
 			else{
 				// int lowerBoundThieves = (nbPlayersAfter <= boxAfter.getTokens().size()) ? 0 : 1;
@@ -373,48 +358,73 @@ public class IAController implements PlayerController {
 				ArrayList<Integer> rolesLeftEnhanced = new ArrayList<Integer>(rolesNumberLeft);
 				rolesLeftEnhanced.addAll(thievesList);
 
-
-				// Add configurations for nbPlayersAfter among rolesLeft
-				ArrayList<ArrayList<Integer>> partialPermutationsLists = partialPermutation(rolesLeftEnhanced, nbPlayersAfter);
-				configAfter.addAll(partialPermutationsLists);
+				int res = (upperBoundThieves + boxAfter.getTokens().size()) - nbPlayersAfter;
+				System.out.println("calcul savant : "+ res +" >= 0 ?");
+				System.out.println();
 				
-				//Add configurations when the last player decides to become a SU
-				ArrayList<ArrayList<Integer>> tmpResult = new ArrayList<ArrayList<Integer>>();
-				for(ArrayList<Integer> list : partialPermutationsLists){
-					ArrayList<Integer> tmpList = new ArrayList<Integer>(list);
-					tmpList.remove(tmpList.size() - 1);
-					tmpList.add(App.rules.getNumberStreetUrchin());
-					if(!tmpResult.contains(tmpList)){
-						tmpResult.add(tmpList);
+				// if there is enough items in the box so that everyone can take something
+				if (nbPlayersAfter <= upperBoundThieves + boxAfter.getTokens().size()){
+					// Add configurations for nbPlayersAfter among rolesLeft
+					ArrayList<ArrayList<Integer>> partialPermutationsLists = partialPermutation(rolesLeftEnhanced, nbPlayersAfter);
+					configAfter.addAll(partialPermutationsLists);
+					
+					//Add configurations when the last player decides to become a SU
+					ArrayList<ArrayList<Integer>> tmpResult = new ArrayList<ArrayList<Integer>>();
+					for(ArrayList<Integer> list : partialPermutationsLists){
+						ArrayList<Integer> tmpList = new ArrayList<Integer>(list);
+						tmpList.remove(tmpList.size() - 1);
+						tmpList.add(App.rules.getNumberStreetUrchin());
+						if(!tmpResult.contains(tmpList)){
+							tmpResult.add(tmpList);
+						}
+					}
+					configAfter.addAll(tmpResult);
+					
+					/*
+					 * Rq de Bea : 
+					 * si le nb de jetons + 1 (le voleur) < nbJoueurapres - 1 => 2 Enfants potentiels
+					 * ex :
+					 * nbJoueurapres = 5
+					 * jetons = 2
+					 */
+					/*
+					 * Specific situation of the second to last player.
+					 * if all tokens have been taken and there is a thief before him
+					 * he can be a SU
+					 */
+					ArrayList<Integer> rolesLeftCopy;
+					List<Integer> subList;
+					//if there is not enough tokens for the remaining players and one thief takes all diamonds
+					if(boxAfter.getTokens().size() + 1 < nbPlayersAfter - 1){
+						for(ArrayList<Integer> list : tmpResult){
+							ArrayList<Integer> tmpList;					
+							rolesLeftCopy = new ArrayList<Integer>(rolesNumberLeft);
+							subList = list.subList(0, list.size()-2);
+							for(Integer roleNumber : subList){
+								rolesLeftCopy.remove(roleNumber);
+							}
+							//if all remaining tokens have been taken
+							if(rolesLeftCopy.isEmpty()){
+								//second to last can be a SU
+								tmpList = new ArrayList<Integer>(list);
+								tmpList.set(list.size()-2, App.rules.getNumberStreetUrchin());
+								configAfter.add(tmpList);
+							}
+						}	
 					}
 				}
-				configAfter.addAll(tmpResult);
-				
 				/*
-				 * Specific situation of the second to last player.
-				 * if all tokens have been taken and there is a thief before him
-				 * he can be a SU
+				 * Specific case: Not enough items for everybody
+				 * ex: 6 players (god father included)
+				 * 1st take 2 tokens
+				 * 2nd take all the diamonds minus 1
+				 * it left 1 diamond and 1 token for 3 players => last player necessarily street urchin
 				 */
-				ArrayList<Integer> rolesLeftCopy;
-				List<Integer> subList;
-				//if there is not enough tokens for the remaining players and one thief takes all diamonds
-				if(boxAfter.getTokens().size() + 1 < nbPlayersAfter - 1){
-					for(ArrayList<Integer> list : tmpResult){
-						ArrayList<Integer> tmpList;					
-						rolesLeftCopy = new ArrayList<Integer>(rolesNumberLeft);
-						subList = list.subList(0, list.size()-2);
-						for(Integer roleNumber : subList){
-							rolesLeftCopy.remove(roleNumber);
-						}
-						//if all remaining tokens have been taken
-						if(rolesLeftCopy.isEmpty()){
-							//second to last can be a SU
-							tmpList = new ArrayList<Integer>(list);
-							tmpList.set(list.size()-2, App.rules.getNumberStreetUrchin());
-							configAfter.add(tmpList);
-						}
-					}	
+				else if(boxAfter.getTokens().size() + upperBoundThieves < nbPlayersAfter){
+					
 				}
+
+				
 			}
 		}
 		return configAfter;
