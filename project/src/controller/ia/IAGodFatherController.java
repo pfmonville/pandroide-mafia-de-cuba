@@ -2,12 +2,9 @@ package controller.ia;
 
 import java.util.ArrayList;
 
-import controller.IAController;
 import model.Box;
 import model.Player;
 import model.Question;
-import model.SecretID;
-import model.Talk;
 
 public class IAGodFatherController extends IAController{
 

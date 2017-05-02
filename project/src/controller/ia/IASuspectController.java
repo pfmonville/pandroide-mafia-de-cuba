@@ -2,7 +2,6 @@ package controller.ia;
 
 import java.util.ArrayList;
 
-import controller.IAController;
 import model.Answer;
 import model.Box;
 import model.Player;

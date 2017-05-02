@@ -1,10 +1,9 @@
 package controller.runnable;
 
-import controller.App;
-import controller.IAController;
-import controller.PlayerController;
-import controller.ia.IAGodFatherController;
 import model.Box;
+import controller.App;
+import controller.PlayerController;
+import controller.ia.IAController;
 
 public class GetBackTheBoxRunnable implements Runnable {
 

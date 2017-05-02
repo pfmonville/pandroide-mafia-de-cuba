@@ -1,12 +1,11 @@
 package controller.runnable;
 
+import model.Box;
 import controller.App;
-import controller.IAController;
 import controller.PlayerController;
+import controller.ia.IAController;
 import controller.ia.IASuspectController;
 import error.PickingStrategyError;
-import javafx.application.Platform;
-import model.Box;
 
 public class PickSomethingRunnable implements Runnable{
 
@@ -22,7 +21,7 @@ public class PickSomethingRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		((IAController)playerController).createWorldsVision(this.box);
+		((IAController)playerController).rolesDistributionBefore(this.box);
 		Object[] obj = ((IASuspectController)playerController).pickSomething(position, box);
 		int diamondsPicked = (int) obj[0];
 		String tokenPicked = (String) obj[1];

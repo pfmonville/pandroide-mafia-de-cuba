@@ -1,11 +1,10 @@
 package controller.runnable;
 
+import model.Box;
 import controller.App;
-import controller.IAController;
 import controller.PlayerController;
 import controller.ia.IAGodFatherController;
 import error.PrepareBoxStrategyError;
-import model.Box;
 
 public class PrepareBoxRunnable implements Runnable{
 

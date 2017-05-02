@@ -37,7 +37,7 @@ public class MainTestIAController {
 		
 		// Le joueur recoit la boite. Maj des configBefore
 		long start = System.currentTimeMillis();
-		ArrayList<ArrayList<Integer>> resultConfigBefore = iac.rolesDistributionBefore(testBox);
+		iac.rolesDistributionBefore(testBox);
 		long endConfigBefore = System.currentTimeMillis() - start;
 		
 		// Le joueur choisi ce qu'il prend
@@ -59,7 +59,7 @@ public class MainTestIAController {
 		
 		// Affichage des configBefore
 		System.out.println("*** ConfigBefore ***");
-		for (ArrayList<Integer> al : resultConfigBefore) {
+		for (ArrayList<Integer> al : iac.getConfigBefore()) {
 	        String appender = "";
 	        for (Integer i : al) {
 	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
@@ -67,7 +67,7 @@ public class MainTestIAController {
 	        }
 	        System.out.println();
 	    }
-		System.out.println("nb configBefore: "+resultConfigBefore.size() );
+		System.out.println("nb configBefore: "+iac.getConfigBefore().size() );
 		System.out.println("temps d'execution : "+endConfigBefore);
 		System.out.println();
 		
