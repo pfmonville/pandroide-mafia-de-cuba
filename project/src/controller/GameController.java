@@ -11,6 +11,7 @@ import controller.ia.AgentStrategy;
 import controller.ia.CleanerStrategy;
 import controller.ia.DriverStrategy;
 import controller.ia.GodFatherStrategy;
+import controller.ia.IAController;
 import controller.ia.IAGodFatherController;
 import controller.ia.IASuspectController;
 import controller.ia.LoyalHenchmanStrategy;
@@ -110,7 +111,7 @@ public class GameController {
 	
 	
 	/**
-	 * update the actualPlayer attribute to match the next player number for the first half of the game
+	 * update the currentPlayer attribute to match the next player number for the first half of the game
 	 * @return the next index of the player or -1 if all players have played the first half
 	 */
 	public int nextPlayer(){
@@ -197,7 +198,7 @@ public class GameController {
 			e.printStackTrace();
 		}
 		this.getCurrentPlayer().setBox(box.clone());
-		if(this.isActualPlayerHuman()){
+		if(this.isCurrentPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
@@ -233,7 +234,7 @@ public class GameController {
 			e.printStackTrace();
 		}
 		Platform.runLater( ()-> App.gv.displayBoxAnimation());
-		if(this.isActualPlayerHuman()){
+		if(this.isCurrentPlayerHuman()){
 			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.currentPlayer, this.box, playerControllers.get(this.currentPlayer)));
@@ -275,12 +276,18 @@ public class GameController {
 			}
 			players.get(position).takeDiamonds(diamondsPicked);
 		}else if(this.box.isEmpty()){
-			//since tokenPicked is null takeToken automatically assigns streetUpchin to this player
+			//since tokenPicked is null takeToken automatically assigns streetUrchin to this player
 			players.get(position).takeToken("");
 		}else{
-			throw new PickingStrategyError("you have to choose either to pick dimaonds or a token");
+			throw new PickingStrategyError("you have to choose either to pick diamond(s) or a token");
 		}
-	
+		
+		// if the current player is not human
+		if(!this.isCurrentPlayerHuman()){
+			// the AI creates all the possible worlds for the players after him, based on the box content
+			// TODO: ((IAController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
+		}
+		
 		//if this is the last player then start the second half
 		if(players.get(this.currentPlayer).isLastPlayer()){
 			//Forcing pause (only for testing)
@@ -403,11 +410,10 @@ public class GameController {
 	
 	
 	/**
-	 * to know if a the actual player is human
-	 * @param playerNumber (int) : actual player index
+	 * to know if a the current player is human
 	 * @return true if the player is human false otherwise
 	 */
-	public boolean isActualPlayerHuman(){
+	public boolean isCurrentPlayerHuman(){
 		return this.isPlayerHuman(this.currentPlayer);
 	}
 	

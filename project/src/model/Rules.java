@@ -67,6 +67,7 @@ public class Rules {
 		this.nameCleaner = "Cleaner";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
+		this.nameAgentLambda = "Agent";
 		this.nameDriver = "Driver";
 		this.nameThief= "Thief";
 		this.nameStreetUrchin = "StreetUrchin";
@@ -708,7 +709,7 @@ public class Rules {
 	
 	public Integer convertRoleNameIntoNumber(String role){
 
-		if(role.equals(nameAgentLambda)){
+		if(role.equals(nameAgentLambda) || role.equals(nameAgentCIA) || role.equals(nameAgentFBI)){
 			return numberAgent;
 		}
 		else if(role.equals(nameLoyalHenchman)){

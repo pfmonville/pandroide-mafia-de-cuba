@@ -21,7 +21,9 @@ public class PickSomethingRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		((IAController)playerController).rolesDistributionBefore(this.box);
+		// the AI creates all the possible worlds for the players before him, based on the box content
+		// TODO: ((IAController)playerController).createWorldsBeforeVision(this.box);
+		
 		Object[] obj = ((IASuspectController)playerController).pickSomething(position, box);
 		int diamondsPicked = (int) obj[0];
 		String tokenPicked = (String) obj[1];

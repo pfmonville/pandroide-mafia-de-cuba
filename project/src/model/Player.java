@@ -24,7 +24,7 @@ public class Player {
 		position = pos ;
 		this.setHuman(human) ;
 		this.lastPlayer = lastPlayer ;
-		if(r.getName() == "Thief"){
+		if(r.getName() == App.rules.getNameThief()){
 			this.thief = true;
 		}else{
 			this.thief = false;

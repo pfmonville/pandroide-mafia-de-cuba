@@ -1,12 +1,12 @@
 package controller.ia;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import controller.App;
 import model.Box;
 import model.Player;
 import model.Role;
+import controller.App;
+import data.World;
 
 public class MainTestIAController {
 
@@ -14,20 +14,20 @@ public class MainTestIAController {
 		// Initialisation de la boite que recoit le joueur courant
 		ArrayList<String> stringList = new ArrayList<String>();
 		stringList.add(App.rules.getNameLoyalHenchman());
+		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
-//		stringList.add(App.rules.getNameLoyalHenchman());
-//		stringList.add(App.rules.getNameLoyalHenchman());
-//		stringList.add(App.rules.getNameAgent());
-//		stringList.add(App.rules.getNameAgent());
+		stringList.add(App.rules.getNameLoyalHenchman());
+		stringList.add(App.rules.getNameAgentCIA());
+		stringList.add(App.rules.getNameAgentFBI());
 //		stringList.add(App.rules.getNameDriver());
-//		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 15;
+		stringList.add(App.rules.getNameDriver());
+		int nombreDeDiamantsDansBoite = 6;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 6; // inclus dans [1 ; n-1], le parrain est le joueur 0
-		Player p = new Player(null, positionDuJoueur, false, false);
+		int positionDuJoueur = 5; // inclus dans [1 ; n-1], le parrain est le joueur 0
+		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		
 		/*
 		 *  Il fallait metre en du dans la classe GameController,
@@ -37,12 +37,12 @@ public class MainTestIAController {
 		
 		// Le joueur recoit la boite. Maj des configBefore
 		long start = System.currentTimeMillis();
-		iac.rolesDistributionBefore(testBox);
+		iac.createWorldsBeforeVision(testBox);
 		long endConfigBefore = System.currentTimeMillis() - start;
 		
 		// Le joueur choisi ce qu'il prend
 		// Joueur voleur
-//		int nombreDeDiamantsVoles = 15;
+//		int nombreDeDiamantsVoles = 7;
 //		iac.getPlayer().takeDiamonds(nombreDeDiamantsVoles);
 		
 		// Joueur non voleur
@@ -54,35 +54,35 @@ public class MainTestIAController {
 		 *  + Maj des configAfter
 		 */
 		start = System.currentTimeMillis();
-		ArrayList<ArrayList<Integer>> resultConfigAfter = iac.rolesDistributionAfter(testBox);
+		iac.createWorldsAfterVision(testBox);
 		long endConfigAfter = System.currentTimeMillis() - start;
 		
 		// Affichage des configBefore
 		System.out.println("*** ConfigBefore ***");
-		for (ArrayList<Integer> al : iac.getConfigBefore()) {
+		for (World al : iac.getConfigBefore()) {
 	        String appender = "";
-	        for (Integer i : al) {
+	        for (Integer i : al.getRolesDistribution()) {
 	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
 	            appender = " ";
 	        }
-	        System.out.println();
+	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
 	    }
 		System.out.println("nb configBefore: "+iac.getConfigBefore().size() );
-		System.out.println("temps d'execution : "+endConfigBefore);
+		System.out.println("temps d'execution [ms] : "+endConfigBefore);
 		System.out.println();
 		
 		// Affichage des configAfter
 		System.out.println("*** ConfigAfter ***");
-		for (ArrayList<Integer> al : resultConfigAfter) {
+		for (World al : iac.getConfigAfter()) {
 	        String appender = "";
-	        for (Integer i : al) {
+	        for (Integer i : al.getRolesDistribution()) {
 	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
 	            appender = " ";
 	        }
 	        System.out.println();
 	    }
-		System.out.println("nb configAfter: "+resultConfigAfter.size() );
-		System.out.println("temps d'execution : "+endConfigAfter);
+		System.out.println("nb configAfter: "+iac.getConfigAfter().size() );
+		System.out.println("temps d'execution [ms] : "+endConfigAfter);
 		System.out.println();
 		
 	}
