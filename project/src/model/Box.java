@@ -8,7 +8,6 @@ public class Box {
 	private ArrayList<String> tokens;
 	
 	public Box(int diamonds, ArrayList<String> tokens){
-
 		this.diamonds = diamonds ;
 		this.tokens = tokens ;
 	}
@@ -36,11 +35,20 @@ public class Box {
 	}
 	
 	public boolean isEmpty(){
-		if(this.diamonds == 0 && tokens.isEmpty()){
-			return true;
-		}
-		return false;
+		return this.diamonds == 0 && tokens.isEmpty();
 	}
+	
+	public String toString(){
+		String str = "";
+		str += "Box content:\n";
+		str += "\t number of diamonds: "+ diamonds +"\n";
+		str += "\t list of tokens: ";
+		for(String tok : tokens){
+			str += tok+" ";
+		}
+		return str + "\n";
+	}
+	
 	public boolean removeToken(String tokenToRemove){
 		if(tokens.contains(tokenToRemove)){
 			tokens.remove(tokenToRemove);

@@ -37,7 +37,17 @@ public class Rules {
 	private String nameAgentLambda;
 	private String nameDriver;
 	private String nameThief;
-	private String nameStreetUpchin;
+	private String nameStreetUrchin;
+	
+	// Corresponding value of each role
+	private final Integer numberGodfather = 0;
+	private final Integer numberLoyalHenchman = 1;
+	private final Integer numberCleaner = 6;
+	private final Integer numberAgent = 3;
+	private final Integer numberDriver = 2;
+	private final Integer numberThief = 4;
+	private final Integer numberStreetUrchin = 5;
+	
 	
 	//Value for the game initialize in the OptionView
 	private int numberOfLoyalHenchmen;
@@ -52,15 +62,14 @@ public class Rules {
 
 	
 	public Rules() {
-		
-		this.nameGodFather = "Parrain";
-		this.nameLoyalHenchman = "Fidèle";
-		this.nameCleaner = "Nettoyeur";
+		this.nameGodFather = "GodFather";
+		this.nameLoyalHenchman = "LoyalHenchman";
+		this.nameCleaner = "Cleaner";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
-		this.nameDriver = "Chauffeur";
-		this.nameThief= "Voleur";
-		this.nameStreetUpchin = "Enfant des Rues";
+		this.nameDriver = "Driver";
+		this.nameThief= "Thief";
+		this.nameStreetUrchin = "StreetUrchin";
 		
 		this.defaultNumberOfLoyalHenchmen = Arrays.asList(1,2,3,4,4,4,5);
 		this.defaultNumberOfCleaners = Arrays.asList(0,0,0,0,0,0,0);
@@ -417,14 +426,14 @@ public class Rules {
 
 
 
-	public String getNameStreetUpchin() {
-		return nameStreetUpchin;
+	public String getNameStreetUrchin() {
+		return nameStreetUrchin;
 	}
 
 
 
-	public void setNameStreetUpchin(String nameStreetUpchin) {
-		this.nameStreetUpchin = nameStreetUpchin;
+	public void setNameStreetUrchin(String nameStreetUrchin) {
+		this.nameStreetUrchin = nameStreetUrchin;
 	}
 
 
@@ -552,6 +561,39 @@ public class Rules {
 		return firstPlayerCanHide ;
 	}
 
+	public Integer getNumberGodfather() {
+		return numberGodfather;
+	}
+
+
+	public Integer getNumberLoyalHenchman() {
+		return numberLoyalHenchman;
+	}
+
+
+	public Integer getNumberCleaner() {
+		return numberCleaner;
+	}
+
+
+	public Integer getNumberAgent() {
+		return numberAgent;
+	}
+
+
+	public Integer getNumberDriver() {
+		return numberDriver;
+	}
+
+
+	public Integer getNumberThief() {
+		return numberThief;
+	}
+
+
+	public Integer getNumberStreetUrchin() {
+		return numberStreetUrchin;
+	}
 
 	public int getCurrentNumberOfPlayer() {
 		return currentNumberOfPlayer;
@@ -664,5 +706,56 @@ public class Rules {
 		return answerList;
 	}
 	
+	public Integer convertRoleNameIntoNumber(String role){
+
+		if(role.equals(nameAgentLambda)){
+			return numberAgent;
+		}
+		else if(role.equals(nameLoyalHenchman)){
+			return numberLoyalHenchman;
+		}
+		else if(role.equals(nameCleaner)){
+			return numberCleaner;
+		}
+		else if(role.equals(nameDriver)){
+			return numberDriver;
+		}
+		else if(role.equals(nameStreetUrchin)){
+			return numberStreetUrchin;
+		}
+		else if(role.equals(nameThief)){
+			return numberThief;
+		}
+		else if(role.equals(nameGodFather)){
+			return numberGodfather;
+		}
+		
+		return null;
+	}
 	
+	public String convertNumberIntoRoleName(Integer number){
+		
+		if(number == numberAgent){
+			return nameAgentLambda;
+		}
+		else if(number == numberCleaner){
+			return nameCleaner;
+		}
+		else if(number == numberDriver){
+			return nameDriver;
+		}
+		else if(number == numberGodfather){
+			return nameGodFather;
+		}
+		else if(number == numberLoyalHenchman){
+			return nameLoyalHenchman;
+		}
+		else if(number == numberStreetUrchin){
+			return nameStreetUrchin;
+		}
+		else if(number == numberThief){
+			return nameThief;
+		}
+		return null;
+	}
 }

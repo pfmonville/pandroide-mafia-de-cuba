@@ -14,8 +14,13 @@ import controller.ia.GodFatherStrategy;
 import controller.ia.IAGodFatherController;
 import controller.ia.IASuspectController;
 import controller.ia.LoyalHenchmanStrategy;
-import controller.ia.StreetUpchinStrategy;
+import controller.ia.StreetUrchinStrategy;
 import controller.ia.ThiefStrategy;
+import model.Answer;
+import model.Box;
+import model.Player;
+import model.Question;
+import model.Rules;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
@@ -27,11 +32,7 @@ import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
-import model.Answer;
-import model.Box;
 import model.GodFather;
-import model.Player;
-import model.Question;
 import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
@@ -39,12 +40,14 @@ import sun.audio.AudioStream;
 
 
 public class GameController {
-	private int actualPlayer;
-	private int actualTurn;
-	private int numberOfPlayer;
+
+	private int currentPlayer;
+	private int currentTurn;
+	private int numberOfPlayers; // nombre de joueurs, parrain inclus
 	private int humanPosition;
 	private HashMap<Integer, Player> players = new HashMap<Integer,Player>();
 	private HashMap<Integer, PlayerController> playerControllers = new HashMap<Integer, PlayerController>();
+
 	private ArrayList<Question> questions;
 	private ArrayList<Answer> answers;
 	private ArrayList<Talk> gameHistory;
@@ -56,9 +59,9 @@ public class GameController {
 	private String tokenHidden;
 	private int diamondsHidden;
 	
+	private Rules rules = new Rules();
 	public GameController(){
-	}
-	
+	}	
 	
 	/**
 	 * get the updated rules by the the user after the optionview panel
@@ -67,12 +70,12 @@ public class GameController {
 		//for the first part of the game, the godFather doesn't play
 		this.setTokenHidden(null);
 		setDiamondsHidden(0);
-		this.actualPlayer = 1;
-		this.actualTurn = 0;
+		this.currentPlayer = 1;
+		this.currentTurn = 0;
 		this.firstHalf = true;
 		this.numberOfThievesCaught = 0;
 		this.setDiamondsTakenBack(0);
-		this.numberOfPlayer = App.rules.getCurrentNumberOfPlayer();
+		this.numberOfPlayers = App.rules.getCurrentNumberOfPlayer();
 		this.gameHistory = new ArrayList<>();
 		this.humanPosition = App.rules.getHumanPosition();
 		this.box = App.rules.getBox();
@@ -114,12 +117,13 @@ public class GameController {
 		if(!this.firstHalf){
 			return -1;
 		}
-		if (this.actualPlayer == this.numberOfPlayer){ 
-			this.actualPlayer = 0;
+		if (this.currentPlayer == this.numberOfPlayers){ 
+			this.currentPlayer = 0;
 			return -1;
 		}else{
-			this.actualPlayer += 1;
-			return this.actualPlayer;
+			this.currentPlayer += 1;
+			return this.currentPlayer;
+
 		}
 	}
 	
@@ -129,7 +133,7 @@ public class GameController {
 	 * @return Player
 	 */
 	public Player getActualPlayer(){
-		return players.get(this.actualPlayer);
+		return players.get(this.currentPlayer);
 	}
 	
 	/**
@@ -137,22 +141,19 @@ public class GameController {
 	 * @return int : the index of the player
 	 */
 	public int getActualPlayerNumber(){
-		return this.actualPlayer;
+		return this.currentPlayer;
 	}
 	
 	/**
 	 * get the number of players
 	 * @return the number of players
 	 */
-	public int getNumberOfPlayer(){
-		return numberOfPlayer ;
+	public int getNumberOfPlayers(){
+		return numberOfPlayers ;
 	}
 	
-	
-	
-	
 	public int getActualTurn() {
-		return actualTurn;
+		return currentTurn;
 	}
 
 
@@ -175,7 +176,7 @@ public class GameController {
 	 * 
 	 */
 	public void startGame(){
-		this.actualTurn = 1;
+		this.currentTurn = 1;
 		this.prepareBox();
 	}
 	
@@ -217,7 +218,7 @@ public class GameController {
 			this.setDiamondsHidden(numberOfDiamondsHidden);
 			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
-		this.actualPlayer = 2;
+		this.currentPlayer = 2;
 		this.nextTurn();
 	}
 	
@@ -235,7 +236,7 @@ public class GameController {
 		if(this.isActualPlayerHuman()){
 			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
-			Thread thread = new Thread(new PickSomethingRunnable(this.actualPlayer, this.box, playerControllers.get(this.actualPlayer)));
+			Thread thread = new Thread(new PickSomethingRunnable(this.currentPlayer, this.box, playerControllers.get(this.currentPlayer)));
 			thread.start();
 		}
 	}
@@ -248,7 +249,7 @@ public class GameController {
 
 		this.getActualPlayer().setBox(box.clone()); 
 		if(tokenHidden != null){
-			if(players.get(this.actualPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
+			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
 				this.box.removeToken(tokenHidden);
 			}else{
@@ -281,7 +282,7 @@ public class GameController {
 		}
 	
 		//if this is the last player then start the second half
-		if(players.get(this.actualPlayer).isLastPlayer()){
+		if(players.get(this.currentPlayer).isLastPlayer()){
 			//Forcing pause (only for testing)
 			try {
 				Thread.sleep(300);
@@ -290,14 +291,14 @@ public class GameController {
 			}
 			Platform.runLater(() ->App.gv.displayBoxAnimation());
 			this.players.get(1).setBox(box.clone());
-			this.actualPlayer = 1;
-			this.actualTurn = 1;
+			this.currentPlayer = 1;
+			this.currentTurn = 1;
 			if(App.rules.isAllIA())
 				Platform.runLater(()->App.gv.createInfoBoxIA());
 			beginSecondHalf();
 		}else{
-			this.actualPlayer ++;
-			this.actualTurn ++;
+			this.currentPlayer ++;
+			this.currentTurn ++;
 			this.nextTurn();
 		}
 		
@@ -315,7 +316,7 @@ public class GameController {
 	}
 	
 	public void SelectingGodFathersAction(){
-		if(humanPosition == this.actualPlayer){
+		if(humanPosition == this.currentPlayer){
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else{
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
@@ -407,7 +408,7 @@ public class GameController {
 	 * @return true if the player is human false otherwise
 	 */
 	public boolean isActualPlayerHuman(){
-		return this.isPlayerHuman(this.actualPlayer);
+		return this.isPlayerHuman(this.currentPlayer);
 	}
 	
 	
@@ -429,7 +430,7 @@ public class GameController {
 	 * gets informations from the updating rules after the option view and creates corresponding players
 	 */
 	private void getPlayers(){
-		for(int i = 1; i < this.numberOfPlayer+1; i++){
+		for(int i = 1; i < this.numberOfPlayers+1; i++){
 			if(this.humanPosition == i){
 				System.out.println("joueur humain en position " + i);
 				this.players.put(i, new Player(i, true, false));
@@ -438,7 +439,7 @@ public class GameController {
 			}
 		}
 		//set the last player boolean "lastPlayer" to true
-		this.players.get(this.numberOfPlayer).setLastPlayer(true);
+		this.players.get(this.numberOfPlayers).setLastPlayer(true);
 		//set the role for the first player to GodFather
 		this.players.get(1).setRole(new GodFather(App.rules.getNumberOfJokers()));
 	}
@@ -506,8 +507,8 @@ public class GameController {
 				case("Thief"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new ThiefStrategy());
 					break;
-				case("StreetUpchin"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new StreetUpchinStrategy());
+				case("StreetUrchin"):
+					((IASuspectController) playerControllers.get(position)).addStrategy(new StreetUrchinStrategy());
 					break;
 				case("Agent"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new AgentStrategy());

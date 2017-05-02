@@ -1,0 +1,28 @@
+package model;
+
+public class Role {
+	
+	private String name;
+	
+	/*
+	 *  TODO: POUR LES TESTS ON AJOUTE LA VISIBILITE PUBLIC AU CONSTRUCTEUR DE ROLE
+	 *  LE FAIT QUE CE CONSTRUCTEUR ETAIT AVANT DE VISIBILITE "PACKAGE" AVAIT UN SENS
+	 *  ENFIN JE CROIS FAUDRA QU'ON DEMANDE 
+	 */
+	Role(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return name;
+	}
+	
+	public void setName(String newName){
+		name = newName ;
+	}
+	
+	public int getNbDiamondsStolen(){
+		return 0;
+	}
+	
+}

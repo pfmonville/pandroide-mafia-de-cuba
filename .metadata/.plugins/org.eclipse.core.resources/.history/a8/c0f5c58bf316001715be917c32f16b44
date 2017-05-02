@@ -1,0 +1,46 @@
+package model;
+
+import java.util.ArrayList;
+
+public class Box {
+	
+	private int diamonds;
+	private ArrayList<String> tokens;
+	
+	public Box(int diamonds, ArrayList<String> tokens){
+		this.diamonds = diamonds ;
+		this.tokens = tokens ;
+	}
+	
+	public Box(Box b){
+		diamonds = b.getDiamonds();
+		tokens = b.getTokens();
+	}
+	
+	public Object[] open(){
+		
+		Object res[] = {diamonds, tokens};
+		return res ;
+	}
+	
+	public int getDiamonds(){
+		return diamonds ;
+	}
+	
+	public ArrayList<String> getTokens(){
+		return new ArrayList<String>(tokens);
+	}
+	
+	public void setDiamonds(int newNumber) {
+		diamonds = newNumber ;
+	}
+	
+	public void setTokens(ArrayList<String> newTokens){
+		tokens = newTokens ;
+	}
+	
+	public boolean isEmpty(){
+		return diamonds == 0 && tokens.isEmpty();
+	}
+	
+}

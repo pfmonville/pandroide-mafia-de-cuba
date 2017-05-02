@@ -4,10 +4,15 @@ public class Role {
 	
 	private String name;
 	
-	Role(String name){
+	/*
+	 *  TODO: POUR LES TESTS ON AJOUTE LA VISIBILITE PUBLIC AU CONSTRUCTEUR DE ROLE
+	 *  LE FAIT QUE CE CONSTRUCTEUR ETAIT AVANT DE VISIBILITE "PACKAGE" AVAIT UN SENS
+	 *  ENFIN JE CROIS FAUDRA QU'ON DEMANDE 
+	 */
+	public Role(String name){
 		this.name = name;
 	}
-	
+
 	public String getName(){
 		return name;
 	}

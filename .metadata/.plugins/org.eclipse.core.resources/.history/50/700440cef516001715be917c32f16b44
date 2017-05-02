@@ -1,0 +1,42 @@
+package controller.ia;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import controller.App;
+import model.Box;
+import model.Player;
+import model.Role;
+
+public class MainTestIAController {
+
+	public static void main(String[] args){
+		ArrayList<String> stringList = new ArrayList<String>();
+//		stringList.add(App.rules.getNameDriver());
+//		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameLoyalHenchman());
+//		stringList.add(App.rules.getNameAgent());
+		
+		
+		int nombreDeDiamantsDansBoite = 1;
+		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
+		
+		int positionDuJoueur = 9;
+		
+		IAController iac = new IAController(new Player(new Role(App.rules.getNameDriver()), positionDuJoueur, false, false));
+		
+		List<ArrayList<String>> result = iac.rolesDistribution(testBox);
+		
+		for (List<String> al : result) {
+	        String appender = "";
+	        for (String i : al) {
+	            System.out.print(appender + i);
+	            appender = " ";
+	        }
+	        System.out.println();
+	    }
+		System.out.println("nb config: "+result.size() );
+		
+	}
+
+}
