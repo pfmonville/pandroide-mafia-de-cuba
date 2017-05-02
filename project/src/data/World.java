@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 public class World {
 	private ArrayList<Integer> roleDistribution;
-	private boolean tokenMovedAside;
+	private Integer tokenMovedAside;
 	
-	public World(ArrayList<Integer> roleDistribution, boolean tokenMovedAside){
+	public World(ArrayList<Integer> roleDistribution, Integer tokenMovedAside){
 		this.roleDistribution = roleDistribution;
 		this.tokenMovedAside = tokenMovedAside;
 	}
@@ -19,11 +19,11 @@ public class World {
 		this.roleDistribution = roleDistribution;
 	}
 
-	public boolean isTokenMovedAside() {
+	public Integer isTokenMovedAside() {
 		return tokenMovedAside;
 	}
 
-	public void setTokenMovedAside(boolean tokenMovedAside) {
+	public void setTokenMovedAside(Integer tokenMovedAside) {
 		this.tokenMovedAside = tokenMovedAside;
 	}
 	

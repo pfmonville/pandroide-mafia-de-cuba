@@ -25,10 +25,7 @@ import sun.audio.AudioStream;
 public class GameController {
 	private static int currentPlayer;
 	private static int currentTurn;
-	/*
-	 * AJOUT DE LA VALEUR POUR LE DEBUG DE LA CLASSE IACONTROLLER VIA LA CLASSE MAINTESTIACONTROLLER
-	 */
-	private static int numberOfPlayers = 10; // nombre de joueurs, parrain inclus
+	private static int numberOfPlayers; // nombre de joueurs, parrain inclus
 	private ArrayList<Player> players;
 	private ArrayList<PlayerController> playerControllers;
 	private ArrayList<Question> questions;

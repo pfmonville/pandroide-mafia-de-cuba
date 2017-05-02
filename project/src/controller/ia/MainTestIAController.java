@@ -29,6 +29,10 @@ public class MainTestIAController {
 		int positionDuJoueur = 6; // inclus dans [1 ; n-1], le parrain est le joueur 0
 		Player p = new Player(null, positionDuJoueur, false, false);
 		
+		/*
+		 *  Il fallait metre en du dans la classe GameController,
+		 *  une valeur pour la variable numberOfPlayers
+		 */
 		IAController iac = new IAController(p);
 		
 		// Le joueur recoit la boite. Maj des configBefore
