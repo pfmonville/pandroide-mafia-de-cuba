@@ -62,15 +62,15 @@ public class Rules {
 
 	
 	public Rules() {
-		this.nameGodFather = "GodFather";
-		this.nameLoyalHenchman = "LoyalHenchman";
-		this.nameCleaner = "Cleaner";
+		this.nameGodFather = "Parrain";
+		this.nameLoyalHenchman = "Fidèle";
+		this.nameCleaner = "Nettoyeur";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
 		this.nameAgentLambda = "Agent";
-		this.nameDriver = "Driver";
-		this.nameThief= "Thief";
-		this.nameStreetUrchin = "StreetUrchin";
+		this.nameDriver = "Chauffeur";
+		this.nameThief= "Voleur";
+		this.nameStreetUrchin = "Enfant des rues";
 		
 		this.defaultNumberOfLoyalHenchmen = Arrays.asList(1,2,3,4,4,4,5);
 		this.defaultNumberOfCleaners = Arrays.asList(0,0,0,0,0,0,0);

@@ -97,7 +97,7 @@ public class Player {
 	
 	public void setRole(Role role) {
 		this.role = role;
-		if(role.getName() == "Thief"){
+		if(role.getName() == "Voleur"){
 			this.thief = true;
 		}else{
 			this.thief = false;

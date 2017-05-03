@@ -19,7 +19,7 @@ public class IASuspectController extends IAController{
 	}
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
-		return this.strategy.chooseAnswer(question, answers);
+		return this.strategy.chooseAnswer(this.getPlayer(),question, answers);
 	}
 	
 	public Object[] pickSomething(int position, Box box){

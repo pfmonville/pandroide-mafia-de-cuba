@@ -1305,7 +1305,7 @@ public class GameView extends View{
 		
 		if(! history.isEmpty()){
 			for (Talk t : history){
-				content+=t.getQuestion().getContent()+"\n\n";
+				content+=t.getQuestion().getContent()+"\n"+t.getAnswer().getContent()+"\n";
 			}
 		}
 		

@@ -68,4 +68,19 @@ public class Box {
 	public Box clone(){
 		return new Box(diamonds, (ArrayList<String>) tokens.clone());
 	}
+	
+	
+	/**
+	 * 
+	 * @param role
+	 * @return
+	 */
+	public int getCount(String role){
+		int cpt = 0 ;
+		for (String tok : tokens){
+			if (tok.equals(role))
+				cpt++;
+		}
+		return cpt ;
+	}
 }

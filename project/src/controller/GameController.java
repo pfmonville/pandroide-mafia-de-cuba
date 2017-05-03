@@ -498,22 +498,22 @@ public class GameController {
 				System.out.println(" role = " + player.getRole().toString());
 				System.out.println( " roleName = " + player.getRole().getName());
 				switch(player.getRole().getName()){
-				case("GodFather"):
+				case("Parrain"):
 					((IAGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
 					break;
-				case("LoyalHenchman"):
+				case("Fidèle"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
-				case("Cleaner"):
+				case("Nettoyeur"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new CleanerStrategy());
 					break;
-				case("Driver"):
+				case("Chauffeur"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new DriverStrategy());
 					break;
-				case("Thief"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new ThiefStrategy());
+				case("Voleur"):
+					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
-				case("StreetUrchin"):
+				case("Enfant des rues"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new StreetUrchinStrategy());
 					break;
 				case("Agent"):
