@@ -69,6 +69,6 @@ public class Theme {
 	
 	
 	//Resolution
-	public static int windowWidth = 1500;
+	public static int windowWidth = 1366;
 	public static int windowHeight = 768;
 }

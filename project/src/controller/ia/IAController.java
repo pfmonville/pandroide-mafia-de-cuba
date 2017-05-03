@@ -21,40 +21,31 @@ public class IAController implements PlayerController {
 	// List for the roles still available in the box when the player receive the box
 	private ArrayList<String> rolesLeft;
 	private ArrayList<Integer> rolesNumberLeft;
-	private ArrayList<World> configBefore;
-	private ArrayList<World> configAfter;
-	private int nbJoueursDansPartiePourDebug = 12; // XXX UTILE QUE POUR LE DEBUG DE MainTestIAController
+	private ArrayList<World> worldsBefore;
+	private ArrayList<World> worldsAfter;
+	private int nbPlayers; // nbPlayers = App.rules.getCurrentNumberOfPlayer();
 	
 	
 	public IAController(Player player) {
 		this.player = player;
 		this.rolesLeft = new ArrayList<String>();
 		this.rolesNumberLeft = new ArrayList<Integer>();
-		this.configBefore = new ArrayList<World>();
-		this.configAfter = new ArrayList<World>();
+		this.worldsBefore = new ArrayList<World>();
+		this.worldsAfter = new ArrayList<World>();
 	}
 	
 	public IAController(Player player2, Box box, Rules rules,
 			int numberOfPlayers) {
 		// TODO Auto-generated constructor stub
 	}
-
-
-	public void createWorldsVision(Box box){
-		/**
-		 * TODO
-		 * 
-		 */
-	}
 	
 	public void createWorldsBeforeVision(Box box){
-		/**
-		 * XXX WARNING POUR TEST
-		 */
-		// BONNE LIGNE
-//		int nbTokensBeforeStart = App.rules.getTokensFor(App.rules.getCurrentNumberOfPlayer()).size();
-		// LIGNE POUR DEBUG
-		int nbTokensBeforeStart = App.rules.getTokensFor(nbJoueursDansPartiePourDebug).size();
+		nbPlayers = App.rules.getCurrentNumberOfPlayer();
+		System.out.println("DEBUG : IAontroller : BEFORE");
+		System.out.println("je suis le joueur : "+player.getPosition());
+		System.out.println(box.toString());
+		
+		int nbTokensBeforeStart = App.rules.getTokensFor(nbPlayers).size();
 		
 		// Roles still available in the box when the player receive the box
 		rolesLeft = (ArrayList<String>) box.getTokens();
@@ -64,14 +55,8 @@ public class IAController implements PlayerController {
 			rolesNumberLeft.add(App.rules.convertRoleNameIntoNumber(roleName));
 		}
 		
-		/**
-		 * XXX WARNING POUR TEST
-		 */
 		// Roles already taken (or hidden) by previous players
-		// BONNE LIGNE
-//		ArrayList<String> rolesTaken = App.rules.getTokensFor(App.rules.getCurrentNumberOfPlayer());
-		// LIGNE POUR DEBUG
-		ArrayList<String> rolesTaken =App.rules.getTokensFor(nbJoueursDansPartiePourDebug);
+		ArrayList<String> rolesTaken =App.rules.getTokensFor(nbPlayers);
 		
 		ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
 		// Conversion of String into Integer
@@ -83,7 +68,7 @@ public class IAController implements PlayerController {
 		}
 		
 		// List of the possible worlds for the previous players
-		ArrayList<World> configBefore = new ArrayList<World>();
+		ArrayList<World> worldsBefore = new ArrayList<World>();
 		
 		// Set of all the possible types for the hidden token
 		Set<Integer> typesOfTokensBefore = new HashSet<Integer>();
@@ -92,28 +77,28 @@ public class IAController implements PlayerController {
 		/**
 		 * configBefore
 		 */		
-		if(player.getPosition() != 1){
+		if(player.getPosition() != 2){
 			
 			// All the players before have taken a token AND a token was moved aside by the first player
-			if(nbTokensBeforeStart - box.getTokens().size() - 1 == player.getPosition() - 1){
+			if(nbTokensBeforeStart - box.getTokens().size() - 1 == player.getPosition() - 2){
 				//add permutations for each possible hidden token 
 				for(Integer roleNumber : typesOfTokensBefore){
 					ArrayList<Integer> tmp = new ArrayList<Integer>(rolesNumberTaken);
 					tmp.remove(roleNumber);
-					configBefore.addAll(permutation(roleNumber, tmp));			
+					worldsBefore.addAll(permutation(roleNumber, tmp));			
 				}
 			}
 			// Number of missing tokens = Number of previous players 
-			else if(nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 1){
+			else if(nbTokensBeforeStart - box.getTokens().size() == player.getPosition() - 2){
 				// All the diamonds are still in the box => no thief
 				if(box.getDiamonds() == App.rules.getNumberOfDiamonds()){
-					configBefore.addAll(permutation(-1, rolesNumberTaken));
+					worldsBefore.addAll(permutation(-1, rolesNumberTaken));
 				}
 				// Number of diamonds in [10 ; 15] => 1 possible thief
 				else if(App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds() <= box.getDiamonds()){
 					// Optimistic case: All the previous players have taken a token
 					ArrayList<Integer> tmp = new ArrayList<Integer>(rolesNumberTaken);
-					configBefore.addAll(permutation(-1, tmp));
+					worldsBefore.addAll(permutation(-1, tmp));
 					
 					// Pessimistic case: The first player hid a token => There is one thief
 					// Add permutations for each possible hidden token
@@ -122,7 +107,7 @@ public class IAController implements PlayerController {
 						tmp = new ArrayList<Integer>(rolesNumberTaken);
 						tmp.remove(roleNumber);
 						tmp.add(App.rules.getNumberThief());
-						configBefore.addAll(permutation(roleNumber, tmp));
+						worldsBefore.addAll(permutation(roleNumber, tmp));
 					}
 				}
 				// Number of diamonds < 10 => 1 thief for sure + 1 hidden token
@@ -132,7 +117,7 @@ public class IAController implements PlayerController {
 						ArrayList<Integer> tmp = new ArrayList<Integer>(rolesNumberTaken);
 						tmp.remove(roleNumber);
 						tmp.add(App.rules.getNumberThief());
-						configBefore.addAll(permutation(roleNumber, tmp));
+						worldsBefore.addAll(permutation(roleNumber, tmp));
 						
 					}
 				}			
@@ -141,8 +126,8 @@ public class IAController implements PlayerController {
 			else{				
 				// All previous players are thieves
 				if(box.getTokens().size() == nbTokensBeforeStart){
-					ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(player.getPosition() - 1, App.rules.getNumberThief()));
-					configBefore.add(new World(-1, thievesList));
+					ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(player.getPosition() - 2, App.rules.getNumberThief()));
+					worldsBefore.add(new World(-1, thievesList));
 				}
 				
 				/* 
@@ -152,7 +137,7 @@ public class IAController implements PlayerController {
 				 * The current player will assume that the first player took away one token.
 				 */
 				else{
-					int thievesUpperBound = (player.getPosition() - 1) - (nbTokensBeforeStart - box.getTokens().size() - 1);
+					int thievesUpperBound = (player.getPosition() - 2) - (nbTokensBeforeStart - box.getTokens().size() - 1);
 					int thievesLowerBound = thievesUpperBound - 1;
 					
 					ArrayList<Integer> upperBoundThievesList = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
@@ -164,7 +149,7 @@ public class IAController implements PlayerController {
 					// Creation of the configurations where the first player hasn't remove a token				
 					tmpLowerBound.addAll(rolesNumberTaken);
 
-					configBefore.addAll(permutation(-1, tmpLowerBound));
+					worldsBefore.addAll(permutation(-1, tmpLowerBound));
 					
 					// Creation of the configurations where the first player has removed a token
 					tmpUpperBound.addAll(rolesNumberTaken);
@@ -173,7 +158,7 @@ public class IAController implements PlayerController {
 					for(Integer roleNumber : typesOfTokensBefore){
 						ArrayList<Integer> tmp = new ArrayList<Integer>(tmpUpperBound);
 						tmp.remove(roleNumber);
-						configBefore.addAll(permutation(roleNumber, tmp));
+						worldsBefore.addAll(permutation(roleNumber, tmp));
 					}
 					
 					if(box.isEmpty()){
@@ -197,7 +182,7 @@ public class IAController implements PlayerController {
 									list.addAll(streetUrchinsList);
 									w.setRoleDistribution(list);
 								}
-								configBefore.addAll(subset);
+								worldsBefore.addAll(subset);
 							}
 						}
 						
@@ -220,21 +205,26 @@ public class IAController implements PlayerController {
 								list.addAll(streetUrchinsList);
 								w.setRoleDistribution(list);
 							}
-							configBefore.addAll(subset);
+							worldsBefore.addAll(subset);
 						}
 					}
 				}
 			}
 		}
-		this.configBefore = configBefore;
+		this.worldsBefore = worldsBefore;
 	}
 	
 	
-	public void createWorldsAfterVision(Box box){		
+	public void createWorldsAfterVision(Box boxAfter){
+		// XXX: Pour DEBUG remplacer le parametre boxAfter, par box
+		System.out.println("DEBUG : IAController : AFTER");
+		System.out.println("je suis le joueur : "+player.getPosition());
+		System.out.println(boxAfter.toString());
+		
 		/*
 		 * Lists of the possible distributions for the next players
 		 */
-		ArrayList<World> configAfter = new ArrayList<World>();
+		ArrayList<World> worldsAfter = new ArrayList<World>();
 		
 		/*
 		 *  XXX: Pour les tests des configAfter, le joueur prend un role.
@@ -245,49 +235,36 @@ public class IAController implements PlayerController {
 		 *  mais le choix du role devra surement etre fait differemment (appel d'une autre methode d'une autre classe ?)
 		 */
 		
-		Box boxAfter = box.clone();
-		boxAfter.setTokens(rolesLeft);
-		System.out.println("AVANT DE PRENDRE :");
-		System.out.println(boxAfter.toString());
+//		Box boxAfter = box.clone();
+//		boxAfter.setTokens(rolesLeft);
+//		System.out.println("AVANT DE PRENDRE :");
+//		System.out.println(boxAfter.toString());
 		
 		/*
 		 * Update of the roles left in the box after that the player took something (he has chosen a role)
 		 * XXX: Si le joueur est un voleur, mise a jour de l'etat de la boite concernant le nombre de diamants,
 		 * pour generer l'ensemble des configurations apres. LA MODIFICATION NE DOIT PAS SE FAIRE DANS CETTE METHODE
 		 */
-		if(player.getRole().getName().equals(App.rules.getNameThief())){
-			boxAfter.setDiamonds(box.getDiamonds() - player.getRole().getNbDiamondsStolen());
-		}else{
-			rolesLeft.remove(player.getRole().getName());
-			rolesNumberLeft.remove(App.rules.convertRoleNameIntoNumber(player.getRole().getName()));
-		}
-		System.out.println("APRES AVOIR PRIS :");
-		System.out.println(boxAfter.toString());
+//		if(player.getRole().getName().equals(App.rules.getNameThief())){
+//			boxAfter.setDiamonds(box.getDiamonds() - player.getRole().getNbDiamondsStolen());
+//		}else{
+//			rolesLeft.remove(player.getRole().getName());
+//			rolesNumberLeft.remove(App.rules.convertRoleNameIntoNumber(player.getRole().getName()));
+//		}
+//		System.out.println("APRES AVOIR PRIS :");
+//		System.out.println(boxAfter.toString());
 		
 		/**
 		 * configAfter
 		 */
-		
-		// BONNES LIGNES
-		// ------------------------------------------------------------------------------	
-//		if(player.getPosition() != App.rules.getCurrentNumberOfPlayer() - 1){
-//			
-//			int nbPlayersAfter = App.rules.getCurrentNumberOfPlayer() - player.getPosition() - 1;
-		// ------------------------------------------------------------------------------
-		/**
-		 * XXX WARNING POUR TEST
-		 */
-		// LIGNES POUR DEBUG
-		// ------------------------------------------------------------------------------
-		if(player.getPosition() != nbJoueursDansPartiePourDebug - 1){
+		if(player.getPosition() != nbPlayers){
 			
-			int nbPlayersAfter = nbJoueursDansPartiePourDebug - player.getPosition() - 1;
-		//-------------------------------------------------------------------------------
+			int nbPlayersAfter = nbPlayers - player.getPosition();
 			
 			// If the box is empty, all the players after are street urchins
 			if(boxAfter.isEmpty()){
 				ArrayList<Integer> StreetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbPlayersAfter, App.rules.getNumberStreetUrchin()));
-				configAfter.add(new World(-1, StreetUrchinsList));
+				worldsAfter.add(new World(-1, StreetUrchinsList));
 			}
 			/*
 			 * if there is only diamonds in the box, there can only be thieves and street urchins (SU) after the current player
@@ -302,13 +279,13 @@ public class IAController implements PlayerController {
 				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
 				
 				// Specific situation of the second to last player. The last player can only be thief or SU
-				if(player.getPosition() == App.rules.getCurrentNumberOfPlayer() - 2){
+				if(player.getPosition() == nbPlayers - 1){
 					tmp.add(App.rules.getNumberThief());
-					configAfter.add(new World(-1, tmp));
+					worldsAfter.add(new World(-1, tmp));
 					
 					tmp = new ArrayList<Integer>();
 					tmp.add(App.rules.getNumberStreetUrchin());
-					configAfter.add(new World(-1, tmp));
+					worldsAfter.add(new World(-1, tmp));
 				}
 				/*
 				 * Generation of all the possible distributions of thieves and SU
@@ -317,13 +294,13 @@ public class IAController implements PlayerController {
 					int streetUrchinsLowerBound = nbPlayersAfter - thievesUpperBound;
 					playersAfter.addAll(new ArrayList<Integer>(Collections.nCopies(streetUrchinsLowerBound, App.rules.getNumberStreetUrchin())));
 					tmp = new ArrayList<Integer>(playersAfter);
-					configAfter.add(new World(-1, tmp));
+					worldsAfter.add(new World(-1, tmp));
 					
 					for(int i=0; i < thievesUpperBound - 1; i++){
 						playersAfter.remove(0);
 						playersAfter.add(App.rules.getNumberStreetUrchin());
 						tmp = new ArrayList<Integer>(playersAfter);
-						configAfter.add(new World(-1, tmp));
+						worldsAfter.add(new World(-1, tmp));
 					}				
 				}
 			}
@@ -346,7 +323,7 @@ public class IAController implements PlayerController {
 						list.addAll(streetUrchinsList);
 						w.setRoleDistribution(list);
 					}
-					configAfter.addAll(subset);				
+					worldsAfter.addAll(subset);				
 				}
 				/*
 				 * More or same number of tokens than players
@@ -354,7 +331,7 @@ public class IAController implements PlayerController {
 				else{
 					// Add configurations for nbPlayersAfter among rolesLeft
 					ArrayList<World> partialPermutationsLists = partialPermutation(-1, rolesNumberLeft, nbPlayersAfter);
-					configAfter.addAll(partialPermutationsLists);
+					worldsAfter.addAll(partialPermutationsLists);
 					
 					//Add configurations when the last player decides to become a street urchin
 					ArrayList<World> tmp = new ArrayList<World>();
@@ -367,7 +344,7 @@ public class IAController implements PlayerController {
 							tmp.add(world);
 						}
 					}
-					configAfter.addAll(tmp);
+					worldsAfter.addAll(tmp);
 				}		
 			}
 			
@@ -386,7 +363,7 @@ public class IAController implements PlayerController {
 				if (nbPlayersAfter <= upperBoundThieves + boxAfter.getTokens().size()){
 					// Add configurations for nbPlayersAfter among rolesLeft
 					ArrayList<World> partialPermutationsLists = partialPermutation(-1, rolesLeftEnhanced, nbPlayersAfter);
-					configAfter.addAll(partialPermutationsLists);
+					worldsAfter.addAll(partialPermutationsLists);
 					
 					//Add configurations when the last player decides to become a SU
 					ArrayList<World> tmpResult = new ArrayList<World>();
@@ -399,7 +376,7 @@ public class IAController implements PlayerController {
 							tmpResult.add(world);
 						}
 					}
-					configAfter.addAll(tmpResult);
+					worldsAfter.addAll(tmpResult);
 					
 					/*
 					 * Rq de Bea : 
@@ -429,7 +406,7 @@ public class IAController implements PlayerController {
 								//second to last can be a SU
 								tmpList = new ArrayList<Integer>(list);
 								tmpList.set(list.size()-2, App.rules.getNumberStreetUrchin());
-								configAfter.add(new World(-1, tmpList));
+								worldsAfter.add(new World(-1, tmpList));
 							}
 						}	
 					}
@@ -455,7 +432,7 @@ public class IAController implements PlayerController {
 							list.add(App.rules.getNumberStreetUrchin());
 							w.setRoleDistribution(list);
 						}						
-						configAfter.addAll(tmpResult);
+						worldsAfter.addAll(tmpResult);
 					}
 					//the last player is a SU
 					else{
@@ -464,12 +441,12 @@ public class IAController implements PlayerController {
 							list.add(App.rules.getNumberStreetUrchin());
 							w.setRoleDistribution(list);
 						}						
-						configAfter.addAll(tmpResult);
+						worldsAfter.addAll(tmpResult);
 					}
 				}
 			}
 		}
-		this.configAfter = configAfter;
+		this.worldsAfter = worldsAfter;
 	}
 	
 	/**
@@ -569,11 +546,11 @@ public class IAController implements PlayerController {
 	}
 
 	public ArrayList<World> getConfigBefore() {
-		return configBefore;
+		return worldsBefore;
 	}
 
 	public ArrayList<World> getConfigAfter() {
-		return configAfter;
+		return worldsAfter;
 	}	
 }
 

@@ -18,7 +18,7 @@ public class GetBackTheBoxRunnable implements Runnable {
 	@Override
 	public void run() {
 		if(playerController instanceof IAController)
-			((IAController)playerController).createWorldsVision(this.box);
+			((IAController)playerController).createWorldsBeforeVision(this.box);
 		App.gameController.SelectingGodFathersAction();
 	}
 

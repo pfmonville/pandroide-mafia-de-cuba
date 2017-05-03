@@ -283,10 +283,10 @@ public class GameController {
 			throw new PickingStrategyError("you have to choose either to pick diamond(s) or a token");
 		}
 		
-		// if the current player is not human
+		// if the current player is an AI
 		if(!this.isCurrentPlayerHuman()){
 			// the AI creates all the possible worlds for the players after him, based on the box content
-			// TODO: ((IAController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
+			((IAController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
 		}
 		
 		//if this is the last player then start the second half
