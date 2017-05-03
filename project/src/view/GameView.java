@@ -1149,10 +1149,9 @@ public class GameView extends View{
 			if(q.getInteractive()==0)
 				App.gameController.askTo(q);
 			else{
-				q.setContent("");
-				String intitule = q.getContent().split(" ... ")[0]+choices.getValue();
+				String intitule = q.getContent().split("[...]")[0]+"..."+choices.getValue();
+				System.out.println(intitule);
 				q.setContent(intitule);
-				//Question q2 = new Question(q.getId(), intitule,q.getAnswersExpected(), q.getCategory());
 				App.gameController.askTo(q);
 			}
 		});

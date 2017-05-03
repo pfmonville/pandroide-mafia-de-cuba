@@ -118,7 +118,8 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				
 			case 8: // Es tu un ...
 				reponse.setId(question.getId()); 
-				String roleAsked = question.getContent().split("...")[1].replace('?', ' ').trim();
+				String[] s = question.getContent().split("[...]");
+				String roleAsked = s[s.length-1].replace('?', ' ').trim();
 				if(roleAsked.equals(player.getRole().getName()))
 					reponse.setContent("Oui");
 				else 
@@ -166,7 +167,8 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				if(!player.isFirstPlayer() || App.gameController.getTokenHidden()==null)
 					reponse.setContent("Non");
 				else {
-					String tokenAsked = question.getContent().split("...")[1].replace('?', ' ').trim();
+					String [] tab = question.getContent().split("[...]");
+					String tokenAsked = tab[tab.length-1].replace('?', ' ').trim();
 					if(App.gameController.getTokenHidden().equals(tokenAsked))
 						reponse.setContent("Oui");
 					else 
