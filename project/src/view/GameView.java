@@ -20,6 +20,7 @@ import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -69,7 +70,7 @@ public class GameView extends View{
 	private ToggleGroup questionsGroup ;
 	private ComboBox<String> choices ; //pour questions interactives
 	private ToolBar toolBar ;
-	private Label answer,diamondsBack, diamondsAway, jokers ;
+	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
 	private Button box, player, other, emptyPocket, askQuestion, answerTo ;
 	private Button replay, inspect, rules;
@@ -216,8 +217,13 @@ public class GameView extends View{
 		logPart = new VBox();	
 		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/1.5));
 		logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		
+		gameHistory = new Label();
+		gameHistory.setId("log");
 
-
+		logPart.getChildren().add(gameHistory);
+		logPart.setMargin(gameHistory, new Insets(20,0,0,50));
+		
 		top.getChildren().addAll(leftPart, logPart);
 		
 		//*********************************
@@ -1150,7 +1156,6 @@ public class GameView extends View{
 				App.gameController.askTo(q);
 			else{
 				String intitule = q.getContent().split("[...]")[0]+"..."+choices.getValue();
-				System.out.println(intitule);
 				q.setContent(intitule);
 				App.gameController.askTo(q);
 			}
@@ -1222,7 +1227,7 @@ public class GameView extends View{
 	 */
 	public void displayBoxAnimation(){
 		
-		int top=0,left=-500;
+		int top=0,left=-600;
 		int nbPlayers = App.rules.getCurrentNumberOfPlayer();
 		int topPlayers =0, rightPlayers = 0;
 		int position = forAnimation;
@@ -1231,6 +1236,16 @@ public class GameView extends View{
 			//Box for Godfather again
 			position = 1 ;
 			forAnimation=1;
+			if(boxOnTable != null)
+				table.getChildren().remove(boxOnTable);
+			boxOnTable = new ImageView(new Image(Theme.pathBox));
+			VBox boxAndGod = new VBox();
+			boxAndGod.setSpacing(10);
+			imgAtCenter.setMargin(boxAndGod, new Insets(super.getHeight()/10,0,0,10));
+			Node n = imgAtCenter.getLeft();
+			boxAndGod.getChildren().addAll(n,boxOnTable);
+			imgAtCenter.setLeft(boxAndGod);
+			return ;
 		}
 		
 		if(boxOnTable != null)
@@ -1249,10 +1264,10 @@ public class GameView extends View{
 				topPlayers = (nbPlayers-1)/2 ;
 				if(position <= topPlayers+1){
 					top =-200;
-					left=-500+(200*(position-1));	
+					left=-600+(200*(position-1));	
 				} else {
 					top = 200;
-					left=-500+(200*(nbPlayers-position+1));
+					left=-600+(200*(nbPlayers-position+1));
 				}
 			/*
 			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 à 5 et de 9 à 12)
@@ -1265,14 +1280,14 @@ public class GameView extends View{
 			
 				if(position <= topPlayers+1){
 					top =-200;
-					left=-500+(200*(position-1));					
+					left=-600+(200*(position-1));					
 				} else {
 					if(position> topPlayers+rightPlayers+1){
 						top = 200;
-						left=-500+(200*(nbPlayers-position+1));
+						left=-600+(200*(nbPlayers-position+1));
 					} else {
 						//players on side
-						left = 500;
+						left = 600;
 						top = -200+(200*(position%6));
 					}
 				}
@@ -1293,26 +1308,14 @@ public class GameView extends View{
 	public void displayGameHistory(){		
 		ArrayList<Talk> history =App.gameController.getGameHistory();
 		
-		Label log = new Label();	
-		log.setId("log");
+		String content = gameHistory.getText() ;
+			
+		content+= history.get(history.size()-1).getQuestion().getContent()+"\n"+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
+		
+		gameHistory.setText(content);
 
-		System.out.println(log.getText());
+		logPart.getChildren().set(0, gameHistory);
 		
-		if(log.getText()!=null)
-			log.setText("");
-		
-		String content = "" ;
-		
-		if(! history.isEmpty()){
-			for (Talk t : history){
-				content+=t.getQuestion().getContent()+"\n"+t.getAnswer().getContent()+"\n";
-			}
-		}
-		
-		log.setText(content);
-
-		logPart.getChildren().add(log);
-		logPart.setMargin(log, new Insets(0,0,0,5));
 	}
 	
 	

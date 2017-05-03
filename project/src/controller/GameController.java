@@ -33,6 +33,7 @@ import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.util.Duration;
 import model.GodFather;
 import model.SecretID;
 import model.Talk;
@@ -352,6 +353,8 @@ public class GameController {
         	.title("Action en cours")
         	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent())
         	.position(Pos.CENTER)
+        	.owner(App.mainStage)
+        	.hideAfter(Duration.seconds(3))
         	.showInformation();
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
@@ -393,6 +396,14 @@ public class GameController {
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
 		//TODO display pop up informing everyone on the answer
+		Platform.runLater(()->
+			Notifications.create()
+	    		.title("Action en cours")
+	    		.text("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent())
+	    		.position(Pos.CENTER)
+	    		.owner(App.mainStage)
+	        	.hideAfter(Duration.seconds(5))
+	    		.showInformation());
 		//TODO update log creating a Talk
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);

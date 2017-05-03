@@ -39,7 +39,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				ArrayList<String> tokens = new ArrayList<String>(player.getBox().getTokens());
 				tokens.remove(player.getRole().getName());
 				reponse.setTokensAnswer(tokens);
-				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds());
+				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds()- player.getRole().getNbDiamondsStolen());
 				reponse.setId(question.getId());
 				if(player.getBox().isEmpty()){
 					reponse.setContent("La boîte était vide");
@@ -53,7 +53,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 						content+= nb+" "+role+", ";
 					}
 				}
-				content+=player.getBox().getDiamonds()+" diamants.";
+				content+=player.getBox().getDiamonds()- player.getRole().getNbDiamondsStolen()+" diamants.";
 				reponse.setContent(content);
 				return reponse;
 				
@@ -78,8 +78,9 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				
 			case 5: //Combienquestion.getId()de jetons contenait la boîte quand tu l'as passée ?
 				reponse.setId(2);
-				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-1);
-				reponse.setContent("La boîte contenait "+(player.getBox().getTokens().size()-1)+" jetons personnage.");
+				int myToken = (!player.getRole().getName().equals(App.rules.getNameStreetUrchin()) && player.getRole().getNbDiamondsStolen()==0)? 1:0;
+				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-myToken);
+				reponse.setContent("La boîte contenait "+(player.getBox().getTokens().size()-myToken)+" jetons personnage.");
 				return reponse ;
 				
 			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
@@ -94,7 +95,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					}
 				}
 				content+=".";
-				content.replaceFirst(",", "");
+				content.replaceFirst("[,]", " ");
 				reponse.setContent(content);
 				return reponse;
 				
@@ -112,7 +113,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					}
 				}
 				content+=".";
-				content.replaceFirst(",", "");
+				content.replaceFirst("[,]", " ");
 				reponse.setContent(content);
 				return reponse;
 				

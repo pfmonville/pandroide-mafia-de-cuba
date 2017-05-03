@@ -69,9 +69,8 @@
 }
 
 #log{
-	-fx-text-alignment:center;
-	-fx-alignment : center ;
-	-fx-font : 12px Tahoma; 
+
+	-fx-font : 15px Tahoma; 
 	-fx-text-fill : black ;
 }
 
