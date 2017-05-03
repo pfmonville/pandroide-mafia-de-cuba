@@ -72,6 +72,7 @@
 
 	-fx-font : 15px Tahoma; 
 	-fx-text-fill : black ;
+	-fx-background: transparent
 }
 
 #info{
@@ -131,3 +132,9 @@
     -fx-border-color: black;
     -fx-opacity : 0.90;
 }
+
+.scroll-pane > .viewport{
+	-fx-background-image:url(../image/confidentialfile.png) ;
+}
+
+

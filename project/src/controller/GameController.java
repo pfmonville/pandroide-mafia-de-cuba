@@ -276,7 +276,7 @@ public class GameController {
 				throw new PickingStrategyError("there is not enough diamonds in the box");
 			}
 			players.get(position).takeDiamonds(diamondsPicked);
-		}else if(this.box.isEmpty()){
+		}else if(this.box.isEmpty()||players.get(position).isLastPlayer()){
 			//since tokenPicked is null takeToken automatically assigns streetUrchin to this player
 			players.get(position).takeToken("");
 		}else{
@@ -516,19 +516,21 @@ public class GameController {
 					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Nettoyeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new CleanerStrategy());
+					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Chauffeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new DriverStrategy());
+					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Voleur"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Enfant des rues"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new StreetUrchinStrategy());
+					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Agent"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new AgentStrategy());
+				case("FBI"):
+				case("CIA"):
+					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				}
 			}

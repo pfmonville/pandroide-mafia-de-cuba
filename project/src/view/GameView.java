@@ -28,6 +28,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -59,13 +60,14 @@ public class GameView extends View{
 	
 	@FXML
 	private Pane panel;
-	private VBox mainBox,logPart, leftPart,pocket ;
+	private VBox mainBox, leftPart,pocket ;
 	private HBox top,bot,info,answerArea ;
 	private BorderPane imgAtCenter ;
 	private StackPane table ;
 	private TilePane themeButtons ;
 	private FlowPane questionsArea,answerPicture; 
 	private GridPane questionsBox, questionsPlayers, questionsOthers, answers ;
+	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
 	private ComboBox<String> choices ; //pour questions interactives
@@ -214,15 +216,15 @@ public class GameView extends View{
 		//*********************************
 		//RIGHT PART
 		//*********************************
-		logPart = new VBox();	
-		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/1.5));
-		logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-		
+		logPart = new ScrollPane();	
+		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2.5));
+		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
 		gameHistory = new Label();
 		gameHistory.setId("log");
-
-		logPart.getChildren().add(gameHistory);
-		logPart.setMargin(gameHistory, new Insets(20,0,0,50));
+		gameHistory.setPadding(new Insets(10,0,0,35));
+		
+		logPart.setContent(gameHistory);
 		
 		top.getChildren().addAll(leftPart, logPart);
 		
@@ -241,7 +243,6 @@ public class GameView extends View{
 		
 		pocket = new VBox() ;
 		pocket.setAlignment(Pos.TOP_CENTER);
-		pocket.setStyle("-fx-border-color:black;");
 		
 		bot.getChildren().addAll(themeButtons, questionsArea, pocket);
 		
@@ -1310,11 +1311,12 @@ public class GameView extends View{
 		
 		String content = gameHistory.getText() ;
 			
-		content+= history.get(history.size()-1).getQuestion().getContent()+"\n"+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
+		content+= history.get(history.size()-1).getQuestion().getContent()+"\n"
+		+"Joueur "+history.get(history.size()-1).getQuestion().getTargetPlayer()+": "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
 		
 		gameHistory.setText(content);
 
-		logPart.getChildren().set(0, gameHistory);
+		logPart.setContent(gameHistory);
 		
 	}
 	
@@ -1332,7 +1334,7 @@ public class GameView extends View{
 			answerPicture.getChildren().clear();
 		if (info !=null)
 			info.getChildren().clear();
-//		logPart.getChildren().clear();
-//		logPart.setBackground(null);
+		gameHistory.setText("");
+
 	} 
 }

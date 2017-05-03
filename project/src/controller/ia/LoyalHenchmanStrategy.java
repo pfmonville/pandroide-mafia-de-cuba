@@ -23,6 +23,10 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setTokensAnswer(player.getBox().getTokens());
 				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds());
 				reponse.setId(question.getId());
+				if(player.getBox().isEmpty()){
+					reponse.setContent("La boîte était vide");
+					return reponse;
+				}
 				content = "J'ai reçu ";
 				Set<String> rolesTypes = new HashSet<String>(player.getBox().getTokens());
 				for(String role : rolesTypes){
@@ -46,7 +50,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					return reponse;
 				}
 				content = "J'ai passé ";
-				rolesTypes = new HashSet<String>(player.getBox().getTokens());
+				rolesTypes = new HashSet<String>(tokens);
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
 					if( nb > 0){
@@ -76,7 +80,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setContent("La boîte contenait "+player.getBox().getTokens().size()+" jetons personnage.");
 				return reponse ;
 				
-			case 5: //Combienquestion.getId()de jetons contenait la boîte quand tu l'as passée ?
+			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
 				reponse.setId(2);
 				int myToken = (!player.getRole().getName().equals(App.rules.getNameStreetUrchin()) && player.getRole().getNbDiamondsStolen()==0)? 1:0;
 				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-myToken);
@@ -86,6 +90,10 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
 				reponse.setId(question.getId());
 				reponse.setTokensAnswer(player.getBox().getTokens());
+				if(player.getBox().getTokens().isEmpty()){
+					reponse.setContent("Aucun.");
+					return reponse;
+				}
 				content = "J'ai reçu";
 				rolesTypes = new HashSet<String>(player.getBox().getTokens());
 				for(String role : rolesTypes){
@@ -104,8 +112,12 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				tokens = new ArrayList<String>(player.getBox().getTokens());
 				tokens.remove(player.getRole().getName());
 				reponse.setTokensAnswer(tokens);
+				if(tokens.isEmpty()){
+					reponse.setContent("Aucun.");
+					return reponse;
+				}
 				content = "J'ai reçu";
-				rolesTypes = new HashSet<String>(player.getBox().getTokens());
+				rolesTypes = new HashSet<String>(tokens);
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
 					if( nb > 0){
@@ -123,7 +135,9 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				String roleAsked = s[s.length-1].replace('?', ' ').trim();
 				if(roleAsked.equals(player.getRole().getName()))
 					reponse.setContent("Oui");
-				else 
+				else if(roleAsked.equals("Agent") && (player.getRole().getName().equals("FBI")||player.getRole().getName().equals("CIA")))
+					reponse.setContent("Oui");
+				else
 					reponse.setContent("Non");
 				return reponse;
 				

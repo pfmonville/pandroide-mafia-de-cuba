@@ -11,8 +11,8 @@ Index des questions : de 0 à nombre de lignes
 5 : Combien de jetons contenait la boîte quand tu l'as passée ? : 0 : 2,3,9
 6 : Quels rôles contenait la boîte quand tu l'as reçue ? : 0 : 2,3,10
 7 : Quels rôles contenait la boîte quand tu l'as passée ? : 0 : 2,3,11
-8 : Es tu un... : 1 : 0,1,2,3,5 : 1
-9 : Quel personnage es tu ? : 1 : 2,3,4
+8 : Es-tu un... : 1 : 0,1,2,3,5 : 1
+9 : Quel personnage es-tu ? : 1 : 2,3,4
 10 : Qui dois-je accuser selon toi? : 1 : 2,3,15
 11 : Est-ce que tu sais quel est le rôle de cette personne? : 1 : 0,1,2,3
 12 : Selon toi quel est le rôle de cette personne ? : 1 : 2,3,13
