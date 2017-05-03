@@ -1149,7 +1149,8 @@ public class GameView extends View{
 			if(q.getInteractive()==0)
 				App.gameController.askTo(q);
 			else{
-				String intitule = q.getContent().split("...")[0]+choices.getValue();
+				q.setContent("");
+				String intitule = q.getContent().split(" ... ")[0]+choices.getValue();
 				q.setContent(intitule);
 				//Question q2 = new Question(q.getId(), intitule,q.getAnswersExpected(), q.getCategory());
 				App.gameController.askTo(q);
