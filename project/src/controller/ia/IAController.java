@@ -582,11 +582,37 @@ public class IAController implements PlayerController {
 				if(playerId < player.getPosition()){
 					if(nbDiamonds < player.getBox().getDiamonds()){
 						fiability.set(playerId, 0.0);
+						pruneWorlds(playerId, App.rules.getNumberLoyalHenchman());
 					}
 				}
 				else{
 					if(nbDiamonds > player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
 						fiability.set(playerId, 0.0);
+						pruneWorlds(playerId, App.rules.getNumberLoyalHenchman());
+					}
+				}
+				break;
+				
+			case 4: //Combien de jetons contenait la boîte quand tu l'as reçue ?
+			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
+				int nbTokens = answer.getNbTokensAnswer();
+				if(playerId < player.getPosition()){
+					if(nbTokens < player.getBox().getTokens().size()){
+						fiability.set(playerId, 0.0);
+						pruneWorlds(playerId, App.rules.getNumberLoyalHenchman());
+					}
+				}
+				else{
+					int tokenTaken; 
+					if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin()))
+						tokenTaken = 0;
+//					else if(player.isFirstPlayer() && il a ecarte un role)
+//						tokenTaken = 2
+					else
+						tokenTaken = 1;
+					if(nbTokens > player.getBox().getTokens().size() - tokenTaken){
+						fiability.set(playerId, 0.0);
+						pruneWorlds(playerId, App.rules.getNumberLoyalHenchman());
 					}
 				}
 				break;
@@ -595,21 +621,23 @@ public class IAController implements PlayerController {
 	}
 	
 	/*
-	 * cut the worlds where the player at playerPosition has the role roleName 
+	 * cut the worlds where the player at playerPosition has the role roleNumber 
 	 */
-	public void pruneWorlds(int playerPosition, String roleName){
+	public void pruneWorlds(int playerPosition, Integer roleNumber){
 		ArrayList<World> worldsList = new ArrayList<World>();
 		int index;
 		if(playerPosition < player.getPosition()){
 			worldsList = worldsBefore;
-			index = playerPosition;
+			index = playerPosition - 2;
 		}else{			
 			worldsList = worldsAfter;
 			index = playerPosition - player.getPosition() - 1;
-		}
-		
-		for(World world : worldList){
-			
+		}		
+		for(World world : worldsList){
+			ArrayList<Integer> dtb = world.getRolesDistribution();
+			if( dtb.get(index) == roleNumber){
+				worldsList.remove(world);
+			}
 		}
 	}
 	
