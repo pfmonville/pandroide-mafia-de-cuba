@@ -164,9 +164,9 @@ public class GameView extends View{
 		// top et bottom elements
 		//***********************
 		top = new HBox();
-		top.setPrefSize(super.getWidth(), super.getHeight()/2);
+		top.setPrefSize(super.getWidth(), 3*super.getHeight()/4);
 		bot = new HBox();
-		bot.setPrefSize(super.getWidth(), super.getHeight()/2);
+		bot.setPrefSize(super.getWidth(), super.getHeight()/4 );
 		
 		//**************************
 		//TOP
@@ -215,6 +215,8 @@ public class GameView extends View{
 		//*********************************
 		logPart = new VBox();	
 		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/1.5));
+		logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+
 
 		top.getChildren().addAll(leftPart, logPart);
 		
@@ -229,10 +231,11 @@ public class GameView extends View{
 		// Questions area
 		//*********************************
 		questionsArea = new FlowPane();
-		questionsArea.setPrefSize((super.getWidth()/4)*3, super.getHeight()/2);
+		questionsArea.setPrefSize((super.getWidth()/4)*3, super.getHeight()/3);// /2
 		
 		pocket = new VBox() ;
 		pocket.setAlignment(Pos.TOP_CENTER);
+		pocket.setStyle("-fx-border-color:black;");
 		
 		bot.getChildren().addAll(themeButtons, questionsArea, pocket);
 		
@@ -1146,9 +1149,10 @@ public class GameView extends View{
 			if(q.getInteractive()==0)
 				App.gameController.askTo(q);
 			else{
-				String intitule = q.getContent()+choices.getValue();
-				Question q2 = new Question(q.getId(), intitule,q.getAnswersExpected(), q.getCategory());
-				App.gameController.askTo(q2);
+				String intitule = q.getContent().split("...")[0]+choices.getValue();
+				q.setContent(intitule);
+				//Question q2 = new Question(q.getId(), intitule,q.getAnswersExpected(), q.getCategory());
+				App.gameController.askTo(q);
 			}
 		});
 		
@@ -1158,7 +1162,6 @@ public class GameView extends View{
 		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
-		logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 	}
 	
 	
@@ -1292,10 +1295,21 @@ public class GameView extends View{
 		
 		Label log = new Label();	
 		log.setId("log");
+
+		System.out.println(log.getText());
+		
+		if(log.getText()!=null)
+			log.setText("");
+		
+		String content = "" ;
 		
 		if(! history.isEmpty()){
-			log.setText(history.get(0).getQuestion().getContent());
+			for (Talk t : history){
+				content+=t.getQuestion().getContent()+"\n\n";
+			}
 		}
+		
+		log.setText(content);
 
 		logPart.getChildren().add(log);
 		logPart.setMargin(log, new Insets(0,0,0,5));
@@ -1315,7 +1329,7 @@ public class GameView extends View{
 			answerPicture.getChildren().clear();
 		if (info !=null)
 			info.getChildren().clear();
-		logPart.getChildren().clear();
-		logPart.setBackground(null);
+//		logPart.getChildren().clear();
+//		logPart.setBackground(null);
 	} 
 }

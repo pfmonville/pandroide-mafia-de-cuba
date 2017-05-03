@@ -71,7 +71,7 @@
 #log{
 	-fx-text-alignment:center;
 	-fx-alignment : center ;
-	-fx-font : 28px Tahoma; 
+	-fx-font : 12px Tahoma; 
 	-fx-text-fill : black ;
 }
 
