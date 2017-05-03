@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import model.Answer;
 import model.Box;
 import model.Player;
 import model.Rules;
@@ -23,6 +24,7 @@ public class IAController implements PlayerController {
 	private ArrayList<Integer> rolesNumberLeft;
 	private ArrayList<World> worldsBefore;
 	private ArrayList<World> worldsAfter;
+	private ArrayList<Double> fiability;
 	private int nbPlayers; // nbPlayers = App.rules.getCurrentNumberOfPlayer();
 	
 	
@@ -32,6 +34,10 @@ public class IAController implements PlayerController {
 		this.rolesNumberLeft = new ArrayList<Integer>();
 		this.worldsBefore = new ArrayList<World>();
 		this.worldsAfter = new ArrayList<World>();
+		//on initialise tout a 0.5
+		this.fiability = new ArrayList<Double>(Collections.nCopies(App.gameController.getNumberOfPlayers(), 0.5));
+		fiability.set(0, 1.0); //godfather reliable 
+		fiability.set(player.getPosition(), 1.0);// i'm reliable
 	}
 	
 	public IAController(Player player2, Box box, Rules rules,
@@ -535,12 +541,78 @@ public class IAController implements PlayerController {
 	
 	public void updateWorldsVision(Talk talk){
 		//TODO
+		//ATTENTION: si c'est moi le joueur cible, pas de update 
 	}
 	
 	public void updateWorldsVision(SecretID secret){
 		//TODO
 	}
-
+	
+	public void checkLiar(Talk talk){
+		int questionId = talk.getAnswer().getId();
+		Answer answer = talk.getAnswer();
+		int playerId = talk.getQuestion().getTargetPlayer(); 
+		switch(questionId){
+			//Que contenait la boite quand tu l'a reçue?
+			case 0 :
+//				ArrayList<String> tokensLeft = answer.getTokensAnswer();
+//				ArrayList<String> tokensTaken = App.rules.getTokensFor(App.gameController.getNumberOfPlayers());
+//				for(String role : tokensLeft){
+//					tokensTaken.remove(role);
+//				}
+//				//on verifie pour chaque monde si cette repartition existe avant lui
+//				//si le joueur cible est avant le joueur courant 
+//				if(playerId < player.getPosition()){
+//					for(World w : worldsBefore){
+//						//parcourir et verifier chaque w.getRolesDistribution()
+//					}
+//				}
+//				else{
+//					for(World w: worldsAfter){
+//						
+//					}
+//				}
+//				
+			case 1:
+			
+			
+			case 2: //Combien de diamants contenait la boite quand tu l'as recu?
+			case 3: //Combien de diamants qd tu l'as passe?
+				int nbDiamonds = answer.getNbDiamondsAnswer();
+				if(playerId < player.getPosition()){
+					if(nbDiamonds < player.getBox().getDiamonds()){
+						fiability.set(playerId, 0.0);
+					}
+				}
+				else{
+					if(nbDiamonds > player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
+						fiability.set(playerId, 0.0);
+					}
+				}
+				break;
+				
+		}
+	}
+	
+	/*
+	 * cut the worlds where the player at playerPosition has the role roleName 
+	 */
+	public void pruneWorlds(int playerPosition, String roleName){
+		ArrayList<World> worldsList = new ArrayList<World>();
+		int index;
+		if(playerPosition < player.getPosition()){
+			worldsList = worldsBefore;
+			index = playerPosition;
+		}else{			
+			worldsList = worldsAfter;
+			index = playerPosition - player.getPosition() - 1;
+		}
+		
+		for(World world : worldList){
+			
+		}
+	}
+	
 	public Player getPlayer() {
 		return player;
 	}
@@ -551,6 +623,7 @@ public class IAController implements PlayerController {
 
 	public ArrayList<World> getConfigAfter() {
 		return worldsAfter;
-	}	
+	}
+	
 }
 
