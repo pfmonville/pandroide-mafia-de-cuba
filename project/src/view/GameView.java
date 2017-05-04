@@ -279,7 +279,7 @@ public class GameView extends View{
 	 * @param nbPlayers : number of buttons to add
 	 * @param humanPosition : the position where the human player is. If humanPosition = -1, no human player.
 	 */
-	public void createIAButton( int nbPlayers, int humanPosition) {
+	public void createAIButton( int nbPlayers, int humanPosition) {
 		ArrayList<Button> iaButtons = new ArrayList<Button>();
 		Button godFather = new Button();
 		int topPlayers =0, botPlayers=0, rightPlayers = 0; 
@@ -569,7 +569,7 @@ public class GameView extends View{
 	/**
 	 * display information about the game (number of jokers, number of diamonds got back etc..) for only IA players
 	 */
-	public void createInfoBoxIA(){
+	public void createInfoBoxAI(){
 		info = new HBox();
 		info.setSpacing(50);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
@@ -1255,11 +1255,11 @@ public class GameView extends View{
 	 */
 	public void setInitialGameView(){
 		// if only IA
-		if (App.rules.isAllIA())
-			createIAButton(App.rules.getCurrentNumberOfPlayer(),-1);
+		if (App.rules.isAllAI())
+			createAIButton(App.rules.getCurrentNumberOfPlayer(),-1);
 		else 
 			//if human player
-			createIAButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
+			createAIButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
 	}
 	
 	

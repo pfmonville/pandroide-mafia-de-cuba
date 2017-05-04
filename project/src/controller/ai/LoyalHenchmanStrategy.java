@@ -1,4 +1,4 @@
-package controller.ia;
+package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashSet;

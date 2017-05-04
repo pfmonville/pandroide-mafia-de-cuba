@@ -1,4 +1,4 @@
-package controller.ia;
+package controller.ai;
 
 import java.util.ArrayList;
 
@@ -6,11 +6,11 @@ import model.Box;
 import model.Player;
 import model.Question;
 
-public class IAGodFatherController extends IAController{
+public class AIGodFatherController extends AIController{
 
 	private IGodFatherStrategy strategy;
 	
-	public IAGodFatherController(Player player){
+	public AIGodFatherController(Player player){
 		super(player);
 		strategy = new GodFatherStrategy();
 	}

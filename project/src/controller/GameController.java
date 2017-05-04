@@ -7,16 +7,16 @@ import java.util.Map;
 
 import org.controlsfx.control.Notifications;
 
-import controller.ia.AgentStrategy;
-import controller.ia.CleanerStrategy;
-import controller.ia.DriverStrategy;
-import controller.ia.GodFatherStrategy;
-import controller.ia.IAController;
-import controller.ia.IAGodFatherController;
-import controller.ia.IASuspectController;
-import controller.ia.LoyalHenchmanStrategy;
-import controller.ia.StreetUrchinStrategy;
-import controller.ia.ThiefStrategy;
+import controller.ai.AgentStrategy;
+import controller.ai.CleanerStrategy;
+import controller.ai.DriverStrategy;
+import controller.ai.GodFatherStrategy;
+import controller.ai.AIController;
+import controller.ai.AIGodFatherController;
+import controller.ai.AISuspectController;
+import controller.ai.LoyalHenchmanStrategy;
+import controller.ai.StreetUrchinStrategy;
+import controller.ai.ThiefStrategy;
 import model.Answer;
 import model.Box;
 import model.Player;
@@ -286,7 +286,7 @@ public class GameController {
 		// if the current player is an AI
 		if(!this.isCurrentPlayerHuman()){
 			// the AI creates all the possible worlds for the players after him, based on the box content
-			((IAController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
+			((AIController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
 		}
 		
 		//if this is the last player then start the second half
@@ -301,8 +301,8 @@ public class GameController {
 			this.players.get(1).setBox(box.clone());
 			this.currentPlayer = 1;
 			this.currentTurn = 1;
-			if(App.rules.isAllIA())
-				Platform.runLater(()->App.gv.createInfoBoxIA());
+			if(App.rules.isAllAI())
+				Platform.runLater(()->App.gv.createInfoBoxAI());
 			beginSecondHalf();
 		}else{
 			this.currentPlayer ++;
@@ -384,7 +384,7 @@ public class GameController {
 				//TODO : display one less joker and everyone knows who is the target
 				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
-					((IAController)pc).updateWorldsVision(secret);
+					((AIController)pc).updateWorldsVision(secret);
 				}
 				SelectingGodFathersAction();
 			}else{
@@ -408,14 +408,14 @@ public class GameController {
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);
 		Platform.runLater(() -> App.gv.displayGameHistory());
-		updateIAWorldsVisions();
+		updateAIWorldsVisions();
 		SelectingGodFathersAction();
 	}
 	
 	
-	public void updateIAWorldsVisions(){
+	public void updateAIWorldsVisions(){
 		for(PlayerController pc: playerControllers.values()){
-			((IAController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+			((AIController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
 		}
 	}
 	
@@ -487,9 +487,9 @@ public class GameController {
 			}
 			else{
 				if(position == 1){
-					playerControllers.put(position, new IAGodFatherController(player));
+					playerControllers.put(position, new AIGodFatherController(player));
 				}else{
-					playerControllers.put(position, new IASuspectController(player));
+					playerControllers.put(position, new AISuspectController(player));
 				}
 			}
 		}
@@ -510,27 +510,27 @@ public class GameController {
 				System.out.println( " roleName = " + player.getRole().getName());
 				switch(player.getRole().getName()){
 				case("Parrain"):
-					((IAGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
+					((AIGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
 					break;
 				case("Fidèle"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Nettoyeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Chauffeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Voleur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Enfant des rues"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Agent"):
 				case("FBI"):
 				case("CIA"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				}
 			}

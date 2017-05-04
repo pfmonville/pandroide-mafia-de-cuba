@@ -59,7 +59,7 @@ public class Rules {
 	private int numberOfDrivers;
 	private int numberOfJokers;
 	private int numberOfDiamonds;
-	private boolean allIA;
+	private boolean allAI;
 	private int humanPosition;
 	private int currentNumberOfPlayer;
 
@@ -96,7 +96,7 @@ public class Rules {
 		this.numberOfDrivers = 1;
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
-		this.allIA = false;
+		this.allAI = false;
 		this.humanPosition = 1;
 	}
 	
@@ -118,7 +118,7 @@ public class Rules {
 		this.numberOfDrivers = 1;
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
-		this.allIA = false;
+		this.allAI = false;
 	}
 	
 	public ArrayList<String> getTokensFor(int numberOfPlayer){
@@ -532,14 +532,14 @@ public class Rules {
 
 
 
-	public boolean isAllIA() {
-		return allIA;
+	public boolean isAllAI() {
+		return allAI;
 	}
 
 
 
-	public void setAllIA(boolean allIA) {
-		this.allIA = allIA;
+	public void setAllAI(boolean allIA) {
+		this.allAI = allIA;
 	}
 
 

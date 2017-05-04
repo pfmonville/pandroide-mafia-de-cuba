@@ -1,4 +1,4 @@
-package controller.ia;
+package controller.ai;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -9,10 +9,10 @@ import model.Box;
 import model.Player;
 import model.Question;
 
-public class IASuspectController extends IAController{
+public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
 	
-	public IASuspectController(Player player){
+	public AISuspectController(Player player){
 		super(player);
 	}
 	

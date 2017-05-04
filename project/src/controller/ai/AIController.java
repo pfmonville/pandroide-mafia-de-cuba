@@ -1,4 +1,4 @@
-package controller.ia;
+package controller.ai;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,7 +18,7 @@ import controller.App;
 import controller.PlayerController;
 import data.World;
 
-public class IAController implements PlayerController {
+public class AIController implements PlayerController {
 
 	private Player player;
 	// List for the roles still available in the box when the player receive the box
@@ -30,7 +30,7 @@ public class IAController implements PlayerController {
 	private boolean debugMode = false;
 	
 	
-	public IAController(Player player) {
+	public AIController(Player player) {
 		this.player = player;
 		this.worldsBefore = new ArrayList<World>();
 		this.worldsAfter = new ArrayList<World>();
@@ -41,13 +41,13 @@ public class IAController implements PlayerController {
 		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
 	}
 	
-	public IAController(Player player2, Box box, Rules rules,
+	public AIController(Player player2, Box box, Rules rules,
 			int numberOfPlayers) {
 		// TODO Auto-generated constructor stub
 	}
 	
 	// Specific constructor uses to debugging in MainTestIAController class
-	public IAController(Player player, int nbPlayers){
+	public AIController(Player player, int nbPlayers){
 		this.player = player;
 		this.worldsBefore = new ArrayList<World>();
 		this.worldsAfter = new ArrayList<World>();

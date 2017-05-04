@@ -1,4 +1,4 @@
-package controller.ia;
+package controller.ai;
 
 import java.util.ArrayList;
 
@@ -11,7 +11,7 @@ import model.Talk;
 import controller.App;
 import data.World;
 
-public class MainTestIAController {
+public class MainTestAIController {
 
 	public static void main(String[] args){
 		// Initialisation de la boite que recoit le joueur courant
@@ -36,11 +36,11 @@ public class MainTestIAController {
 		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		p.setBox(testBox);
 		
-		IAController iac = new IAController(p, nbPlayers);
+		AIController aic = new AIController(p, nbPlayers);
 		
 		// Le joueur recoit la boite. Maj des configBefore
 		long start = System.currentTimeMillis();
-		iac.createWorldsBeforeVision(testBox);
+		aic.createWorldsBeforeVision(testBox);
 		long endConfigBefore = System.currentTimeMillis() - start;
 		
 		// Le joueur choisi ce qu'il prend
@@ -50,26 +50,26 @@ public class MainTestIAController {
 		
 		// Joueur non voleur
 		String nomDuRole = App.rules.getNameDriver();
-		iac.getPlayer().setRole(new Role(nomDuRole));
+		aic.getPlayer().setRole(new Role(nomDuRole));
 		
 		Box testBoxAfter = testBox.clone();
 		System.out.println("AVANT DE PRENDRE :");
 		System.out.println(testBoxAfter.toString());
-		if(iac.getPlayer().getRole().getName().equals(App.rules.getNameThief())){
-			testBoxAfter.setDiamonds(testBoxAfter.getDiamonds() - iac.getPlayer().getRole().getNbDiamondsStolen());
+		if(aic.getPlayer().getRole().getName().equals(App.rules.getNameThief())){
+			testBoxAfter.setDiamonds(testBoxAfter.getDiamonds() - aic.getPlayer().getRole().getNbDiamondsStolen());
 		}else{
-			testBoxAfter.getTokens().remove(iac.getPlayer().getRole().getName());
+			testBoxAfter.getTokens().remove(aic.getPlayer().getRole().getName());
 		}
 		System.out.println("APRES AVOIR PRIS :");
 		System.out.println(testBoxAfter.toString());
 		
 		start = System.currentTimeMillis();
-		iac.createWorldsAfterVision(testBoxAfter);
+		aic.createWorldsAfterVision(testBoxAfter);
 		long endConfigAfter = System.currentTimeMillis() - start;
 		
 		// Affichage des configBefore
 		System.out.println("*** ConfigBefore ***");
-		for (World al : iac.getWorldsBefore()) {
+		for (World al : aic.getWorldsBefore()) {
 	        String appender = "";
 	        for (Integer i : al.getRolesDistribution()) {
 	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
@@ -77,13 +77,13 @@ public class MainTestIAController {
 	        }
 	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
 	    }
-		System.out.println("nb configBefore: "+iac.getWorldsBefore().size() );
+		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigBefore);
 		System.out.println();
 		
 		// Affichage des configAfter
 		System.out.println("*** ConfigAfter ***");
-		for (World al : iac.getWorldsAfter()) {
+		for (World al : aic.getWorldsAfter()) {
 	        String appender = "";
 	        for (Integer i : al.getRolesDistribution()) {
 	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
@@ -91,7 +91,7 @@ public class MainTestIAController {
 	        }
 	        System.out.println();
 	    }
-		System.out.println("nb configAfter: "+iac.getWorldsAfter().size() );
+		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigAfter);
 		System.out.println();
 		
