@@ -29,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -70,7 +71,7 @@ public class GameView extends View{
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
-	private ComboBox<String> choices ; //pour questions interactives
+	private ComboBox<String> choices_role, choices_tokenHidden ; //pour questions interactives
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
@@ -218,11 +219,16 @@ public class GameView extends View{
 		//*********************************
 		logPart = new ScrollPane();	
 		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2.5));
-		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
+		logPart.setHbarPolicy(ScrollBarPolicy.NEVER);
+		logPart.setFitToWidth(true);
+		
+		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		//TODO
 		gameHistory = new Label();
 		gameHistory.setId("log");
 		gameHistory.setPadding(new Insets(10,0,0,35));
+		gameHistory.setWrapText(true);
 		
 		logPart.setContent(gameHistory);
 		
@@ -402,7 +408,13 @@ public class GameView extends View{
 				for(int j=0; j<quest.size();j++){
 					if(quest.get(j) instanceof Question && quest.get(j).getId()==qrID){
 						if(((Question)quest.get(j)).getInteractive()==0){
-							choices.setDisable(true);
+							choices_role.setDisable(true);
+							choices_tokenHidden.setDisable(true);
+						} else {
+							if(((Question)quest.get(j)).getId()==8)
+								choices_tokenHidden.setDisable(true);
+							if(((Question)quest.get(j)).getId()==16)
+								choices_role.setDisable(true);
 						}
 						break;
 					}
@@ -480,14 +492,14 @@ public class GameView extends View{
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				//la combo box
-				choices = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
-				choices.setVisibleRowCount(4);
-				choices.setDisable(true);
-				choices.getStyleClass().add("question_box");
+				choices_role = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_role.setVisibleRowCount(4);
+				choices_role.setDisable(true);
+				choices_role.getStyleClass().add("question_box");
 				b.setOnAction((event)->{
-					choices.setDisable(false);
+					choices_role.setDisable(false);
 				});
-				button.getChildren().addAll(b,choices);
+				button.getChildren().addAll(b,choices_role);
 				
 				if(index%2==0 && index!=0)
 					i++;
@@ -498,16 +510,43 @@ public class GameView extends View{
 		i =0;
 		for (Question q : others){
 			int index= others.indexOf(q);
-			RadioButton b = new RadioButton(q.getContent());
-			b.setPrefHeight(questionsOthers.getHeight()/5);
-			b.setWrapText(true);
-			b.setId(q.getId()+"");
-			b.setToggleGroup(questionsGroup);
-			b.getStyleClass().add("question");
-			if(index%2==0 && index!=0)
-				i++;
-			questionsOthers.add(b, index%nbCol, i );
-			questionsOthers.setMargin(b, new Insets(5,0,0,5));
+			if(q.getInteractive()==0){
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				if(index%2==0 && index!=0)
+					i++;
+				questionsOthers.add(b, index%nbCol,i);
+				questionsOthers.setMargin(b, new Insets(5,0,0,5));
+			}else{
+				//une question à choix multiple
+				HBox button = new HBox() ;
+				button.setSpacing(2);
+				//le bouton radio de la question
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				//la combo box
+				choices_tokenHidden = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_tokenHidden.setVisibleRowCount(4);
+				choices_tokenHidden.setDisable(true);
+				choices_tokenHidden.getStyleClass().add("question_box");
+				b.setOnAction((event)->{
+					choices_tokenHidden.setDisable(false);
+				});
+				button.getChildren().addAll(b,choices_tokenHidden);
+				
+				if(index%2==0 && index!=0)
+					i++;
+				questionsOthers.add(button, index%nbCol, i );
+				questionsOthers.setMargin(button, new Insets(5,0,0,5));
+			}
 		}
 	}
 
@@ -1156,7 +1195,11 @@ public class GameView extends View{
 			if(q.getInteractive()==0)
 				App.gameController.askTo(q);
 			else{
-				String intitule = q.getContent().split("[...]")[0]+"..."+choices.getValue();
+				String intitule ="";
+				if(q.getId()==8)
+					intitule = q.getContent().split("[...]")[0]+"..."+choices_role.getValue();
+				else 
+					intitule = q.getContent().split("[...]")[0]+"..."+choices_tokenHidden.getValue();
 				q.setContent(intitule);
 				App.gameController.askTo(q);
 			}
@@ -1317,7 +1360,7 @@ public class GameView extends View{
 		gameHistory.setText(content);
 
 		logPart.setContent(gameHistory);
-		
+		logPart.vvalueProperty().bind(gameHistory.heightProperty());
 	}
 	
 	
