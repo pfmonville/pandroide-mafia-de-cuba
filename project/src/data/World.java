@@ -56,6 +56,15 @@ public class World {
 		return true;
 		
 	}
+	
+	public World clone(){
+		ArrayList<Integer> clonedRolesDistribution = new ArrayList<Integer>();
+		for (Integer i : rolesDistribution){
+			clonedRolesDistribution.add(new Integer(i.intValue()));
+		}
+		return new World(tokenMovedAside, clonedRolesDistribution);
+	}
+	
 	public ArrayList<Integer> getRolesDistribution() {
 		return rolesDistribution;
 	}

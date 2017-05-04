@@ -38,6 +38,8 @@ public class Rules {
 	private String nameDriver;
 	private String nameThief;
 	private String nameStreetUrchin;
+	// Ugly as hell, but whatever: Be careful, the names are defined in the constructor too
+	private final String nameRolesTab[] = {"Fidèle", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
 	
 	// Corresponding value of each role
 	private final Integer numberGodfather = 0;
@@ -47,6 +49,7 @@ public class Rules {
 	private final Integer numberDriver = 2;
 	private final Integer numberThief = 4;
 	private final Integer numberStreetUrchin = 5;
+	private final Integer numberRolesTab[] = {1, 2, 3, 6}; // numbers representing the tokens
 	
 	
 	//Value for the game initialize in the OptionView
@@ -758,5 +761,15 @@ public class Rules {
 			return nameThief;
 		}
 		return null;
+	}
+
+
+	public Integer[] getNumberRolesTab() {
+		return numberRolesTab;
+	}
+
+
+	public String[] getNameRolesTab() {
+		return nameRolesTab;
 	}
 }

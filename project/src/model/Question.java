@@ -48,8 +48,8 @@ public class Question extends Phrase{
 		return targetPlayer;
 	}
 
-	public void setTargetPlayer(int tagetPlayer) {
-		this.targetPlayer = tagetPlayer;
+	public void setTargetPlayer(int targetPlayer) {
+		this.targetPlayer = targetPlayer;
 	}
 
 	public int getInteractive() {
