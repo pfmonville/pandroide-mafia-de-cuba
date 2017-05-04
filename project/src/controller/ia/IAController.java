@@ -35,9 +35,9 @@ public class IAController implements PlayerController {
 		this.worldsBefore = new ArrayList<World>();
 		this.worldsAfter = new ArrayList<World>();
 		//on initialise tout a 0.5
-		this.fiability = new ArrayList<Double>(Collections.nCopies(App.gameController.getNumberOfPlayers(), 0.5));
-		fiability.set(0, 1.0); //godfather reliable 
-		fiability.set(player.getPosition(), 1.0);// i'm reliable
+		this.fiability = new ArrayList<Double>(Collections.nCopies(App.gameController.getNumberOfPlayers(), 50.0));
+		fiability.set(0, 100.0); //godfather reliable 
+		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
 	}
 	
 	public IAController(Player player2, Box box, Rules rules,
