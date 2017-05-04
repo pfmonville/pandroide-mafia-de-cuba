@@ -158,7 +158,7 @@ public class OptionView extends View{
 		
 		//the part where the user chooses to play or watch ia
 		Image iconHU = new Image(Theme.pathHumanIcon);
-		Image iconIA = new Image(Theme.pathAIIcon);
+		Image iconAI = new Image(Theme.pathAIIcon);
 				
 		Label typeOfPlayerLabel = new Label();
 		Image imageJ1 = new Image(Theme.pathTypeOfPlayer);
@@ -166,7 +166,7 @@ public class OptionView extends View{
 		typeOfPlayerLabel.setTooltip(super.createStandardTooltip("Type de joueurs"));
 		plAI = new RadioButton();
 		plAI.setUserData("ia");
-		plAI.setGraphic(new ImageView(iconIA));
+		plAI.setGraphic(new ImageView(iconAI));
 		plAI.setTooltip(super.createStandardTooltip("Tous IA"));
 		plHU = new RadioButton();
 		plHU.setUserData("hu");

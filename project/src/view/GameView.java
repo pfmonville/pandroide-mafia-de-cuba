@@ -567,7 +567,7 @@ public class GameView extends View{
 	
 	
 	/**
-	 * display information about the game (number of jokers, number of diamonds got back etc..) for only IA players
+	 * display information about the game (number of jokers, number of diamonds got back etc..) for only AI players
 	 */
 	public void createInfoBoxAI(){
 		info = new HBox();
@@ -1254,7 +1254,7 @@ public class GameView extends View{
 	 * set the game view with the option settings
 	 */
 	public void setInitialGameView(){
-		// if only IA
+		// if only AI
 		if (App.rules.isAllAI())
 			createAIButton(App.rules.getCurrentNumberOfPlayer(),-1);
 		else 

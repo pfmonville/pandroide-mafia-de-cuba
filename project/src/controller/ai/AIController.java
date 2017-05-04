@@ -46,7 +46,7 @@ public class AIController implements PlayerController {
 		// TODO Auto-generated constructor stub
 	}
 	
-	// Specific constructor uses to debugging in MainTestIAController class
+	// Specific constructor uses to debugging in MainTestAIController class
 	public AIController(Player player, int nbPlayers){
 		this.player = player;
 		this.worldsBefore = new ArrayList<World>();

@@ -2,11 +2,11 @@ package controller.runnable;
 
 import java.util.ArrayList;
 
+import model.Answer;
+import model.Question;
 import controller.App;
 import controller.PlayerController;
 import controller.ai.AISuspectController;
-import model.Answer;
-import model.Question;
 
 public class AnswerQuestionRunnable implements Runnable {
 

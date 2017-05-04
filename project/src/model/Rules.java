@@ -538,8 +538,8 @@ public class Rules {
 
 
 
-	public void setAllAI(boolean allIA) {
-		this.allAI = allIA;
+	public void setAllAI(boolean allAI) {
+		this.allAI = allAI;
 	}
 
 
