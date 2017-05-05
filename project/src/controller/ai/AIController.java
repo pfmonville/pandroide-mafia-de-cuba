@@ -36,7 +36,7 @@ public class AIController implements PlayerController {
 		this.worldsAfter = new ArrayList<World>();
 		this.rolesNumberReceived = new ArrayList<Integer>();
 		//on initialise tout a 50
-		this.fiability = new ArrayList<Double>(Collections.nCopies(App.gameController.getNumberOfPlayers(), 50.0));
+		this.fiability = new ArrayList<Double>(Collections.nCopies(App.rules.getCurrentNumberOfPlayer(), 50.0));
 		fiability.set(0, 100.0); //godfather reliable 
 		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
 	}

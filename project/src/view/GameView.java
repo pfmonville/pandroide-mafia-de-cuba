@@ -186,7 +186,7 @@ public class GameView extends View{
 		//**************************
 		//
 		leftPart = new VBox();
-		leftPart.setPrefSize((super.getWidth()/3)*2, (super.getHeight()/2));
+		leftPart.setPrefSize((super.getWidth()/3)*2, (3*super.getHeight()/4));
 		
 		//**************************
 		//IMAGE AT CENTER
@@ -223,7 +223,7 @@ public class GameView extends View{
 		//RIGHT PART
 		//*********************************
 		logPart = new ScrollPane();	
-		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2.5));
+		logPart.setPrefSize(super.getWidth()/3, (3*super.getHeight()/4));
 
 		logPart.setHbarPolicy(ScrollBarPolicy.NEVER);
 		logPart.setFitToWidth(true);
@@ -239,7 +239,7 @@ public class GameView extends View{
 		//logPart.setBackground(null);
 		//logPart.setContent(gameHistory);
 		
-		String image = "image/confidentialfile.png";
+		String image = Theme.pathGameHistory;
 		
 		//ImageView iv = new ImageView(im);
 		//iv.setFitHeight(500);
@@ -252,7 +252,7 @@ public class GameView extends View{
 		//stackPane.getChildren().addAll(iv, gameHistory);
 		
 		logPart.setContent(gameHistory);
-		Image im = new Image(image, super.getHeight()/3, super.getWidth()/2.5, true, true);
+		Image im = new Image(image, super.getHeight()/3, 3*super.getWidth()/4, true, true);
 		logPart.setBackground(new Background(new BackgroundImage(im, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null)));
 		
 		top.getChildren().addAll(leftPart, logPart);
@@ -261,14 +261,14 @@ public class GameView extends View{
 		//BOTTOM
 		//*********************************
 		themeButtons = new TilePane();
-		themeButtons.setMaxSize(super.getWidth()/12,(super.getHeight()/2));
+		themeButtons.setMaxSize(super.getWidth()/12,(super.getHeight()/4));
 		themeButtons.setVgap(10);
 		
 		//*********************************
 		// Questions area
 		//*********************************
 		questionsArea = new FlowPane();
-		questionsArea.setPrefSize((super.getWidth()/4)*3, super.getHeight()/3);// /2
+		questionsArea.setPrefSize((super.getWidth()/4)*3, 3*super.getHeight()/4);// /2
 		
 		pocket = new VBox() ;
 		pocket.setAlignment(Pos.TOP_CENTER);
@@ -1435,6 +1435,24 @@ public class GameView extends View{
 	 * @param pi
 	 */
 	public void displayEndBanner(PlayersInfo pi){
-		//TODO
+		leftPart.getChildren().clear();
+		bot.getChildren().clear();
+		
+		//whether or not the human player has won
+		Label whoWon = new Label();
+		whoWon.setStyle("-fx-font : 50px Tahoma ; -fx-text-fill: white;");
+		if(pi.getWinningSide().equals(PlayersInfo.GODFATHER)){
+			whoWon.setText("Vous avez gagné !");
+		} else{
+			whoWon.setText("Vous avez perdu...");
+		}
+		
+		// reveal each player's role
+		
+		bot.setAlignment(Pos.CENTER);
+		bot.getChildren().add(whoWon);
+	
 	}
 }
+
+

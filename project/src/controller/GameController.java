@@ -467,6 +467,7 @@ public class GameController {
 				playersInfo.addWinner(playersInfo.getGodFather());
 				playersInfo.addWinners(playersInfo.getLoyalHenchmen());
 				playersInfo.addWinners(this.getWinningDrivers());
+				playersInfo.setWinningSide(PlayersInfo.GODFATHER);
 				//display end banner
 				App.gv.displayEndBanner(playersInfo); 
 				System.out.println("le parrain a gagné");
@@ -498,6 +499,7 @@ public class GameController {
 				playersInfo.addWinner(bestThief);
 				playersInfo.addWinners(playersInfo.getStreetUrchin());
 				playersInfo.addWinners(this.getWinningDrivers());
+				playersInfo.setWinningSide(PlayersInfo.THIEVES);
 				App.gv.displayEndBanner(playersInfo); //TODO
 				System.out.println("le parrain a perdu");
 			}
