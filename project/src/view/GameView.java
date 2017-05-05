@@ -1389,6 +1389,26 @@ public class GameView extends View{
 	}
 	
 	
+	
+	
+	/**
+	 * update Godfather's information
+	 * @param diamsTakenBack : updated number of taken back diamonds, -1 if no change
+	 * @param jokersLeft : updated nmber of jokers left, -1 if no change
+	 */
+	public void displayUpdatedInfo(int diamsTakenBack, int jokersLeft){
+		
+		if(diamsTakenBack != -1){
+			diamondsBack.setText(diamsTakenBack+"");
+		}
+		
+		if(jokersLeft != -1){
+			jokers.setText(jokersLeft+"");
+		}
+	}
+	
+	
+	
 	/**
 	 * display the end of the game
 	 * shows players who have won 

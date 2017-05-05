@@ -354,7 +354,7 @@ public class GameController {
 	}
 	
 	public void SelectingGodFathersAction(){
-		if(humanPosition == this.currentPlayer){
+		if(humanPosition == this.currentPlayer && currentTurn==1){ 
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else{
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
@@ -462,6 +462,7 @@ public class GameController {
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			//update the number of diamonds taken back in display
+			App.gv.displayUpdatedInfo(this.getDiamondsTakenBack(),-1) ;
 			if(hasGodFatherWon()){
 				//find godFather, loyalHenchmen and all their drivers
 				playersInfo.addWinner(playersInfo.getGodFather());
@@ -477,9 +478,12 @@ public class GameController {
 			System.out.println("role du joueur ciblé " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
+				App.gv.displayUpdatedInfo(-1, ((GodFather)players.get(1).getRole()).getJokersLeft());
 				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
+					if(pc instanceof AIController){
 					((AIController)pc).updateWorldsVision(secret);
+					}
 				}
 				this.currentTurn += 1;
 				SelectingGodFathersAction();
@@ -521,7 +525,9 @@ public class GameController {
 	
 	public void updateAIWorldsVisions(){
 		for(PlayerController pc: playerControllers.values()){
-			((AIController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+			if(pc instanceof AIController){
+				((AIController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+			}
 		}
 	}
 	

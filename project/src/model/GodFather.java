@@ -48,4 +48,7 @@ public class GodFather extends Role implements GodFatherSide{
 		}
 	}
 	
+	public int getJokersLeft(){
+		return jokers;
+	}
 }

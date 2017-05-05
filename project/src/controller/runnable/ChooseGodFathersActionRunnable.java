@@ -14,6 +14,7 @@ public class ChooseGodFathersActionRunnable implements Runnable {
 	
 	@Override
 	public void run() {
+		
 		int response = ((AIGodFatherController)playerController).chooseAction();
 		App.gameController.getGodFathersAction(response);
 	}
