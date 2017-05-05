@@ -227,7 +227,7 @@ public class GameView extends View{
 
 		logPart.setHbarPolicy(ScrollBarPolicy.NEVER);
 		logPart.setFitToWidth(true);
-		
+			
 		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 		//TODO
 		gameHistory = new Label();

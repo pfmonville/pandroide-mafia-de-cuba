@@ -471,6 +471,8 @@ public class GameController {
 				App.gv.displayEndBanner(playersInfo); 
 				System.out.println("le parrain a gagné");
 			}
+			this.currentTurn += 1;
+			SelectingGodFathersAction();
 		}else{
 			System.out.println("role du joueur ciblé " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
@@ -479,6 +481,7 @@ public class GameController {
 				for(PlayerController pc: playerControllers.values()){
 					((AIController)pc).updateWorldsVision(secret);
 				}
+				this.currentTurn += 1;
 				SelectingGodFathersAction();
 			}else{
 				//find the best thief
@@ -511,6 +514,7 @@ public class GameController {
 		this.gameHistory.add(talk);
 		Platform.runLater(() -> App.gv.displayGameHistory());
 		updateAIWorldsVisions();
+		this.currentTurn += 1;
 		SelectingGodFathersAction();
 	}
 	

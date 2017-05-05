@@ -133,7 +133,7 @@
     -fx-opacity : 0.90;
 }
 
-.scroll-pane > .viewport{
+.scroll-pane .viewport{
 	-fx-background-image:url(../image/confidentialfile.png) ;
 }
 
