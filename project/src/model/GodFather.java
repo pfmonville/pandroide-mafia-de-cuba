@@ -34,6 +34,11 @@ public class GodFather extends Role implements GodFatherSide{
 		return false;
 	}
 	
+	/**
+	 * enlève un joker parmi ceux disponible
+	 * s'il en reste au moins un renvoie vrai, la partie continue
+	 * sinon faux la partie est terminée
+	 */
 	public boolean consumeJoker(){
 		if(isJokerLeft()){
 			this.jokers --;

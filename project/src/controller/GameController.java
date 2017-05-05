@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.controlsfx.control.Notifications;
 
@@ -14,12 +15,15 @@ import controller.ia.GodFatherStrategy;
 import controller.ia.IAController;
 import controller.ia.IAGodFatherController;
 import controller.ia.IASuspectController;
+import controller.ia.ISuspectStrategy;
 import controller.ia.LoyalHenchmanStrategy;
 import controller.ia.StreetUrchinStrategy;
 import controller.ia.ThiefStrategy;
 import model.Answer;
 import model.Box;
+import model.Driver;
 import model.Player;
+import model.PlayersInfo;
 import model.Question;
 import model.Rules;
 import controller.runnable.AnswerQuestionRunnable;
@@ -31,6 +35,8 @@ import controller.runnable.PickSomethingRunnable;
 import controller.runnable.PrepareBoxRunnable;
 import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
+import error.RoleError;
+import error.StrategyError;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
@@ -39,6 +45,7 @@ import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+import sun.management.resources.agent;
 
 
 public class GameController {
@@ -49,7 +56,8 @@ public class GameController {
 	private int humanPosition;
 	private HashMap<Integer, Player> players = new HashMap<Integer,Player>();
 	private HashMap<Integer, PlayerController> playerControllers = new HashMap<Integer, PlayerController>();
-
+	private PlayersInfo playersInfo = new PlayersInfo();
+	
 	private ArrayList<Question> questions;
 	private ArrayList<Answer> answers;
 	private ArrayList<Talk> gameHistory;
@@ -62,7 +70,9 @@ public class GameController {
 	private int diamondsHidden;
 	
 	private Rules rules = new Rules();
+	
 	public GameController(){
+	
 	}	
 	
 	/**
@@ -88,8 +98,9 @@ public class GameController {
 	
 	/**
 	 * after the first half, call this method to update the number of thieves
+	 * @throws RoleError 
 	 */
-	private void updateRules(){
+	private void updateRules() throws RoleError{
 		int numberOfThieves = 0;
 		for(Player player: players.values()){
 			if(player.isThief()){
@@ -98,6 +109,30 @@ public class GameController {
 		}
 		this.numberOfThieves = numberOfThieves;
 		this.firstHalf = false;
+		
+		for(Player player : this.players.values()){
+			if(player.getRole().getName() == App.rules.getNameAgentCIA()){
+				this.playersInfo.addCIA(player);
+			}else if(player.getRole().getName() == App.rules.getNameAgentFBI()){
+				this.playersInfo.addFBI(player);
+			}else if(player.getRole().getName() == App.rules.getNameAgentLambda()){
+				this.playersInfo.addAgent(player);
+			}else if(player.getRole().getName() == App.rules.getNameCleaner()){
+				this.playersInfo.addCleaner(player);
+			}else if(player.getRole().getName() == App.rules.getNameDriver()){
+				this.playersInfo.addDriver(player);
+			}else if(player.getRole().getName() == App.rules.getNameLoyalHenchman()){
+				this.playersInfo.addLoyalHenchman(player);
+			}else if(player.getRole().getName() == App.rules.getNameStreetUrchin()){
+				this.playersInfo.addStreetUrchin(player);
+			}else if(player.getRole().getName() == App.rules.getNameThief()){
+				this.playersInfo.addThief(player);
+			}else if(player.getRole().getName() == App.rules.getNameGodFather()){
+				this.playersInfo.setGodFather(player);
+			}else{
+				throw new RoleError("Wrong role detected either you add a new one or something went wrong");
+			}
+		}
 	}
 	
 	
@@ -254,6 +289,7 @@ public class GameController {
 			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
 				this.box.removeToken(tokenHidden);
+				this.getCurrentPlayer().getRole().setHiddenToken(tokenHidden);
 			}else{
 				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
 			}
@@ -364,22 +400,86 @@ public class GameController {
 		}
 	}
 	
-	public void emptyPocketsTo(int targetPlayer){
-		//TODO handle the Cleaner shot
-		//TODO reveal the identity of the targetPlayer
-		SecretID secret = players.get(targetPlayer).reveal();
-		if(secret.getRole() == App.rules.getNameAgentCIA() || secret.getRole() == App.rules.getNameAgentFBI() || secret.getRole() == App.rules.getNameAgentLambda()){
-			//TODO display losing : the agent alone has won
+	/**
+	 * add all drivers that have a winning passenger at the current time
+	 */
+	public ArrayList<Player> getWinningDrivers(){
+		ArrayList<Player> drivers = new ArrayList<>();
+		for(Player player: playersInfo.getDrivers()){
+			Player passenger = players.get(((Driver) player.getRole()).getProtectedPlayerPosition());
+			if (playersInfo.getWinners().contains(passenger)){
+				//one iteration is enough because we check in order who has won so a driver of a driver will be caught
+				drivers.add(player);
+			}
 		}
+		return drivers;
+	}
+	
+	public void emptyPocketsTo(int targetPlayer){
+		//handle the Cleaner shot
+		boolean targetHasBeenShot = false;
+		Player cleanerWhoShot = null;
+		ArrayList<Player> cleanersWantingToShoot = new ArrayList<>();
+		for(Player player: this.playersInfo.getCleaners()){
+			try {
+				if(((IASuspectController) this.playerControllers.get(player.getPosition())).chooseToShoot(targetPlayer)){
+					targetHasBeenShot = true;
+					cleanersWantingToShoot.add(player);
+				}
+			} catch (StrategyError e) {
+				e.printStackTrace();
+			}
+		}
+		if(targetHasBeenShot){
+			//choose one of the cleaners who wants to shoot (simulate which one was the fastest to speak)
+			cleanerWhoShot = cleanersWantingToShoot.get(new Random().nextInt(cleanersWantingToShoot.size()));
+		}
+	
+		//TODO reveal the identity of the targetPlayer
+		//the list which will be sent to the view to display informations about players
+		SecretID secret = players.get(targetPlayer).reveal();
+		
+		//if the target is an agent
+		if(secret.getRole() == App.rules.getNameAgentCIA() || secret.getRole() == App.rules.getNameAgentFBI() || secret.getRole() == App.rules.getNameAgentLambda()){
+			//if a cleaner has shot, the cleaner wins alone
+			if(cleanerWhoShot == null){
+				System.out.println("Un agent a gagnÃ©");
+				playersInfo.addWinner(this.players.get(targetPlayer));
+				if(secret.getRole() == App.rules.getNameAgentCIA()){
+					playersInfo.setWinningSide(PlayersInfo.CIA);
+				}else if (secret.getRole() == App.rules.getNameAgentFBI()){
+					playersInfo.setWinningSide(PlayersInfo.FBI);
+				}else{
+					playersInfo.setWinningSide(PlayersInfo.AGENT);
+				}
+			//else the agent wins alone
+			}else{
+				System.out.println("Un nettoyeur a gagnÃ©");
+				playersInfo.addWinner(cleanerWhoShot);
+				playersInfo.setWinningSide(PlayersInfo.CLEANER);
+			}
+			
+			//add all winning drivers
+			playersInfo.addWinners(this.getWinningDrivers());
+			//display end banner
+			App.gv.displayEndBanner(playersInfo);
+		}
+		//if the target is a thief
 		if(secret.getRole() == App.rules.getNameThief()){
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			//update the number of diamonds taken back in display
 			if(hasGodFatherWon()){
-				//TODO display winning 
+				//find godFather, loyalHenchmen and all their drivers
+				playersInfo.addWinner(playersInfo.getGodFather());
+				playersInfo.addWinners(playersInfo.getLoyalHenchmen());
+				playersInfo.addWinners(this.getWinningDrivers());
+				//display end banner
+				App.gv.displayEndBanner(playersInfo); 
+				System.out.println("le parrain a gagnÃ©");
 			}
 		}else{
-			System.out.println("role du joueur ciblé " + secret.getRole());
+			System.out.println("role du joueur ciblï¿½ " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
 				System.out.println("on sait qui est cette personne");
@@ -388,18 +488,29 @@ public class GameController {
 				}
 				SelectingGodFathersAction();
 			}else{
-				//TODO : display losing : thieves have won
+				//find the best thief
+				Player bestThief = playersInfo.getThieves().get(0);
+				for(Player player: playersInfo.getThieves()){
+					if (player.getRole().getNbDiamondsStolen() > bestThief.getRole().getNbDiamondsStolen()){
+						bestThief = player;
+					}
+				}
+				playersInfo.addWinner(bestThief);
+				playersInfo.addWinners(playersInfo.getStreetUrchin());
+				playersInfo.addWinners(this.getWinningDrivers());
+				App.gv.displayEndBanner(playersInfo);
 				System.out.println("le parrain a perdu");
 			}
 		}
 	}
+	
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
 		//TODO display pop up informing everyone on the answer
 		Platform.runLater(()->
 			Notifications.create()
 	    		.title("Action en cours")
-	    		.text("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent())
+	    		.text("Le joueur " + question.getTargetPlayer() + " rï¿½pond :\n" + answer.getContent())
 	    		.position(Pos.CENTER)
 	    		.owner(App.mainStage)
 	        	.hideAfter(Duration.seconds(5))
@@ -512,7 +623,7 @@ public class GameController {
 				case("Parrain"):
 					((IAGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
 					break;
-				case("Fidèle"):
+				case("Fidï¿½le"):
 					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Nettoyeur"):
@@ -571,7 +682,11 @@ public class GameController {
 	 * start second half of the game
 	 */
 	public void beginSecondHalf(){
-		this.updateRules();
+		try {
+			this.updateRules();
+		} catch (RoleError e) {
+			e.printStackTrace();
+		}
 		this.updateControllers();
 		this.giveTheBoxToGodFather();
 	}

@@ -50,7 +50,7 @@ public class Player {
 	
 	public void takeToken(String token){
 		switch (token) {
-			case "Fidèle" :
+			case "Fidï¿½le" :
 				role = new LoyalHenchman();
 				break ;
 			case "FBI" :

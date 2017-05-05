@@ -69,9 +69,10 @@
 }
 
 #log{
-	-fx-text-alignment:center;
-	-fx-alignment : center ;
-	-fx-font : 28px Tahoma; 
+
+	-fx-font : 15px Tahoma; 
+	-fx-text-fill : black ;
+	-fx-background: transparent
 }
 
 #info{
@@ -123,3 +124,17 @@
     -fx-border-color: black;
     -fx-opacity : 0.90;
 }
+
+.question_box{
+	-fx-font: 15px Tahoma;
+	-fx-background-color:dimgray;
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-opacity : 0.90;
+}
+
+.scroll-pane > .viewport{
+	-fx-background-image:url(../image/confidentialfile.png) ;
+}
+
+

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import controller.App;
+import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.Player;
@@ -24,6 +25,14 @@ public class IASuspectController extends IAController{
 		return this.strategy.chooseAnswer(this.getPlayer(),question, answers);
 	}
 	
+	public boolean chooseToShoot(int target) throws StrategyError{
+		//test s'il s'agit bien d'un nettoyeur
+		if(!(this.strategy instanceof CleanerStrategy)){
+			throw new StrategyError("The strategy: "+ this.strategy.getClass().getName() +" is incorrect it should have been: "+ CleanerStrategy.class.getName());
+		}
+		return ((CleanerStrategy) this.strategy).chooseToShoot(target);
+	}
+	
 	//random
 	public Object[] pickSomething(int position, Box box){
 		Object[] result = new Object[3];
@@ -42,7 +51,7 @@ public class IASuspectController extends IAController{
 				if(alea < 0.5){
 					result[2] = tokens.get(new Random().nextInt(tokens.size()));
 					tokens.remove(result[2]);
-					System.out.println("Joueur "+position+" a caché "+result[2]);
+					System.out.println("Joueur "+position+" a cachï¿½ "+result[2]);
 				}
 			}
 			
@@ -59,7 +68,7 @@ public class IASuspectController extends IAController{
 				System.out.println("Joueur "+position+" a pris "+result[1]);
 			} else { // ...or steal diamonds
 				result[0] = new Random().nextInt(nbDiams)+1;
-				System.out.println("Joueur "+position+" a volé "+result[0]);
+				System.out.println("Joueur "+position+" a volï¿½ "+result[0]);
 			}
 		}
 		
