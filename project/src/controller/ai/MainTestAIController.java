@@ -1,6 +1,7 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import model.Answer;
 import model.Box;
@@ -95,22 +96,37 @@ public class MainTestAIController {
 		System.out.println("temps d'execution [ms] : "+endConfigAfter);
 		System.out.println();
 		
-//		Question q = new Question(2, " ", new ArrayList<Integer>(), 0);
-//		q.setTargetPlayer(3);
-//		Answer a = new Answer(2, " ",  new ArrayList<Integer>());
-//		a.setNbDiamondsAnswer(6);
-//		Talk t = new Talk(q, a);
-//		iac.checkLiar(t);
+		Question q = new Question(6, " ", new ArrayList<Integer>(), 0);
+		q.setTargetPlayer(4);
+		Answer a = new Answer(6, " ",  new ArrayList<Integer>());
+		//a.setNbDiamondsAnswer(6);
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(App.rules.getNameLoyalHenchman());
+		list.add(App.rules.getNameDriver());
+		a.setTokensAnswer(list);
+		Talk t = new Talk(q, a);
+		aic.checkLiar(t);
 //		System.out.println("configBefore apres mise a jour:");
-//		for (World al : iac.getWorldsBefore()) {
+//		for (World al : aic.getWorldsBefore()) {
 //	        String appender = "";
 //	        for (Integer i : al.getRolesDistribution()) {
 //	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
 //	            appender = " ";
 //	        }
 //	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
-//	    }
-		
+//	    }		
+		System.out.println("*** ConfigAfter apres maj***");
+		for (World al : aic.getWorldsAfter()) {
+	        String appender = "";
+	        for (Integer i : al.getRolesDistribution()) {
+	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
+	            appender = " ";
+	        }
+	        System.out.println();
+	    }
+		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
+		System.out.println("temps d'execution [ms] : "+endConfigAfter);
+		System.out.println();		
 		
 		
 	}

@@ -594,49 +594,38 @@ public class AIController implements PlayerController {
 				break;
 
 			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
-				ArrayList<String> tokensReceivedByTheOther = answer.getTokensAnswer();	
-				
-				ArrayList<String> tokensTakenInBetween = App.rules.getTokensFor(App.gameController.getNumberOfPlayers());
-				for(String role : tokensReceivedByTheOther){
-					tokensTakenInBetween.remove(role);
+			case 7: //Quels rôles contenait la boîte quand tu l'as passée ?
+				ArrayList<String> response = answer.getTokensAnswer();					
+				//Initialization
+				Map<String, Integer> otherCptDict = new HashMap<String, Integer>();
+				Map<String, Integer> myCptDict = new HashMap<String, Integer>();				
+				for(String tokenName : App.rules.getNameRolesTab()){
+					otherCptDict.put(tokenName, 0);
+					myCptDict.put(tokenName, 0);
 				}
-				
+				// Counting the number of each roles in the box received by the other player
+				for(String tokenName : response){
+					otherCptDict.put(tokenName, otherCptDict.get(tokenName) + 1);
+				}
+				ArrayList<String> rolesLeft;
+				boolean liarDetected = false;
 				//on verifie pour chaque monde si cette repartition existe avant lui
 				//si le joueur cible est avant le joueur courant 
-				if(otherPlayerPosition < player.getPosition()){	
-					// TODO A CONTINUER
-//					for(World w : worldsBefore){
-//						//parcourir et verifier chaque w.getRolesDistribution()
-//					}
-				}
-				else{
-					/*
-					 * If the player, which is after me, says that he received a number of one role that is
-					 * superior to the number of the same role in the box I gave,
-					 * he lies, so he's not a LoyalHenchman
-					 */
-					// -------------------------------------------------------------------------------------
-					// Initialization
-					Map<String, Integer> otherCptDict = new HashMap<String, Integer>();
-					Map<String, Integer> myCptDict = new HashMap<String, Integer>();
-					for(String tokenName : App.rules.getNameRolesTab()){
-						otherCptDict.put(tokenName, 0);
-						myCptDict.put(tokenName, 0);
-					}
-					// Counting the number of each roles in the box received by the other player
-					for(String tokenName : tokensReceivedByTheOther){
-						otherCptDict.put(tokenName, otherCptDict.get(tokenName) + 1);
-					}
-					// Counting the number of each roles in the box I gave
-					ArrayList<String> rolesLeft = new ArrayList<String>(player.getBox().getTokens());
-					rolesLeft.remove(player.getRole().getName());
+				
+				/*
+				 * If the player that is before me says that he received a number of one role that is
+				 * inferior to the number of the same role in the box I gave,
+				 * he lies, so he's not a LoyalHenchman
+				 */
+				if(otherPlayerPosition < player.getPosition()){
+					// Counting the number of each roles in the box I received
+					rolesLeft = new ArrayList<String>(player.getBox().getTokens());
 					for(String tokenName : rolesLeft){
 						myCptDict.put(tokenName, myCptDict.get(tokenName) + 1);
 					}
-					// Checking for each same role if his number announced is higher that mine in the box I gave
-					boolean liarDetected = false;
+					// Checking for each same role if his number announced is lower than mine in the box I gave
 					for(String tokenName : App.rules.getNameRolesTab()){
-						if(otherCptDict.get(tokenName) > myCptDict.get(tokenName)){
+						if(otherCptDict.get(tokenName) < myCptDict.get(tokenName)){
 							liarDetected = true;
 							break;
 						}
@@ -645,17 +634,35 @@ public class AIController implements PlayerController {
 						pruneWorlds(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 						break; // break for the case
 					}
+				}
+				else{
+					/*
+					 * If the player, which is after me, says that he received a number of one role that is
+					 * superior to the number of the same role in the box I gave, he's not a LoyalHenchman
+					 */
+					// Counting the number of each roles in the box I gave
+					rolesLeft = new ArrayList<String>(player.getBox().getTokens());
+					rolesLeft.remove(player.getRole().getName());
+					for(String tokenName : rolesLeft){
+						myCptDict.put(tokenName, myCptDict.get(tokenName) + 1);
+					}
+					// Checking for each same role if his number announced is higher than mine in the box I gave
+					for(String tokenName : App.rules.getNameRolesTab()){
+						if(otherCptDict.get(tokenName) > myCptDict.get(tokenName)){
+							liarDetected = true;
+							break;
+						}
+					}
+//					System.out.println("1. "+myCptDict);
+//					System.out.println("2. "+otherCptDict);
+					if(liarDetected){
+						pruneWorlds(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+						break; // break for the case
+					}
 					// -------------------------------------------------------------------------------------
 					
-					// TODO: A CONTINUER
-//					int index = otherPlayerPosition - player.getPosition() - 1;
-//					for(World w: worldsAfter){
-//						
-//					}
+					
 				}
-				break;
-			case 7: //Quels rôles contenait la boîte quand tu l'as passée ?
-				
 				break;
 
 				
@@ -682,7 +689,7 @@ public class AIController implements PlayerController {
 		}
 		for(World world : worldsListCopy){
 			ArrayList<Integer> rolesDistribution = world.getRolesDistribution();
-			if( rolesDistribution.get(index) == roleNumber){
+			if( rolesDistribution.get(index).equals(roleNumber)){
 				worldsList.remove(world);
 			}
 		}
