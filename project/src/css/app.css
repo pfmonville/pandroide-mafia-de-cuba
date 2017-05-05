@@ -134,7 +134,8 @@
 }
 
 .scroll-pane .viewport{
-	-fx-background-image:url(../image/confidentialfile.png) ;
+	//-fx-background-color: transparent;
+	//-fx-background-image:url(../image/confidentialfile.png) ;
 }
 
 

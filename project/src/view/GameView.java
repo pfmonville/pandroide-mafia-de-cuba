@@ -235,7 +235,25 @@ public class GameView extends View{
 		gameHistory.setPadding(new Insets(10,0,0,35));
 		gameHistory.setWrapText(true);
 		
+		//gameHistory.setBackground(null);
+		//logPart.setBackground(null);
+		//logPart.setContent(gameHistory);
+		
+		String image = "image/confidentialfile.png";
+		
+		//ImageView iv = new ImageView(im);
+		//iv.setFitHeight(500);
+		//iv.setFitWidth(400);
+		
+		//iv.fitWidthProperty().bind(App.mainStage.widthProperty());
+		
+		StackPane stackPane = new StackPane();
+		
+		//stackPane.getChildren().addAll(iv, gameHistory);
+		
 		logPart.setContent(gameHistory);
+		Image im = new Image(image, super.getHeight()/3, super.getWidth()/2.5, true, true);
+		logPart.setBackground(new Background(new BackgroundImage(im, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null)));
 		
 		top.getChildren().addAll(leftPart, logPart);
 		
