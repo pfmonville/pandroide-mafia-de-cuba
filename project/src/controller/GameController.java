@@ -101,23 +101,23 @@ public class GameController {
 		this.firstHalf = false;
 		
 		for(Player player : this.players.values()){
-			if(player.getRole().getName() == App.rules.getNameAgentCIA()){
+			if(player.getRole().getName().equals(App.rules.getNameAgentCIA())){
 				this.playersInfo.addCIA(player);
-			}else if(player.getRole().getName() == App.rules.getNameAgentFBI()){
+			}else if(player.getRole().getName().equals(App.rules.getNameAgentFBI())){
 				this.playersInfo.addFBI(player);
-			}else if(player.getRole().getName() == App.rules.getNameAgentLambda()){
+			}else if(player.getRole().getName().equals(App.rules.getNameAgentLambda())){
 				this.playersInfo.addAgent(player);
-			}else if(player.getRole().getName() == App.rules.getNameCleaner()){
+			}else if(player.getRole().getName().equals(App.rules.getNameCleaner())){
 				this.playersInfo.addCleaner(player);
-			}else if(player.getRole().getName() == App.rules.getNameDriver()){
+			}else if(player.getRole().getName().equals( App.rules.getNameDriver())){
 				this.playersInfo.addDriver(player);
-			}else if(player.getRole().getName() == App.rules.getNameLoyalHenchman()){
+			}else if(player.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
 				this.playersInfo.addLoyalHenchman(player);
-			}else if(player.getRole().getName() == App.rules.getNameStreetUrchin()){
+			}else if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 				this.playersInfo.addStreetUrchin(player);
-			}else if(player.getRole().getName() == App.rules.getNameThief()){
+			}else if(player.getRole().getName().equals( App.rules.getNameThief())){
 				this.playersInfo.addThief(player);
-			}else if(player.getRole().getName() == App.rules.getNameGodFather()){
+			}else if(player.getRole().getName().equals(App.rules.getNameGodFather())){
 				this.playersInfo.setGodFather(player);
 			}else{
 				throw new RoleError("Wrong role detected either you add a new one or something went wrong");
@@ -275,15 +275,7 @@ public class GameController {
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden) throws PickingStrategyError{
 
 		this.getCurrentPlayer().setBox(box.clone()); 
-		if(tokenHidden != null){
-			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
-				this.setTokenHidden(tokenHidden);
-				this.box.removeToken(tokenHidden);
-				this.getCurrentPlayer().getRole().setHiddenToken(tokenHidden);
-			}else{
-				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
-			}
-		}
+
 		if(diamondsPicked > 0 && tokenPicked != null){
 			throw new PickingStrategyError("you can't take a token and steal diamonds");
 		}
@@ -307,6 +299,18 @@ public class GameController {
 			players.get(position).takeToken("");
 		}else{
 			throw new PickingStrategyError("you have to choose either to pick diamond(s) or a token");
+		}
+		
+		if(tokenHidden != null){
+			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
+				this.setTokenHidden(tokenHidden);
+				this.box.removeToken(tokenHidden);
+				System.out.println("numero du joueur " + this.getCurrentPlayer().getPosition());
+				System.out.println("role =  " + this.getCurrentPlayer().getRole().toString());
+				this.getCurrentPlayer().getRole().setHiddenToken(tokenHidden);
+			}else{
+				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
+			}
 		}
 		
 		// if the current player is an AI
@@ -429,14 +433,14 @@ public class GameController {
 		SecretID secret = players.get(targetPlayer).reveal();
 		
 		//if the target is an agent
-		if(secret.getRole() == App.rules.getNameAgentCIA() || secret.getRole() == App.rules.getNameAgentFBI() || secret.getRole() == App.rules.getNameAgentLambda()){
+		if(secret.getRole().equals(App.rules.getNameAgentCIA()) || secret.getRole().equals(App.rules.getNameAgentFBI() )|| secret.getRole().equals(App.rules.getNameAgentLambda())){
 			//if a cleaner has shot, the cleaner wins alone
 			if(cleanerWhoShot == null){
 				System.out.println("Un agent a gagné");
 				playersInfo.addWinner(this.players.get(targetPlayer));
-				if(secret.getRole() == App.rules.getNameAgentCIA()){
+				if(secret.getRole().equals(App.rules.getNameAgentCIA())){
 					playersInfo.setWinningSide(PlayersInfo.CIA);
-				}else if (secret.getRole() == App.rules.getNameAgentFBI()){
+				}else if (secret.getRole().equals(App.rules.getNameAgentFBI())){
 					playersInfo.setWinningSide(PlayersInfo.FBI);
 				}else{
 					playersInfo.setWinningSide(PlayersInfo.AGENT);
@@ -454,7 +458,7 @@ public class GameController {
 			App.gv.displayEndBanner(playersInfo);
 		}
 		//if the target is a thief
-		if(secret.getRole() == App.rules.getNameThief()){
+		if(secret.getRole().equals(App.rules.getNameThief())){
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			//update the number of diamonds taken back in display
@@ -607,25 +611,25 @@ public class GameController {
 				System.out.println(" role = " + player.getRole().toString());
 				System.out.println( " roleName = " + player.getRole().getName());
 
-				if(player.getRole().getName() == App.rules.getNameGodFather()){
+				if(player.getRole().getName().equals(App.rules.getNameGodFather())){
 					((AIGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameLoyalHenchman()){
+				if(player.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameCleaner()){
+				if(player.getRole().getName().equals(App.rules.getNameCleaner())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameDriver()){
+				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameThief()){
+				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameGodFather()){
+				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
-				if(player.getRole().getName() == App.rules.getNameAgentCIA() | player.getRole().getName() == App.rules.getNameAgentFBI() | player.getRole().getName() == App.rules.getNameAgentLambda()){
+				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
 			}

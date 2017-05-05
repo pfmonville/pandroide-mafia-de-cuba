@@ -10,8 +10,8 @@ public class PlayersInfo {
 	private ArrayList<Player> streetUrchin;
 	private ArrayList<Player> drivers;
 	private ArrayList<Player> agents;
-	private ArrayList<Player> fbi;
-	private ArrayList<Player> cia;
+	private Player fbi;
+	private Player cia;
 	
 	private ArrayList<Player> winners;
 	
@@ -33,8 +33,8 @@ public class PlayersInfo {
 		streetUrchin = new ArrayList<>();
 		drivers = new ArrayList<>();
 		agents = new ArrayList<>();
-		fbi = new ArrayList<>();
-		cia = new ArrayList<>();
+//		fbi = new ArrayList<>();
+//		cia = new ArrayList<>();
 		
 		winners = new ArrayList<>();
 	}
@@ -133,32 +133,32 @@ public class PlayersInfo {
 	}
 
 
-	public ArrayList<Player> getFBI() {
+	public Player getFBI() {
 		return fbi;
 	}
 
 
-	public void setFBI(ArrayList<Player> fbi) {
+	public void setFBI(Player fbi) {
 		this.fbi = fbi;
 	}
 
 	
 	public void addFBI(Player player){
-		this.fbi.add(player);
+		this.fbi = player;
 	}
 
-	public ArrayList<Player> getCIA() {
+	public Player getCIA() {
 		return cia;
 	}
 
 
-	public void setCIA(ArrayList<Player> cia) {
+	public void setCIA(Player cia) {
 		this.cia = cia;
 	}
 
 	
 	public void addCIA(Player player){
-		this.cia.add(player);
+		this.cia = player;
 	}
 
 	public ArrayList<Player> getWinners() {
