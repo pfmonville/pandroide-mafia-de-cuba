@@ -19,15 +19,15 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 		String content;
 		switch(id){
 		
-			case 0 ://Que contenait la boîte quand tu l'as reçue ?
+			case 0 ://Que contenait la boÃ®te quand tu l'as reÃ§ue ?
 				reponse.setTokensAnswer(player.getBox().getTokens());
 				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds());
 				reponse.setId(question.getId());
 				if(player.getBox().isEmpty()){
-					reponse.setContent("La boîte était vide");
+					reponse.setContent("La boÃ®te Ã©tait vide");
 					return reponse;
 				}
-				content = "J'ai reçu ";
+				content = "J'ai reÃ§u ";
 				Set<String> rolesTypes = new HashSet<String>(player.getBox().getTokens());
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
@@ -39,17 +39,17 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setContent(content);
 				return reponse;
 				
-			case 1://Que contenait la boîte quand tu l'as passée ?
+			case 1://Que contenait la boÃ®te quand tu l'as passÃ©e ?
 				ArrayList<String> tokens = new ArrayList<String>(player.getBox().getTokens());
 				tokens.remove(player.getRole().getName());
 				reponse.setTokensAnswer(tokens);
 				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds()- player.getRole().getNbDiamondsStolen());
 				reponse.setId(question.getId());
 				if(player.getBox().isEmpty()){
-					reponse.setContent("La boîte était vide");
+					reponse.setContent("La boÃ®te Ã©tait vide");
 					return reponse;
 				}
-				content = "J'ai passé ";
+				content = "J'ai passÃ© ";
 				rolesTypes = new HashSet<String>(tokens);
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
@@ -61,40 +61,40 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setContent(content);
 				return reponse;
 				
-			case 2: //Combien de diamants contenait la boîte quand tu l'as reçue ? 
+			case 2: //Combien de diamants contenait la boÃ®te quand tu l'as reÃ§ue ? 
 				reponse.setId(question.getId());
 				reponse.setNbDiamondsAnswer(player.getBox().getDiamonds());
-				reponse.setContent("La boîte contenait "+player.getBox().getDiamonds()+" diamants.");
+				reponse.setContent("La boÃ®te contenait "+player.getBox().getDiamonds()+" diamants.");
 				return reponse ;
 				
-			case 3: //Combien de diamants contenait la boîte quand tu l'as passée ?
+			case 3: //Combien de diamants contenait la boÃ®te quand tu l'as passÃ©e ?
 				reponse.setId(question.getId());
 				int nbDiams = player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen();
 				reponse.setNbDiamondsAnswer(nbDiams);
-				reponse.setContent("La boîte contenait "+nbDiams+" diamants.");
+				reponse.setContent("La boÃ®te contenait "+nbDiams+" diamants.");
 				return reponse ;
 			
-			case 4 : //Combien de jetons contenait la boîte quand tu l'as reçue ?
+			case 4 : //Combien de jetons contenait la boÃ®te quand tu l'as reÃ§ue ?
 				reponse.setId(question.getId());
 				reponse.setNbTokensAnswer(player.getBox().getTokens().size());
-				reponse.setContent("La boîte contenait "+player.getBox().getTokens().size()+" jetons personnage.");
+				reponse.setContent("La boÃ®te contenait "+player.getBox().getTokens().size()+" jetons personnage.");
 				return reponse ;
 				
-			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
+			case 5: //Combien de jetons contenait la boÃ®te quand tu l'as passÃ©e ?
 				reponse.setId(2);
 				int myToken = (!player.getRole().getName().equals(App.rules.getNameStreetUrchin()) && player.getRole().getNbDiamondsStolen()==0)? 1:0;
 				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-myToken);
-				reponse.setContent("La boîte contenait "+(player.getBox().getTokens().size()-myToken)+" jetons personnage.");
+				reponse.setContent("La boÃ®te contenait "+(player.getBox().getTokens().size()-myToken)+" jetons personnage.");
 				return reponse ;
 				
-			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
+			case 6: //Quels rÃ´les contenait la boÃ®te quand tu l'as reÃ§ue ?
 				reponse.setId(question.getId());
 				reponse.setTokensAnswer(player.getBox().getTokens());
 				if(player.getBox().getTokens().isEmpty()){
 					reponse.setContent("Aucun.");
 					return reponse;
 				}
-				content = "J'ai reçu";
+				content = "J'ai reÃ§u";
 				rolesTypes = new HashSet<String>(player.getBox().getTokens());
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
@@ -107,7 +107,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setContent(content);
 				return reponse;
 				
-			case 7 : //Quels rôles contenait la boîte quand tu l'as passée ?
+			case 7 : //Quels rÃ´les contenait la boÃ®te quand tu l'as passÃ©e ?
 				reponse.setId(question.getId());
 				tokens = new ArrayList<String>(player.getBox().getTokens());
 				tokens.remove(player.getRole().getName());
@@ -116,7 +116,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					reponse.setContent("Aucun.");
 					return reponse;
 				}
-				content = "J'ai reçu";
+				content = "J'ai reÃ§u";
 				rolesTypes = new HashSet<String>(tokens);
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
@@ -150,16 +150,16 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 			case 10://Qui dois-je accuser selon toi? 
 				break;
 				
-			case 11://Est-ce que tu sais quel est le rôle de cette personne?
+			case 11://Est-ce que tu sais quel est le rÃ´le de cette personne?
 				break;
 				
-			case 12://Selon toi quel est le rôle de cette personne ? 
+			case 12://Selon toi quel est le rÃ´le de cette personne ? 
 				break;
 				
 			case 13://Est-ce que tu penses que cette personne a pris des diamants? Combien? 
 				break;
 				
-			case 14:// As-tu écarté un jeton ?
+			case 14:// As-tu Ã©cartÃ© un jeton ?
 				reponse.setId(question.getId());
 				if(player.isFirstPlayer() && App.gameController.getTokenHidden()!=null)
 					reponse.setContent("Oui");
@@ -167,17 +167,17 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					reponse.setContent("Non");
 				return reponse;
 				
-			case 15://Quel jeton as-tu écarté ?  
+			case 15://Quel jeton as-tu Ã©cartÃ© ?  
 				reponse.setId(question.getId());
 				reponse.setTokenMovedAside(App.gameController.getTokenHidden());
 				if(player.isFirstPlayer() && App.gameController.getTokenHidden()!=null){
-					reponse.setContent("J'ai écarté "+App.gameController.getTokenHidden()+".");
+					reponse.setContent("J'ai Ã©cartÃ© "+App.gameController.getTokenHidden()+".");
 				} else {
-					reponse.setContent("Je n'ai écarté aucun jeton.");
+					reponse.setContent("Je n'ai Ã©cartÃ© aucun jeton.");
 				}
 				return reponse;
 				
-			case 16 ://As-tu écarté un jeton ... ?
+			case 16 ://As-tu Ã©cartÃ© un jeton ... ?
 				reponse.setId(question.getId());
 				if(!player.isFirstPlayer() || App.gameController.getTokenHidden()==null)
 					reponse.setContent("Non");

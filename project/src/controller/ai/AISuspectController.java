@@ -42,7 +42,7 @@ public class AISuspectController extends AIController{
 				if(alea < 0.5){
 					result[2] = tokens.get(new Random().nextInt(tokens.size()));
 					tokens.remove(result[2]);
-					System.out.println("Joueur "+position+" a caché "+result[2]);
+					System.out.println("Joueur "+position+" a cachÃ© "+result[2]);
 				}
 			}
 			
@@ -59,7 +59,7 @@ public class AISuspectController extends AIController{
 				System.out.println("Joueur "+position+" a pris "+result[1]);
 			} else { // ...or steal diamonds
 				result[0] = new Random().nextInt(nbDiams)+1;
-				System.out.println("Joueur "+position+" a volé "+result[0]);
+				System.out.println("Joueur "+position+" a volÃ© "+result[0]);
 			}
 		}
 		

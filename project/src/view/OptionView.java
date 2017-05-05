@@ -290,7 +290,7 @@ public class OptionView extends View{
 		Label loyalHenchmenLabel = new Label();
 		Image imgLoyalHenchman = new Image("image/loyalHenchman32.png");
 		loyalHenchmenLabel.setGraphic(new ImageView(imgLoyalHenchman));
-		loyalHenchmenLabel.setTooltip(super.createStandardTooltip("Nombre de jetons Fidèle"));
+		loyalHenchmenLabel.setTooltip(super.createStandardTooltip("Nombre de jetons FidÃ¨le"));
 		
 		ArrayList<RadioButton> loyalHenchmenList = new ArrayList<>();
 		nbLoy = new ToggleGroup();
@@ -307,7 +307,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfLoyalHenchmen(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -341,7 +341,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfCleaners(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -374,7 +374,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfAgents(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -407,7 +407,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfDrivers(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -441,7 +441,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfJokers(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		

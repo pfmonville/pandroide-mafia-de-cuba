@@ -379,7 +379,7 @@ public class GameController {
 				//TODO display winning 
 			}
 		}else{
-			System.out.println("role du joueur ciblé " + secret.getRole());
+			System.out.println("role du joueur ciblÃ© " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
 				System.out.println("on sait qui est cette personne");
@@ -399,7 +399,7 @@ public class GameController {
 		Platform.runLater(()->
 			Notifications.create()
 	    		.title("Action en cours")
-	    		.text("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent())
+	    		.text("Le joueur " + question.getTargetPlayer() + " rÃ©pond :\n" + answer.getContent())
 	    		.position(Pos.CENTER)
 	    		.owner(App.mainStage)
 	        	.hideAfter(Duration.seconds(5))
@@ -512,7 +512,7 @@ public class GameController {
 				case("Parrain"):
 					((AIGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
 					break;
-				case("Fidèle"):
+				case("FidÃ¨le"):
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 					break;
 				case("Nettoyeur"):

@@ -34,7 +34,7 @@ public class RulesView extends View{
 		mainBox.setPrefSize(x, y);
 		mainBox.setSpacing(30);
 		
-		title = new Label("Règles");
+		title = new Label("RÃ¨gles");
 		title.setId("title");
 		title.setPrefWidth(x);
 		
@@ -61,10 +61,10 @@ public class RulesView extends View{
 		rules.setWrapText(true);
 		rules.setScrollLeft(50);
 
-		rules.setText("LE PARRAIN : il a sacrifié beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !Le Parrain gagne s’il retrouve tous les diamants volés. Il arbitre les débats, veille à ce que chacun"
-+"s’exprime, et exige un respect obséquieux de la part de ses hommes !"
-+"Attention, le Parrain doit accuser uniquement les Voleurs pour éviter de perdre ses Jokers et"
-+"être éliminé.");
+		rules.setText("LE PARRAIN : il a sacrifiÃ© beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !Le Parrain gagne s'il retrouve tous les diamants volÃ©s. Il arbitre les dÃ©bats, veille Ã  ce que chacun"
++"s'exprime, et exige un respect obsÃ©quieux de la part de ses hommes !"
++"Attention, le Parrain doit accuser uniquement les Voleurs pour Ã©viter de perdre ses Jokers et"
++"Ãªtre Ã©liminÃ©.");
 
 
 

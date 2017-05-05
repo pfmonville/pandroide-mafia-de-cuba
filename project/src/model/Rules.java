@@ -39,7 +39,7 @@ public class Rules {
 	private String nameThief;
 	private String nameStreetUrchin;
 	// Ugly as hell, but whatever: Be careful, the names are defined in the constructor too
-	private final String nameRolesTab[] = {"Fidèle", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
+	private final String nameRolesTab[] = {"FidÃ¨le", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
 	
 	// Corresponding value of each role
 	private final Integer numberGodfather = 0;
@@ -66,7 +66,7 @@ public class Rules {
 	
 	public Rules() {
 		this.nameGodFather = "Parrain";
-		this.nameLoyalHenchman = "Fidèle";
+		this.nameLoyalHenchman = "FidÃ¨le";
 		this.nameCleaner = "Nettoyeur";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
@@ -628,11 +628,11 @@ public class Rules {
 			
 			line = file.readLine();
 			while(line != null){
-				//identifier les différents éléments de la ligne
+				//identifier les diffÃ©rents Ã©lÃ©ments de la ligne
 				String[] elem = line.split(":");
 				int index = Integer.parseInt(elem[0].trim());
 				int category = Integer.parseInt(elem[2].trim());
-				//  le dernier élément est la liste des ids des réponses
+				//  le dernier Ã©lÃ©ment est la liste des ids des rÃ©ponses
 				String[] idsTab = elem[3].trim().split(",");
 				ArrayList<Integer> ids = new ArrayList<Integer>();
 				for(int i=0 ; i<idsTab.length;i++){
@@ -668,7 +668,7 @@ public class Rules {
 	 */
 	public ArrayList<Answer> getAnswers(){
 		ArrayList<Answer> answerList = new ArrayList<Answer>();
-		//lire le fichier des réponses
+		//lire le fichier des rÃ©ponses
 				BufferedReader file=null;
 				String line ;
 				
@@ -681,10 +681,10 @@ public class Rules {
 					
 					line = file.readLine();
 					while(line != null){
-						//identifier les différents éléments de la ligne
+						//identifier les diffÃ©rents Ã©lÃ©ments de la ligne
 						String[] elem = line.split(":");
 						int index = Integer.parseInt(elem[0].trim());
-						//  le dernier élément est la liste des ids des questions
+						//  le dernier Ã©lÃ©ment est la liste des ids des questions
 						String[] idsTab = elem[elem.length-1].trim().split(",");
 						ArrayList<Integer> ids = new ArrayList<Integer>();
 						for(int i=0 ; i<idsTab.length;i++){

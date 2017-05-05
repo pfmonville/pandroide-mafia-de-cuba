@@ -14,7 +14,7 @@ public class Question extends Phrase{
 	 * 2 : others
 	 */
 	private int category;
-	private int interactive=0; // = 1 quand question propose plusieurs choix d'intitulé
+	private int interactive=0; // = 1 quand question propose plusieurs choix d'intitulÃ©
 	
 	public Question(int id, String content,ArrayList<Integer> answersIDs, int category) {
 		super(id, content);

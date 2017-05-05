@@ -528,7 +528,7 @@ public class AIController implements PlayerController {
 		Answer answer = talk.getAnswer();
 		int otherPlayerPosition = talk.getQuestion().getTargetPlayer(); 
 		switch(questionId){
-			//Que contenait la boite quand tu l'a reçue?
+			//Que contenait la boite quand tu l'a reÃ§ue?
 			case 0 :
 //				ArrayList<String> tokensLeft = answer.getTokensAnswer();
 //				ArrayList<String> tokensTaken = App.rules.getTokensFor(App.gameController.getNumberOfPlayers());
@@ -569,8 +569,8 @@ public class AIController implements PlayerController {
 				}
 				break;
 				
-			case 4: //Combien de jetons contenait la boîte quand tu l'as reçue ?
-			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
+			case 4: //Combien de jetons contenait la boÃ®te quand tu l'as reÃ§ue ?
+			case 5: //Combien de jetons contenait la boÃ®te quand tu l'as passÃ©e ?
 				int nbTokens = answer.getNbTokensAnswer();
 				if(otherPlayerPosition < player.getPosition()){
 					if(nbTokens < player.getBox().getTokens().size()){
@@ -593,7 +593,7 @@ public class AIController implements PlayerController {
 				}
 				break;
 
-			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
+			case 6: //Quels rÃ´les contenait la boÃ®te quand tu l'as reÃ§ue ?
 				ArrayList<String> tokensReceivedByTheOther = answer.getTokensAnswer();	
 				
 				ArrayList<String> tokensTakenInBetween = App.rules.getTokensFor(App.gameController.getNumberOfPlayers());
@@ -654,7 +654,7 @@ public class AIController implements PlayerController {
 //					}
 				}
 				break;
-			case 7: //Quels rôles contenait la boîte quand tu l'as passée ?
+			case 7: //Quels rÃ´les contenait la boÃ®te quand tu l'as passÃ©e ?
 				
 				break;
 
