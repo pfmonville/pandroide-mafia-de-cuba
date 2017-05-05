@@ -356,7 +356,7 @@ public class GameController {
 	public void SelectingGodFathersAction(){
 		if(humanPosition == this.currentPlayer && currentTurn==1){ 
 			Platform.runLater(() -> App.gv.displayGFQuestions());
-		}else{
+		}else if (humanPosition != this.currentPlayer){
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
 			thread.start();
 		}
@@ -378,13 +378,7 @@ public class GameController {
 	}
 	
 	public void askTo(Question questionToAsk){
-		Notifications.create()
-        	.title("Action en cours")
-        	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent())
-        	.position(Pos.CENTER)
-        	.owner(App.mainStage)
-        	.hideAfter(Duration.seconds(3))
-        	.showInformation();
+		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
@@ -409,6 +403,9 @@ public class GameController {
 	}
 	
 	public void emptyPocketsTo(int targetPlayer){
+		//display pop up
+		createPopUp("Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.\n", "Accusation", 4);
+		
 		//handle the Cleaner shot
 		boolean targetHasBeenShot = false;
 		Player cleanerWhoShot = null;
@@ -434,9 +431,9 @@ public class GameController {
 		
 		//if the target is an agent
 		if(secret.getRole().equals(App.rules.getNameAgentCIA()) || secret.getRole().equals(App.rules.getNameAgentFBI() )|| secret.getRole().equals(App.rules.getNameAgentLambda())){
-			//if a cleaner has shot, the cleaner wins alone
+			//if a cleaner hasn't shot, the agent wins alone
 			if(cleanerWhoShot == null){
-				System.out.println("Un agent a gagné");
+				createPopUp("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu... :\n", "", 4);	
 				playersInfo.addWinner(this.players.get(targetPlayer));
 				if(secret.getRole().equals(App.rules.getNameAgentCIA())){
 					playersInfo.setWinningSide(PlayersInfo.CIA);
@@ -445,22 +442,24 @@ public class GameController {
 				}else{
 					playersInfo.setWinningSide(PlayersInfo.AGENT);
 				}
-			//else the agent wins alone
+			//else the cleaner wins alone
 			}else{
-				System.out.println("Un nettoyeur a gagné");
+				createPopUp("Le nettoyeur a tué un agent ! Vous avez perdu... \n", "", 4);
 				playersInfo.addWinner(cleanerWhoShot);
 				playersInfo.setWinningSide(PlayersInfo.CLEANER);
 			}
 			
 			//add all winning drivers
 			playersInfo.addWinners(this.getWinningDrivers());
-			//display end banner
+			//display end banner //TODO
 			App.gv.displayEndBanner(playersInfo);
+			return ;
 		}
 		//if the target is a thief
 		if(secret.getRole().equals(App.rules.getNameThief())){
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
+			createPopUp("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.\n", "", 4);
 			//update the number of diamonds taken back in display
 			App.gv.displayUpdatedInfo(this.getDiamondsTakenBack(),-1) ;
 			if(hasGodFatherWon()){
@@ -474,11 +473,11 @@ public class GameController {
 			}
 			this.currentTurn += 1;
 			SelectingGodFathersAction();
-		}else{
-			System.out.println("role du joueur ciblé " + secret.getRole());
+		}else{	
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
 				App.gv.displayUpdatedInfo(-1, ((GodFather)players.get(1).getRole()).getJokersLeft());
+				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.\n", "", 4);
 				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
 					if(pc instanceof AIController){
@@ -488,6 +487,7 @@ public class GameController {
 				this.currentTurn += 1;
 				SelectingGodFathersAction();
 			}else{
+				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...\n", "", 4);
 				//find the best thief
 				Player bestThief = playersInfo.getThieves().get(0);
 				for(Player player: playersInfo.getThieves()){
@@ -498,7 +498,7 @@ public class GameController {
 				playersInfo.addWinner(bestThief);
 				playersInfo.addWinners(playersInfo.getStreetUrchin());
 				playersInfo.addWinners(this.getWinningDrivers());
-				App.gv.displayEndBanner(playersInfo);
+				App.gv.displayEndBanner(playersInfo); //TODO
 				System.out.println("le parrain a perdu");
 			}
 		}
@@ -507,13 +507,7 @@ public class GameController {
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
 		Platform.runLater(()->
-			Notifications.create()
-	    		.title("Action en cours")
-	    		.text("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent())
-	    		.position(Pos.CENTER)
-	    		.owner(App.mainStage)
-	        	.hideAfter(Duration.seconds(5))
-	    		.showInformation());
+			createPopUp("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent(), "Action en cours", 5));
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);
 		Platform.runLater(() -> App.gv.displayGameHistory());
@@ -759,5 +753,22 @@ public class GameController {
 
 	public void setDiamondsTakenBack(int diamondsTakenBack) {
 		this.diamondsTakenBack = diamondsTakenBack;
+	}
+	
+	
+	/**
+	 * create a pop up 
+	 * @param text : pop up text
+	 * @param title : pop up title
+	 * @param time : time the pop up is shown
+	 */
+	public void createPopUp(String text, String title, int time){
+		Notifications.create()
+    	.title(title)
+    	.text(text)
+    	.position(Pos.CENTER)
+    	.owner(App.mainStage)
+    	.hideAfter(Duration.seconds(time))
+    	.showInformation();
 	}
 }

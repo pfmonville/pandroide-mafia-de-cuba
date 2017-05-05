@@ -1427,6 +1427,7 @@ public class GameView extends View{
 	
 	
 	
+	
 	/**
 	 * display the end of the game
 	 * shows players who have won 
