@@ -133,13 +133,14 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				reponse.setId(question.getId()); 
 				String[] s = question.getContent().split("[...]");
 				String roleAsked = s[s.length-1].replace('?', ' ').trim();
-				if(roleAsked.equals(player.getRole().getName()))
+				if(roleAsked.equals(player.getRole().getName())){
 					reponse.setContent("Oui");
-				else if(roleAsked.equals("Agent") && (player.getRole().getName().equals("FBI")||player.getRole().getName().equals("CIA")))
+				}
+				else if(roleAsked.equals("Agent") && (player.getRole().getName().equals("FBI")||player.getRole().getName().equals("CIA"))){
 					reponse.setContent("Oui");
-				else
+				}else{
 					reponse.setContent("Non");
-				return reponse;
+				}return reponse;
 				
 			case 9: //Quel personnage es tu ? 
 				reponse.setId(question.getId());
@@ -161,7 +162,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				
 			case 14:// As-tu écarté un jeton ?
 				reponse.setId(question.getId());
-				if(player.isFirstPlayer() && App.gameController.getTokenHidden()!=null)
+				if(player.isFirstPlayer() && player.getRole().getHiddenToken()!=null)
 					reponse.setContent("Oui");
 				else
 					reponse.setContent("Non");
