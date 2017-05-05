@@ -29,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
@@ -71,7 +72,7 @@ public class GameView extends View{
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
-	private ComboBox<String> choices ; //pour questions interactives
+	private ComboBox<String> choices_role, choices_tokenHidden ; //pour questions interactives
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
@@ -114,7 +115,9 @@ public class GameView extends View{
 			//ask for confirmation
 			final Alert alert = new Alert(Alert.AlertType.CONFIRMATION);   
 			alert.setTitle("Demande de confirmation"); 
-			alert.setHeaderText("Vous allez �tre redirig� vers la page d'options."); 
+
+			alert.setHeaderText("Vous allez être redirigé vers la page d'options."); 
+
 			alert.setGraphic(new ImageView( new Image("image/bg-1.png")));
 			final Optional<ButtonType> result = alert.showAndWait(); 
 			result.ifPresent(button -> { 
@@ -132,7 +135,9 @@ public class GameView extends View{
 		
 		inspect.setOnAction((event)->{
 			Stage stage = new Stage();
-			stage.setTitle("R�glages");
+
+			stage.setTitle("Réglages");
+
 			Pane layout = new Pane();
 			//TODO
 //			layout.getChildren().add(iv.getPanel());
@@ -155,7 +160,7 @@ public class GameView extends View{
 			    	System.out.println(ex.toString());
 			    	Notifications.create()
 		              .title("File Error")
-		              .text("Aucun logiciel n'est renseign� pour ouvrir les PDF")
+		              .text("Aucun logiciel n'est renseigné pour ouvrir les PDF")
 		              .showWarning();
 			    }
 			}
@@ -219,11 +224,16 @@ public class GameView extends View{
 		//*********************************
 		logPart = new ScrollPane();	
 		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2.5));
-		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
 
+		logPart.setHbarPolicy(ScrollBarPolicy.NEVER);
+		logPart.setFitToWidth(true);
+		
+		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
+		//TODO
 		gameHistory = new Label();
 		gameHistory.setId("log");
 		gameHistory.setPadding(new Insets(10,0,0,35));
+		gameHistory.setWrapText(true);
 		
 		logPart.setContent(gameHistory);
 		
@@ -274,7 +284,7 @@ public class GameView extends View{
 	 * @param nbPlayers : number of buttons to add
 	 * @param humanPosition : the position where the human player is. If humanPosition = -1, no human player.
 	 */
-	public void createIAButton( int nbPlayers, int humanPosition) {
+	public void createAIButton( int nbPlayers, int humanPosition) {
 		ArrayList<Button> iaButtons = new ArrayList<Button>();
 		Button godFather = new Button();
 		int topPlayers =0, botPlayers=0, rightPlayers = 0; 
@@ -403,7 +413,13 @@ public class GameView extends View{
 				for(int j=0; j<quest.size();j++){
 					if(quest.get(j) instanceof Question && quest.get(j).getId()==qrID){
 						if(((Question)quest.get(j)).getInteractive()==0){
-							choices.setDisable(true);
+							choices_role.setDisable(true);
+							choices_tokenHidden.setDisable(true);
+						} else {
+							if(((Question)quest.get(j)).getId()==8)
+								choices_tokenHidden.setDisable(true);
+							if(((Question)quest.get(j)).getId()==16)
+								choices_role.setDisable(true);
 						}
 						break;
 					}
@@ -470,7 +486,8 @@ public class GameView extends View{
 				questionsPlayers.add(b, index%nbCol,i);
 				questionsPlayers.setMargin(b, new Insets(5,0,0,5));
 			}else{
-				//une question � choix multiple
+				//une question à choix multiple
+
 				HBox button = new HBox() ;
 				button.setSpacing(2);
 				//le bouton radio de la question
@@ -481,14 +498,15 @@ public class GameView extends View{
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				//la combo box
-				choices = new ComboBox<>(FXCollections.observableArrayList("Fid�le?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
-				choices.setVisibleRowCount(4);
-				choices.setDisable(true);
-				choices.getStyleClass().add("question_box");
+
+				choices_role = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_role.setVisibleRowCount(4);
+				choices_role.setDisable(true);
+				choices_role.getStyleClass().add("question_box");
 				b.setOnAction((event)->{
-					choices.setDisable(false);
+					choices_role.setDisable(false);
 				});
-				button.getChildren().addAll(b,choices);
+				button.getChildren().addAll(b,choices_role);
 				
 				if(index%2==0 && index!=0)
 					i++;
@@ -499,16 +517,43 @@ public class GameView extends View{
 		i =0;
 		for (Question q : others){
 			int index= others.indexOf(q);
-			RadioButton b = new RadioButton(q.getContent());
-			b.setPrefHeight(questionsOthers.getHeight()/5);
-			b.setWrapText(true);
-			b.setId(q.getId()+"");
-			b.setToggleGroup(questionsGroup);
-			b.getStyleClass().add("question");
-			if(index%2==0 && index!=0)
-				i++;
-			questionsOthers.add(b, index%nbCol, i );
-			questionsOthers.setMargin(b, new Insets(5,0,0,5));
+			if(q.getInteractive()==0){
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				if(index%2==0 && index!=0)
+					i++;
+				questionsOthers.add(b, index%nbCol,i);
+				questionsOthers.setMargin(b, new Insets(5,0,0,5));
+			}else{
+				//une question à choix multiple
+				HBox button = new HBox() ;
+				button.setSpacing(2);
+				//le bouton radio de la question
+				RadioButton b = new RadioButton(q.getContent());
+				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setWrapText(true);
+				b.setId(q.getId()+"");
+				b.setToggleGroup(questionsGroup);
+				b.getStyleClass().add("question");
+				//la combo box
+				choices_tokenHidden = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_tokenHidden.setVisibleRowCount(4);
+				choices_tokenHidden.setDisable(true);
+				choices_tokenHidden.getStyleClass().add("question_box");
+				b.setOnAction((event)->{
+					choices_tokenHidden.setDisable(false);
+				});
+				button.getChildren().addAll(b,choices_tokenHidden);
+				
+				if(index%2==0 && index!=0)
+					i++;
+				questionsOthers.add(button, index%nbCol, i );
+				questionsOthers.setMargin(button, new Insets(5,0,0,5));
+			}
 		}
 	}
 
@@ -529,9 +574,9 @@ public class GameView extends View{
 	
 	
 	/**
-	 * display information about the game (number of jokers, number of diamonds got back etc..) for only IA players
+	 * display information about the game (number of jokers, number of diamonds got back etc..) for only AI players
 	 */
-	public void createInfoBoxIA(){
+	public void createInfoBoxAI(){
 		info = new HBox();
 		info.setSpacing(50);
 		info.setPrefSize( (super.getWidth()/3)*2, (super.getHeight()/2)/4);
@@ -560,7 +605,7 @@ public class GameView extends View{
 		int nbLoyal = 0, nbDriver =0, nbAgent=0, nbCleaner = 0;
 		ArrayList<String>  tokens= App.gameController.getBox().getTokens();
 		for (String tok : tokens){
-			if (tok.equals("Fid�le"))
+			if (tok.equals("Fidèle"))
 				nbLoyal++;
 			if(tok.equals("Chauffeur"))
 				nbDriver++;
@@ -571,7 +616,7 @@ public class GameView extends View{
 		}
 		Label boxImg = new Label();
 		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
-		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la bo�te que le Parrain a re�u :"));
+		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que le Parrain a reçu :"));
 		Label box = new Label(":"); 
 		box.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
 		infoAboutBox.getChildren().addAll(boxImg, box);
@@ -589,7 +634,7 @@ public class GameView extends View{
 		if(nbLoyal > 0){
 			Label loyalImg = new Label();
 			loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
-			loyalImg.setTooltip(super.createStandardTooltip("Fid�le"));
+			loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
 			Label loyalNb = new Label("x "+nbLoyal); 
 			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");	
 			
@@ -647,7 +692,7 @@ public class GameView extends View{
 		if(App.rules.getHumanPosition()!=1){
 			String token=null ; Label diamonds = new Label();
 			String role = App.gameController.getHumanPlayer().getRole().getName();
-			if(role.equals("Fid�le"))
+			if(role.equals("Fidèle"))
 				token = Theme.pathLoyalHencman;
 			if(role.equals("Chauffeur"))
 				token = Theme.pathDriver;
@@ -664,13 +709,13 @@ public class GameView extends View{
 			}
 			Label playerRole = new Label(), tokenHidden=null ;
 			playerRole.setGraphic(new ImageView( new Image(token)));
-			playerRole.setTooltip(super.createStandardTooltip("Vous �tes "+role));
+			playerRole.setTooltip(super.createStandardTooltip("Vous êtes "+role));
 			
 			if(App.rules.getHumanPosition()==2 && App.gameController.getTokenHidden()!=null){
 				tokenHidden=new Label();
 				String tH = App.gameController.getTokenHidden();
 				String img =null;
-				if(tH.equals("Fid�le"))
+				if(tH.equals("Fidèle"))
 					img= Theme.pathLoyalHencman;
 				if(tH.equals("Chauffeur"))
 					img = Theme.pathDriver;
@@ -679,7 +724,7 @@ public class GameView extends View{
 				if(tH.equals("Nettoyeur"))
 					img = Theme.pathCleaner;
 				tokenHidden.setGraphic(new ImageView( new Image(img)));
-				tokenHidden.setTooltip(super.createStandardTooltip("Vous avez �cart� : "+tH));
+				tokenHidden.setTooltip(super.createStandardTooltip("Vous avez écarté : "+tH));
 			}
 			
 			if(tokenHidden != null)
@@ -713,7 +758,7 @@ public class GameView extends View{
 		// get what is in the box
 		ArrayList<String>  tokens= App.gameController.getHumanPlayer().getBox().getTokens();
 		for (String tok : tokens){
-			if (tok.equals("Fid�le"))
+			if (tok.equals("Fidèle"))
 				nbLoyal++;
 			if(tok.equals("Chauffeur"))
 				nbDriver++;
@@ -724,7 +769,7 @@ public class GameView extends View{
 		}
 		Label boxImg = new Label();
 		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
-		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la bo�te que vous avez re�ue :"));
+		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que vous avez reçue :"));
 		Label box = new Label(":"); 
 		box.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");
 		infoAboutBox.getChildren().addAll(boxImg, box);
@@ -742,7 +787,7 @@ public class GameView extends View{
 		if(nbLoyal > 0){
 			Label loyalImg = new Label();
 			loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
-			loyalImg.setTooltip(super.createStandardTooltip("Fid�le"));
+			loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
 			Label loyalNb = new Label("x "+nbLoyal); 
 			loyalNb.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");	
 			
@@ -798,7 +843,7 @@ public class GameView extends View{
 	public void godFatherHideDiamondsView(){
 		HBox askToHide = new HBox();
 		askToHide.setSpacing(10);
-		Label questionLabel = new Label("Combien de diamants voulez-vous �carter ?");
+		Label questionLabel = new Label("Combien de diamants voulez-vous écarter ?");
 		questionLabel.setStyle("-fx-text-fill:white;-fx-font : 28px Tahoma;");
 		ComboBox<String> chooseNumber = new ComboBox<String>(FXCollections.observableArrayList("0","1","2","3","4","5"));
 		chooseNumber.setVisibleRowCount(4);
@@ -845,7 +890,7 @@ public class GameView extends View{
 		int nbLoyal=0, nbDriver=0, nbAgent = 0, nbCleaner = 0;
 		ArrayList<String>  tokens= App.gameController.getBox().getTokens();
 		for (String tok : tokens){
-			if (tok.equals("Fid�le"))
+			if (tok.equals("Fidèle"))
 				nbLoyal++;
 			if(tok.equals("Chauffeur"))
 				nbDriver++;
@@ -857,7 +902,7 @@ public class GameView extends View{
 		NBLOYAL = nbLoyal ; NBDRIVER=nbDriver; NBAGENT = nbAgent; NBCLEANER = nbCleaner;
 		Label boxImg = new Label();
 		boxImg.setGraphic(new ImageView( new Image(Theme.pathBox)));
-		boxImg.setTooltip(super.createStandardTooltip("Ce que contient la bo�te que vous recevez :"));
+		boxImg.setTooltip(super.createStandardTooltip("Ce que contient la boîte que vous recevez :"));
 		Label box = new Label(":"); 
 		box.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
 		Label diamImg = new Label();
@@ -868,7 +913,7 @@ public class GameView extends View{
 		diamNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
 		Label loyalImg =new Label();
 		loyalImg.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
-		loyalImg.setTooltip(super.createStandardTooltip("Fid�le"));
+		loyalImg.setTooltip(super.createStandardTooltip("Fidèle"));
 		Label loyalNb = new Label("x "+NBLOYAL); 
 		loyalNb.setStyle("-fx-text-fill:white;-fx-font : 25px Tahoma;");
 		Label driverImg = new Label();
@@ -899,10 +944,10 @@ public class GameView extends View{
 		// if first player, can hide a token
 		ComboBox<String> chooseToken = new ComboBox<String>(FXCollections.observableArrayList("Aucun"));
 		if(App.rules.getHumanPosition()==2){
-			Label instruction = new Label("Quel jeton voulez-vous �carter ?");
+			Label instruction = new Label("Quel jeton voulez-vous écarter ?");
 			instruction.setStyle("-fx-text-fill:white; -fx-font: 25px Tahoma;");
 			if(NBLOYAL>0)
-				chooseToken.getItems().add("Fid�le");
+				chooseToken.getItems().add("Fidèle");
 			if(NBDRIVER>0)
 				chooseToken.getItems().add("Chauffeur");
 			if(NBAGENT>0)
@@ -918,7 +963,7 @@ public class GameView extends View{
 			chooseToken.valueProperty().addListener(new ChangeListener<String>() {
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					if(chooseToken.getValue().equals("Fid�le") && NBLOYAL <= 1){
+					if(chooseToken.getValue().equals("Fidèle") && NBLOYAL <= 1){
 						henchman.setDisable(true);
 						driver.setDisable(false); agent.setDisable(false); cleaner.setDisable(false);
 					}
@@ -949,7 +994,7 @@ public class GameView extends View{
 		
 		// if box is empty, player is a StreetUpchin
 		if(App.gameController.getBox().isEmpty()) {
-			Label emptyBox = new Label("La bo�te est vide, vous �tes Enfant des rues.");
+			Label emptyBox = new Label("La boîte est vide, vous êtes Enfant des rues.");
 			emptyBox.setStyle("-fx-text-fill:white; -fx-font: 30px Tahoma;");
 			whatToPick.getChildren().add(emptyBox);
 
@@ -999,7 +1044,7 @@ public class GameView extends View{
 			
 			//loyal henchman
 			henchman.setGraphic(new ImageView( new Image(Theme.pathLoyalHencman)));
-			henchman.setTooltip(super.createStandardTooltip("Fid�le"));
+			henchman.setTooltip(super.createStandardTooltip("Fidèle"));
 			henchman.setToggleGroup(pickGroup);
 			//driver
 			driver.setGraphic(new ImageView( new Image( Theme.pathDriver)));
@@ -1047,7 +1092,7 @@ public class GameView extends View{
 					if(picked.equals(diams))
 						App.gameController.endTurn(App.rules.getHumanPosition(), Integer.parseInt(nb.getValue()), null, tokenHidden);
 					if(picked.equals(henchman))
-						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fid�le", tokenHidden);
+						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Fidèle", tokenHidden);
 					if(picked.equals(driver))
 						App.gameController.endTurn(App.rules.getHumanPosition(), 0, "Chauffeur", tokenHidden);
 					if(picked.equals(agent)){
@@ -1061,7 +1106,7 @@ public class GameView extends View{
 				}catch(NumberFormatException|PickingStrategyError e){
 					e.printStackTrace();
 				}
-				//TODO pour agent, v�rifier dans game controller si on enleve fbi ou cia
+				//TODO pour agent, vérifier dans game controller si on enleve fbi ou cia
 				cleanGameView();
 				createInfoBoxHumanPlayer();
 			});
@@ -1149,7 +1194,7 @@ public class GameView extends View{
 		askQuestion = new Button();
 		askQuestion.setPrefSize(super.getWidth()/10, super.getHeight()/10);
 		askQuestion.setGraphic(new ImageView( new Image(Theme.pathAskQuestion)));
-		askQuestion.setTooltip(super.createStandardTooltip("Poser une question au joueur selectionn�"));
+		askQuestion.setTooltip(super.createStandardTooltip("Poser une question au joueur selectionné"));
 		
 		askQuestion.setOnAction((event)->{
 			Question q = App.gameController.getQuestions().get(qrID);
@@ -1157,7 +1202,11 @@ public class GameView extends View{
 			if(q.getInteractive()==0)
 				App.gameController.askTo(q);
 			else{
-				String intitule = q.getContent().split("[...]")[0]+"..."+choices.getValue();
+				String intitule ="";
+				if(q.getId()==8)
+					intitule = q.getContent().split("[...]")[0]+"..."+choices_role.getValue();
+				else 
+					intitule = q.getContent().split("[...]")[0]+"..."+choices_tokenHidden.getValue();
 				q.setContent(intitule);
 				App.gameController.askTo(q);
 			}
@@ -1185,7 +1234,7 @@ public class GameView extends View{
 		answers.setVgap(2); answers.setHgap(3);
 		
 		questionsArea.getChildren().add(answers);
-		//TODO il ne faut pas r�cup�rer toutes les questions mais seulement celles concern�es par la question pr�cedente
+		//TODO il ne faut pas récupérer toutes les questions mais seulement celles concernées par la question précedente
 		createQRButtons(App.gameController.getAnswers(), false);
 		
 		//**********************************
@@ -1196,7 +1245,7 @@ public class GameView extends View{
 		//answerTo.setGraphic(new ImageView( new Image(Theme.pathEmptyPocket)));
 		answerTo.setTooltip(super.createStandardTooltip("Answer to GodFather's question"));
 		answerTo.setOnAction((event)->{
-			//TODO r�cup�rer la question et la r�ponse
+			//TODO récupérer la question et la réponse
 			//App.gameController.getAnswerToQuestion(question, answer);
 		});
 		
@@ -1212,12 +1261,12 @@ public class GameView extends View{
 	 * set the game view with the option settings
 	 */
 	public void setInitialGameView(){
-		// if only IA
-		if (App.rules.isAllIA())
-			createIAButton(App.rules.getCurrentNumberOfPlayer(),-1);
+		// if only AI
+		if (App.rules.isAllAI())
+			createAIButton(App.rules.getCurrentNumberOfPlayer(),-1);
 		else 
 			//if human player
-			createIAButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
+			createAIButton(App.rules.getCurrentNumberOfPlayer(), App.rules.getHumanPosition());	
 	}
 	
 	
@@ -1258,8 +1307,8 @@ public class GameView extends View{
 			top = super.getHeight()/40;
 		} else {
 			/*
-			 * si il y a <= 9 joueurs : pour les 4 premiers (de 2 � 5) top � une meme position et left incr�ment�
-			 * 							(de 6 � 9) top meme position et left d�cr�ment�
+			 * si il y a <= 9 joueurs : pour les 4 premiers (de 2 à 5) top à une meme position et left incrémenté
+			 * 							(de 6 à 9) top meme position et left décrémenté
 			 * 
 			 */ 
 			if(nbPlayers<=9){
@@ -1272,8 +1321,8 @@ public class GameView extends View{
 					left=-600+(200*(nbPlayers-position+1));
 				}
 			/*
-			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 � 5 et de 9 � 12)
-			 * 						  pour les joueurs de droite (6 � 8) left est le meme et top incr�ment�
+			 * si il y a >9 joueurs : meme chose pour haut et bas (de 2 à 5 et de 9 à 12)
+			 * 						  pour les joueurs de droite (6 à 8) left est le meme et top incrémenté
 			 */
 			} else {
 				rightPlayers = nbPlayers-9;
@@ -1318,7 +1367,7 @@ public class GameView extends View{
 		gameHistory.setText(content);
 
 		logPart.setContent(gameHistory);
-		
+		logPart.vvalueProperty().bind(gameHistory.heightProperty());
 	}
 	
 	

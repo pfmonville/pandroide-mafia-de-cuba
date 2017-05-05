@@ -38,6 +38,8 @@ public class Rules {
 	private String nameDriver;
 	private String nameThief;
 	private String nameStreetUrchin;
+	// Ugly as hell, but whatever: Be careful, the names are defined in the constructor too
+	private final String nameRolesTab[] = {"Fid√®le", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
 	
 	// Corresponding value of each role
 	private final Integer numberGodfather = 0;
@@ -47,6 +49,7 @@ public class Rules {
 	private final Integer numberDriver = 2;
 	private final Integer numberThief = 4;
 	private final Integer numberStreetUrchin = 5;
+	private final Integer numberRolesTab[] = {1, 2, 3, 6}; // numbers representing the tokens
 	
 	
 	//Value for the game initialize in the OptionView
@@ -56,14 +59,14 @@ public class Rules {
 	private int numberOfDrivers;
 	private int numberOfJokers;
 	private int numberOfDiamonds;
-	private boolean allIA;
+	private boolean allAI;
 	private int humanPosition;
 	private int currentNumberOfPlayer;
 
 	
 	public Rules() {
 		this.nameGodFather = "Parrain";
-		this.nameLoyalHenchman = "FidËle";
+		this.nameLoyalHenchman = "Fid√®le";
 		this.nameCleaner = "Nettoyeur";
 		this.nameAgentFBI = "FBI";
 		this.nameAgentCIA = "CIA";
@@ -93,7 +96,7 @@ public class Rules {
 		this.numberOfDrivers = 1;
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
-		this.allIA = false;
+		this.allAI = false;
 		this.humanPosition = 1;
 	}
 	
@@ -115,7 +118,7 @@ public class Rules {
 		this.numberOfDrivers = 1;
 		this.numberOfJokers = 0;
 		this.numberOfDiamonds = 15;
-		this.allIA = false;
+		this.allAI = false;
 	}
 	
 	public ArrayList<String> getTokensFor(int numberOfPlayer){
@@ -529,14 +532,14 @@ public class Rules {
 
 
 
-	public boolean isAllIA() {
-		return allIA;
+	public boolean isAllAI() {
+		return allAI;
 	}
 
 
 
-	public void setAllIA(boolean allIA) {
-		this.allIA = allIA;
+	public void setAllAI(boolean allAI) {
+		this.allAI = allAI;
 	}
 
 
@@ -625,11 +628,11 @@ public class Rules {
 			
 			line = file.readLine();
 			while(line != null){
-				//identifier les diffÈrents ÈlÈments de la ligne
+				//identifier les diff√©rents √©l√©ments de la ligne
 				String[] elem = line.split(":");
 				int index = Integer.parseInt(elem[0].trim());
 				int category = Integer.parseInt(elem[2].trim());
-				//  le dernier ÈlÈment est la liste des ids des rÈponses
+				//  le dernier √©l√©ment est la liste des ids des r√©ponses
 				String[] idsTab = elem[3].trim().split(",");
 				ArrayList<Integer> ids = new ArrayList<Integer>();
 				for(int i=0 ; i<idsTab.length;i++){
@@ -665,7 +668,7 @@ public class Rules {
 	 */
 	public ArrayList<Answer> getAnswers(){
 		ArrayList<Answer> answerList = new ArrayList<Answer>();
-		//lire le fichier des rÈponses
+		//lire le fichier des r√©ponses
 				BufferedReader file=null;
 				String line ;
 				
@@ -678,10 +681,10 @@ public class Rules {
 					
 					line = file.readLine();
 					while(line != null){
-						//identifier les diffÈrents ÈlÈments de la ligne
+						//identifier les diff√©rents √©l√©ments de la ligne
 						String[] elem = line.split(":");
 						int index = Integer.parseInt(elem[0].trim());
-						//  le dernier ÈlÈment est la liste des ids des questions
+						//  le dernier √©l√©ment est la liste des ids des questions
 						String[] idsTab = elem[elem.length-1].trim().split(",");
 						ArrayList<Integer> ids = new ArrayList<Integer>();
 						for(int i=0 ; i<idsTab.length;i++){
@@ -758,5 +761,15 @@ public class Rules {
 			return nameThief;
 		}
 		return null;
+	}
+
+
+	public Integer[] getNumberRolesTab() {
+		return numberRolesTab;
+	}
+
+
+	public String[] getNameRolesTab() {
+		return nameRolesTab;
 	}
 }

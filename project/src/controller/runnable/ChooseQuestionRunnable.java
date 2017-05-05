@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAGodFatherController;
+import controller.ai.AIGodFatherController;
 import model.Question;
 
 public class ChooseQuestionRunnable  implements Runnable{
@@ -19,7 +19,7 @@ public class ChooseQuestionRunnable  implements Runnable{
 	
 	@Override
 	public void run() {
-		Question question = ((IAGodFatherController)playerController).chooseQuestion(questions);
+		Question question = ((AIGodFatherController)playerController).chooseQuestion(questions);
 		App.gameController.askTo(question);
 	}
 

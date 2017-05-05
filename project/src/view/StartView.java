@@ -34,8 +34,8 @@ public class StartView extends View{
 
 		//element initialization to display
 		btnPlay = new Button("Jouer");
-		btnSettings = new Button("Réglages");
-		btnRules = new Button("Règles");
+		btnSettings = new Button("RÃ©glages");
+		btnRules = new Button("RÃ¨gles");
 		btnAbout = new Button("A Propos");
 
 		//title layout
@@ -90,7 +90,7 @@ public class StartView extends View{
 		
 		btnSettings.setOnAction((event)->{
 			Stage stage = new Stage();
-			stage.setTitle("Réglages");
+			stage.setTitle("RÃ©glages");
 			Pane layout = new Pane();
 			//TODO
 //			layout.getChildren().add(setv.getPanel());

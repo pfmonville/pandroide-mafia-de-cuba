@@ -2,7 +2,7 @@ package controller.runnable;
 
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAGodFatherController;
+import controller.ai.AIGodFatherController;
 
 public class EmptyPocketsRunnable implements Runnable{
 
@@ -14,7 +14,7 @@ public class EmptyPocketsRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		int thiefPosition = ((IAGodFatherController)playerController).chooseWhoIsTheThief();
+		int thiefPosition = ((AIGodFatherController)playerController).chooseWhoIsTheThief();
 		App.gameController.emptyPocketsTo(thiefPosition);
 	}
 	

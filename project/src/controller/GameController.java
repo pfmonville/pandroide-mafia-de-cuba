@@ -8,24 +8,17 @@ import java.util.Random;
 
 import org.controlsfx.control.Notifications;
 
-import controller.ia.AgentStrategy;
-import controller.ia.CleanerStrategy;
-import controller.ia.DriverStrategy;
-import controller.ia.GodFatherStrategy;
-import controller.ia.IAController;
-import controller.ia.IAGodFatherController;
-import controller.ia.IASuspectController;
-import controller.ia.ISuspectStrategy;
-import controller.ia.LoyalHenchmanStrategy;
-import controller.ia.StreetUrchinStrategy;
-import controller.ia.ThiefStrategy;
+import controller.ai.GodFatherStrategy;
+import controller.ai.AIController;
+import controller.ai.AIGodFatherController;
+import controller.ai.AISuspectController;
+import controller.ai.LoyalHenchmanStrategy;
 import model.Answer;
 import model.Box;
 import model.Driver;
 import model.Player;
 import model.PlayersInfo;
 import model.Question;
-import model.Rules;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
@@ -45,7 +38,6 @@ import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-import sun.management.resources.agent;
 
 
 public class GameController {
@@ -68,8 +60,6 @@ public class GameController {
 	private Box box;
 	private String tokenHidden;
 	private int diamondsHidden;
-	
-	private Rules rules = new Rules();
 	
 	public GameController(){
 	
@@ -322,7 +312,7 @@ public class GameController {
 		// if the current player is an AI
 		if(!this.isCurrentPlayerHuman()){
 			// the AI creates all the possible worlds for the players after him, based on the box content
-			((IAController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
+			((AIController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
 		}
 		
 		//if this is the last player then start the second half
@@ -337,8 +327,8 @@ public class GameController {
 			this.players.get(1).setBox(box.clone());
 			this.currentPlayer = 1;
 			this.currentTurn = 1;
-			if(App.rules.isAllIA())
-				Platform.runLater(()->App.gv.createInfoBoxIA());
+			if(App.rules.isAllAI())
+				Platform.runLater(()->App.gv.createInfoBoxAI());
 			beginSecondHalf();
 		}else{
 			this.currentPlayer ++;
@@ -384,7 +374,6 @@ public class GameController {
 	}
 	
 	public void askTo(Question questionToAsk){
-		//TODO display pop up informing everyone on the question asked
 		Notifications.create()
         	.title("Action en cours")
         	.text("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent())
@@ -422,7 +411,7 @@ public class GameController {
 		ArrayList<Player> cleanersWantingToShoot = new ArrayList<>();
 		for(Player player: this.playersInfo.getCleaners()){
 			try {
-				if(((IASuspectController) this.playerControllers.get(player.getPosition())).chooseToShoot(targetPlayer)){
+				if(((AISuspectController) this.playerControllers.get(player.getPosition())).chooseToShoot(targetPlayer)){
 					targetHasBeenShot = true;
 					cleanersWantingToShoot.add(player);
 				}
@@ -479,12 +468,12 @@ public class GameController {
 				System.out.println("le parrain a gagné");
 			}
 		}else{
-			System.out.println("role du joueur cibl� " + secret.getRole());
+			System.out.println("role du joueur ciblé " + secret.getRole());
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//TODO : display one less joker and everyone knows who is the target
 				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
-					((IAController)pc).updateWorldsVision(secret);
+					((AIController)pc).updateWorldsVision(secret);
 				}
 				SelectingGodFathersAction();
 			}else{
@@ -506,27 +495,25 @@ public class GameController {
 	
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
-		//TODO display pop up informing everyone on the answer
 		Platform.runLater(()->
 			Notifications.create()
 	    		.title("Action en cours")
-	    		.text("Le joueur " + question.getTargetPlayer() + " r�pond :\n" + answer.getContent())
+	    		.text("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent())
 	    		.position(Pos.CENTER)
 	    		.owner(App.mainStage)
 	        	.hideAfter(Duration.seconds(5))
 	    		.showInformation());
-		//TODO update log creating a Talk
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);
 		Platform.runLater(() -> App.gv.displayGameHistory());
-		updateIAWorldsVisions();
+		updateAIWorldsVisions();
 		SelectingGodFathersAction();
 	}
 	
 	
-	public void updateIAWorldsVisions(){
+	public void updateAIWorldsVisions(){
 		for(PlayerController pc: playerControllers.values()){
-			((IAController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+			((AIController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
 		}
 	}
 	
@@ -598,9 +585,9 @@ public class GameController {
 			}
 			else{
 				if(position == 1){
-					playerControllers.put(position, new IAGodFatherController(player));
+					playerControllers.put(position, new AIGodFatherController(player));
 				}else{
-					playerControllers.put(position, new IASuspectController(player));
+					playerControllers.put(position, new AISuspectController(player));
 				}
 			}
 		}
@@ -619,30 +606,27 @@ public class GameController {
 				System.out.println("player = " + player.toString() +" position "+ player.getPosition() + " isHuman " + player.isHuman());
 				System.out.println(" role = " + player.getRole().toString());
 				System.out.println( " roleName = " + player.getRole().getName());
-				switch(player.getRole().getName()){
-				case("Parrain"):
-					((IAGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
-					break;
-				case("Fid�le"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
-				case("Nettoyeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
-				case("Chauffeur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
-				case("Voleur"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
-				case("Enfant des rues"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
-				case("Agent"):
-				case("FBI"):
-				case("CIA"):
-					((IASuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					break;
+
+				if(player.getRole().getName() == App.rules.getNameGodFather()){
+					((AIGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameLoyalHenchman()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameCleaner()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameDriver()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameThief()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameGodFather()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+				}
+				if(player.getRole().getName() == App.rules.getNameAgentCIA() | player.getRole().getName() == App.rules.getNameAgentFBI() | player.getRole().getName() == App.rules.getNameAgentLambda()){
+					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
 			}
 		}

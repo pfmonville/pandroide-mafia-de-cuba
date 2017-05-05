@@ -2,7 +2,7 @@ package controller.runnable;
 
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAGodFatherController;
+import controller.ai.AIGodFatherController;
 
 public class ChooseGodFathersActionRunnable implements Runnable {
 
@@ -14,7 +14,7 @@ public class ChooseGodFathersActionRunnable implements Runnable {
 	
 	@Override
 	public void run() {
-		int response = ((IAGodFatherController)playerController).chooseAction();
+		int response = ((AIGodFatherController)playerController).chooseAction();
 		App.gameController.getGodFathersAction(response);
 	}
 

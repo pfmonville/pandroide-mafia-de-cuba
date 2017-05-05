@@ -3,8 +3,8 @@ package controller.runnable;
 import model.Box;
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAController;
-import controller.ia.IASuspectController;
+import controller.ai.AIController;
+import controller.ai.AISuspectController;
 import error.PickingStrategyError;
 
 public class PickSomethingRunnable implements Runnable{
@@ -22,9 +22,9 @@ public class PickSomethingRunnable implements Runnable{
 	@Override
 	public void run() {
 		// the AI creates all the possible worlds for the players before him, based on the box content
-		((IAController)playerController).createWorldsBeforeVision(this.box);
+		((AIController)playerController).createWorldsBeforeVision(this.box);
 		
-		Object[] obj = ((IASuspectController)playerController).pickSomething(position, box);
+		Object[] obj = ((AISuspectController)playerController).pickSomething(position, box);
 		int diamondsPicked = (int) obj[0];
 		String tokenPicked = (String) obj[1];
 		String tokenHidden = (String) obj[2];

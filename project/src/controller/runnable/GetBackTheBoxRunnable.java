@@ -3,7 +3,7 @@ package controller.runnable;
 import model.Box;
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAController;
+import controller.ai.AIController;
 
 public class GetBackTheBoxRunnable implements Runnable {
 
@@ -17,8 +17,8 @@ public class GetBackTheBoxRunnable implements Runnable {
 	
 	@Override
 	public void run() {
-		if(playerController instanceof IAController)
-			((IAController)playerController).createWorldsBeforeVision(this.box);
+		if(playerController instanceof AIController)
+			((AIController)playerController).createWorldsBeforeVision(this.box);
 		App.gameController.SelectingGodFathersAction();
 	}
 

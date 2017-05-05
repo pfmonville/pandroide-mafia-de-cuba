@@ -2,11 +2,11 @@ package controller.runnable;
 
 import java.util.ArrayList;
 
-import controller.App;
-import controller.PlayerController;
-import controller.ia.IASuspectController;
 import model.Answer;
 import model.Question;
+import controller.App;
+import controller.PlayerController;
+import controller.ai.AISuspectController;
 
 public class AnswerQuestionRunnable implements Runnable {
 
@@ -22,7 +22,7 @@ public class AnswerQuestionRunnable implements Runnable {
 
 	@Override
 	public void run() {
-		Answer answer = ((IASuspectController)playerController).chooseAnswer(this.questionToAsk, answers);
+		Answer answer = ((AISuspectController)playerController).chooseAnswer(this.questionToAsk, answers);
 		App.gameController.getAnswerToQuestion(this.questionToAsk, answer);
 	}
 

@@ -28,14 +28,14 @@ import javafx.scene.text.Text;
 import model.Theme;
 
 public class OptionView extends View{
-	private RadioButton plIA,plHU;
+	private RadioButton plAI,plHU;
 	private Label labelnbpl,labelHUPos;
 	private Button valider;
 	private Button mainMenu;
 	CheckBox checkBox1;
 
 	private ToggleGroup nbpl;
-	private ToggleGroup huIA, pos, nbLoy, nbCle, nbAge, nbDri, nbJok;
+	private ToggleGroup huAI, pos, nbLoy, nbCle, nbAge, nbDri, nbJok;
 	private ComboBox<String> nbDia;
 	
 
@@ -106,7 +106,7 @@ public class OptionView extends View{
 
 	    	  			//de-activate too high positions
 						for(int i = 11; i >= newNumberOfPlayer; i--){
-							if(huIA.getSelectedToggle().getUserData().toString().equals("hu")){
+							if(huAI.getSelectedToggle().getUserData().toString().equals("hu")){
 								((RadioButton) pos.getToggles().get(i)).setDisable(true);
 							}
 							if(checkBox1.isSelected()){
@@ -119,7 +119,7 @@ public class OptionView extends View{
 						}
 						//activate all available positions
 						for(int i = 0; i < newNumberOfPlayer; i++){
-							if(huIA.getSelectedToggle().getUserData().toString().equals("hu")){
+							if(huAI.getSelectedToggle().getUserData().toString().equals("hu")){
 								((RadioButton) pos.getToggles().get(i)).setDisable(false);
 		    	  			}
 							if(checkBox1.isSelected()){
@@ -158,29 +158,29 @@ public class OptionView extends View{
 		
 		//the part where the user chooses to play or watch ia
 		Image iconHU = new Image(Theme.pathHumanIcon);
-		Image iconIA = new Image(Theme.pathIAIcon);
+		Image iconAI = new Image(Theme.pathAIIcon);
 				
 		Label typeOfPlayerLabel = new Label();
 		Image imageJ1 = new Image(Theme.pathTypeOfPlayer);
 		typeOfPlayerLabel.setGraphic(new ImageView(imageJ1));
 		typeOfPlayerLabel.setTooltip(super.createStandardTooltip("Type de joueurs"));
-		plIA = new RadioButton();
-		plIA.setUserData("ia");
-		plIA.setGraphic(new ImageView(iconIA));
-		plIA.setTooltip(super.createStandardTooltip("Tous IA"));
+		plAI = new RadioButton();
+		plAI.setUserData("ia");
+		plAI.setGraphic(new ImageView(iconAI));
+		plAI.setTooltip(super.createStandardTooltip("Tous IA"));
 		plHU = new RadioButton();
 		plHU.setUserData("hu");
 		plHU.setGraphic(new ImageView(iconHU));
 		plHU.setTooltip(super.createStandardTooltip("Un Joueur Humain"));
-		huIA = new ToggleGroup(); 
-		plIA.setToggleGroup(huIA); 
-		plHU.setToggleGroup(huIA);
+		huAI = new ToggleGroup(); 
+		plAI.setToggleGroup(huAI); 
+		plHU.setToggleGroup(huAI);
 		
 		plHU.setSelected(true);
 		
 		gridPane1.add(typeOfPlayerLabel, 0, 2);
 		gridPane1.add(new Text(""), 1, 2);
-		gridPane1.add(plIA, 2, 2);
+		gridPane1.add(plAI, 2, 2);
 		gridPane1.add(plHU, 3, 2);
 		gridPane1.add(new Text(""), 0, 3);
 		
@@ -210,8 +210,8 @@ public class OptionView extends View{
 		}
 
 		
-		plIA.setOnAction((event)->{
-			App.rules.setAllIA(true);
+		plAI.setOnAction((event)->{
+			App.rules.setAllAI(true);
 			App.rules.setHumanPosition(-1);
 				for(int i = 0; i < App.rules.getMaximumNumberOfPlayer(); i++){
 					((RadioButton) pos.getToggles().get(i)).setDisable(true);
@@ -219,7 +219,7 @@ public class OptionView extends View{
 		});
 		
 		plHU.setOnAction((event)->{
-			App.rules.setAllIA(false);
+			App.rules.setAllAI(false);
 			for(int i = 0; i < Integer.parseInt(nbpl.getSelectedToggle().getUserData().toString()); i++){
 				((RadioButton) pos.getToggles().get(i)).setDisable(false);
 			}
@@ -290,7 +290,7 @@ public class OptionView extends View{
 		Label loyalHenchmenLabel = new Label();
 		Image imgLoyalHenchman = new Image("image/loyalHenchman32.png");
 		loyalHenchmenLabel.setGraphic(new ImageView(imgLoyalHenchman));
-		loyalHenchmenLabel.setTooltip(super.createStandardTooltip("Nombre de jetons Fidèle"));
+		loyalHenchmenLabel.setTooltip(super.createStandardTooltip("Nombre de jetons FidÃ¨le"));
 		
 		ArrayList<RadioButton> loyalHenchmenList = new ArrayList<>();
 		nbLoy = new ToggleGroup();
@@ -307,7 +307,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfLoyalHenchmen(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -341,7 +341,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfCleaners(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -374,7 +374,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfAgents(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -407,7 +407,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfDrivers(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		
@@ -441,7 +441,7 @@ public class OptionView extends View{
 		      public void changed(ObservableValue<? extends Toggle> ov,
 		              Toggle old_toggle, Toggle new_toggle) {
 		    	  App.rules.setNumberOfJokers(Integer.parseInt(new_toggle.getUserData().toString()));
-		    	  //TODO mettre à jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
+		    	  //TODO mettre Ã  jour les autres lignes de sorte qu'il n'y ait pas plus de jeton que de joueurs-1
 		      }
 		});
 		

@@ -3,7 +3,7 @@ package controller.runnable;
 import model.Box;
 import controller.App;
 import controller.PlayerController;
-import controller.ia.IAGodFatherController;
+import controller.ai.AIGodFatherController;
 import error.PrepareBoxStrategyError;
 
 public class PrepareBoxRunnable implements Runnable{
@@ -18,7 +18,7 @@ public class PrepareBoxRunnable implements Runnable{
 	
 	@Override
 	public void run() {
-		int response = ((IAGodFatherController)playerController).chooseHowManyDiamondsToHide(box);
+		int response = ((AIGodFatherController)playerController).chooseHowManyDiamondsToHide(box);
 		try {
 			App.gameController.responsePrepareBox(response);
 		} catch (PrepareBoxStrategyError e) {
