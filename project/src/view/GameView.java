@@ -122,6 +122,7 @@ public class GameView extends View{
 				if(button == ButtonType.OK){
 					try {
 						cleanGameView();
+						forAnimation=1; 
 						App.changePanel(super.getPanel(), App.ov.getPanel());
 					} catch (IOException e) {
 						e.printStackTrace();
