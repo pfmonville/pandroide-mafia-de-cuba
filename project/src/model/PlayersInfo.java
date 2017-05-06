@@ -33,8 +33,6 @@ public class PlayersInfo {
 		streetUrchin = new ArrayList<>();
 		drivers = new ArrayList<>();
 		agents = new ArrayList<>();
-//		fbi = new ArrayList<>();
-//		cia = new ArrayList<>();
 		
 		winners = new ArrayList<>();
 	}
@@ -187,8 +185,6 @@ public class PlayersInfo {
 		this.winningSide = winningSide;
 	}
 
-	
-	
 	
 	
 	

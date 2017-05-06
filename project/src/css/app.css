@@ -65,12 +65,12 @@
 	-fx-text-alignment:center;
 	-fx-alignment:center;
 	-fx-text-fill:white;
-	-fx-font : 28px Tahoma;
 }
 
 #log{
 
 	-fx-font : 15px Tahoma; 
+	-fx-font-weight:bold;
 	-fx-text-fill : black ;
 	-fx-background: transparent
 }
@@ -134,8 +134,24 @@
 }
 
 .scroll-pane .viewport{
-	//-fx-background-color: transparent;
-	//-fx-background-image:url(../image/confidentialfile.png) ;
+	-fx-background-color: transparent;
+	
 }
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-image:url(../image/confidentialfile.png) ;
+    -fx-background-repeat:no-repeat;
+    -fx-background-size:stretch;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}
+
 
 

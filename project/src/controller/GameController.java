@@ -379,6 +379,7 @@ public class GameController {
 	
 	public void askTo(Question questionToAsk){
 		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
+		questionToAsk.setNumero(currentTurn);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
@@ -405,7 +406,11 @@ public class GameController {
 	public void emptyPocketsTo(int targetPlayer){
 		//display pop up
 		createPopUp("Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.\n", "Accusation", 4);
-		
+		//question and answer for the Talk object
+		Question q = new Question(0, "Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.", new ArrayList<>(), -1);
+		q.setTargetPlayer(targetPlayer);
+		q.setNumero(currentTurn);
+		Answer a = new Answer(0,"",new ArrayList<>());
 		//handle the Cleaner shot
 		boolean targetHasBeenShot = false;
 		Player cleanerWhoShot = null;
@@ -425,7 +430,9 @@ public class GameController {
 			cleanerWhoShot = cleanersWantingToShoot.get(new Random().nextInt(cleanersWantingToShoot.size()));
 		}
 	
-		//TODO reveal the identity of the targetPlayer
+		//TODO : reveal the identity of the targetPlayer and of the cleaner who shot if one
+		App.gv.revealId(players.get(targetPlayer));
+		if(cleanerWhoShot!=null) App.gv.revealId(cleanerWhoShot);
 		//the list which will be sent to the view to display informations about players
 		SecretID secret = players.get(targetPlayer).reveal();
 		
@@ -433,7 +440,8 @@ public class GameController {
 		if(secret.getRole().equals(App.rules.getNameAgentCIA()) || secret.getRole().equals(App.rules.getNameAgentFBI() )|| secret.getRole().equals(App.rules.getNameAgentLambda())){
 			//if a cleaner hasn't shot, the agent wins alone
 			if(cleanerWhoShot == null){
-				createPopUp("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu... :\n", "", 4);	
+				createPopUp("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu... \n", "", 4);	
+				a.setContent("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu...");
 				playersInfo.addWinner(this.players.get(targetPlayer));
 				if(secret.getRole().equals(App.rules.getNameAgentCIA())){
 					playersInfo.setWinningSide(PlayersInfo.CIA);
@@ -445,14 +453,19 @@ public class GameController {
 			//else the cleaner wins alone
 			}else{
 				createPopUp("Le nettoyeur a tué un agent ! Vous avez perdu... \n", "", 4);
+				a.setContent("Le nettoyeur a tué un agent ! Vous avez perdu...");
 				playersInfo.addWinner(cleanerWhoShot);
 				playersInfo.setWinningSide(PlayersInfo.CLEANER);
 			}
 			
 			//add all winning drivers
 			playersInfo.addWinners(this.getWinningDrivers());
-			//display end banner //TODO
+			//display end banner
+			Talk t =new Talk(q,a);
+			gameHistory.add(t);
+			App.gv.displayGameHistory();
 			App.gv.displayEndBanner(playersInfo);
+			playersInfo = new PlayersInfo();
 			return ;
 		}
 		//if the target is a thief
@@ -460,8 +473,12 @@ public class GameController {
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			createPopUp("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.\n", "", 4);
+			a.setContent("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.");
 			//update the number of diamonds taken back in display
 			App.gv.displayUpdatedInfo(this.getDiamondsTakenBack(),-1) ;
+			Talk t = new Talk(q,a);
+			gameHistory.add(t);
+			App.gv.displayGameHistory();
 			if(hasGodFatherWon()){
 				//find godFather, loyalHenchmen and all their drivers
 				playersInfo.addWinner(playersInfo.getGodFather());
@@ -470,25 +487,30 @@ public class GameController {
 				playersInfo.setWinningSide(PlayersInfo.GODFATHER);
 				//display end banner
 				App.gv.displayEndBanner(playersInfo); 
-				System.out.println("le parrain a gagné");
+				playersInfo = new PlayersInfo();
 			}
+
 			this.currentTurn += 1;
 			SelectingGodFathersAction();
 		}else{	
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
-				//TODO : display one less joker and everyone knows who is the target
+				//display one less joker and everyone knows who is the target
 				App.gv.displayUpdatedInfo(-1, ((GodFather)players.get(1).getRole()).getJokersLeft());
 				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.\n", "", 4);
-				System.out.println("on sait qui est cette personne");
 				for(PlayerController pc: playerControllers.values()){
 					if(pc instanceof AIController){
 					((AIController)pc).updateWorldsVision(secret);
 					}
 				}
+				a.setContent("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.");
+				Talk t = new Talk(q,a);
+				gameHistory.add(t);
+				App.gv.displayGameHistory();
 				this.currentTurn += 1;
 				SelectingGodFathersAction();
 			}else{
 				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...\n", "", 4);
+				a.setContent("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...");
 				//find the best thief
 				Player bestThief = playersInfo.getThieves().get(0);
 				for(Player player: playersInfo.getThieves()){
@@ -500,8 +522,11 @@ public class GameController {
 				playersInfo.addWinners(playersInfo.getStreetUrchin());
 				playersInfo.addWinners(this.getWinningDrivers());
 				playersInfo.setWinningSide(PlayersInfo.THIEVES);
-				App.gv.displayEndBanner(playersInfo); //TODO
-				System.out.println("le parrain a perdu");
+				Talk t = new Talk(q,a);
+				gameHistory.add(t);
+				App.gv.displayGameHistory();
+				App.gv.displayEndBanner(playersInfo);
+				playersInfo = new PlayersInfo();
 			}
 		}
 	}
