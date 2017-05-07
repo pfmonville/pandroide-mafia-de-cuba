@@ -21,8 +21,9 @@ public class FirstPositionStrategy implements IPositionStrategy{
 		
 		//Thief Strategy
 		if(alea < 0.25){
-			if(box.getDiamonds() > 10){
-				diamondsTaken = box.getDiamonds() - 10;
+			//TODO: take more diamonds?
+			if(box.getDiamonds() > App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
+				diamondsTaken = box.getDiamonds() - App.rules.getNumberOfDiamonds() + App.rules.getMaxHiddenDiamonds();
 				alea = r.nextFloat();
 				//move aside one LoyalHenchman
 				//TODO: or an agent?
