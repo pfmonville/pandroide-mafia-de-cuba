@@ -65,7 +65,7 @@ public class GameView extends View{
 	private StackPane table ;
 	private TilePane themeButtons ;
 	private FlowPane questionsArea,answerPicture; 
-	private GridPane questionsBox, questionsPlayers, questionsOthers, answers ;
+	private GridPane questionsBox, questionsPlayers, questionsFirstPlayer, answers ;
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
@@ -73,7 +73,7 @@ public class GameView extends View{
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
-	private Button box, player, other, emptyPocket, askQuestion, answerTo ;
+	private Button box, player, firstPlayer, emptyPocket, askQuestion, answerTo ;
 	private Button replay, inspect, rules;
 	private ArrayList<Button> aiButtons;
 	
@@ -321,6 +321,15 @@ public class GameView extends View{
 			//action
 			b.setOnAction((event)->{
 				target = Integer.parseInt(b.getId());
+				//disable first player questions if player is not the first
+				if(target!=2) {
+					firstPlayer.setVisible(false);
+					questionsFirstPlayer.setVisible(false);
+				}
+				else {
+					firstPlayer.setVisible(true);
+					questionsFirstPlayer.setVisible(true);
+				}
 				b.pseudoClassStateChanged(CHOSEN_PSEUDO_CLASS, true);
 				for(Button button : aiButtons){
 					if(button != b)
@@ -517,22 +526,22 @@ public class GameView extends View{
 			int index= others.indexOf(q);
 			if(q.getInteractive()==0){
 				RadioButton b = new RadioButton(q.getContent());
-				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setPrefHeight(questionsFirstPlayer.getHeight()/5);
 				b.setWrapText(true);
 				b.setId(q.getId()+"");
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				if(index%2==0 && index!=0)
 					i++;
-				questionsOthers.add(b, index%nbCol,i);
-				questionsOthers.setMargin(b, new Insets(5,0,0,5));
+				questionsFirstPlayer.add(b, index%nbCol,i);
+				questionsFirstPlayer.setMargin(b, new Insets(5,0,0,5));
 			}else{
 				//une question à choix multiple
 				HBox button = new HBox() ;
 				button.setSpacing(2);
 				//le bouton radio de la question
 				RadioButton b = new RadioButton(q.getContent());
-				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setPrefHeight(questionsFirstPlayer.getHeight()/5);
 				b.setWrapText(true);
 				b.setId(q.getId()+"");
 				b.setToggleGroup(questionsGroup);
@@ -549,8 +558,8 @@ public class GameView extends View{
 				
 				if(index%2==0 && index!=0)
 					i++;
-				questionsOthers.add(button, index%nbCol, i );
-				questionsOthers.setMargin(button, new Insets(5,0,0,5));
+				questionsFirstPlayer.add(button, index%nbCol, i );
+				questionsFirstPlayer.setMargin(button, new Insets(5,0,0,5));
 			}
 		}
 	}
@@ -565,8 +574,8 @@ public class GameView extends View{
 			box.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 		if(toChange==questionsPlayers)
 			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
-		if(toChange==questionsOthers)
-			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
+		if(toChange==questionsFirstPlayer)
+			firstPlayer.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 	}
 	
 	
@@ -1142,32 +1151,32 @@ public class GameView extends View{
 			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsPlayers);
 		});
-		other = new Button("Others");
-		other.setOnAction((event)->{
+		firstPlayer = new Button("First player");
+		firstPlayer.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
-			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
-			questionsArea.getChildren().add(questionsOthers);
+			firstPlayer.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
+			questionsArea.getChildren().add(questionsFirstPlayer);
 		});
 		box.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		player.setPrefSize(super.getWidth()/12, super.getHeight()/12);
-		other.setPrefSize(super.getWidth()/12, super.getHeight()/12);
+		firstPlayer.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		
-		themeButtons.getChildren().addAll(box, player,other);
+		themeButtons.getChildren().addAll(box, player,firstPlayer);
 		themeButtons.setMargin(box,new Insets(0,0,0,5));
 		themeButtons.setMargin(player,new Insets(0,0,0,5));
-		themeButtons.setMargin(other,new Insets(0,0,0,5));
+		themeButtons.setMargin(firstPlayer,new Insets(0,0,0,5));
 		
 		//questions area
 		questionsBox = new GridPane();
 		questionsPlayers = new GridPane();
-		questionsOthers = new GridPane();
+		questionsFirstPlayer = new GridPane();
 		questionsBox.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
 		questionsPlayers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
-		questionsOthers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
+		questionsFirstPlayer.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
 		questionsBox.setVgap(2); questionsBox.setHgap(3);
 		questionsPlayers.setVgap(2); questionsPlayers.setHgap(3);
-		questionsOthers.setVgap(2); questionsOthers.setHgap(3);
+		questionsFirstPlayer.setVgap(2); questionsFirstPlayer.setHgap(3);
 		
 		questionsArea.getChildren().add(questionsBox);//default : show the questions relative to the box		
 //		//*********************************
