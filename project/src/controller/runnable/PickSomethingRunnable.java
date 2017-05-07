@@ -1,11 +1,12 @@
 package controller.runnable;
 
-import model.Box;
 import controller.App;
 import controller.PlayerController;
 import controller.ai.AIController;
 import controller.ai.AISuspectController;
 import error.PickingStrategyError;
+import model.Box;
+import model.SecretID;
 
 public class PickSomethingRunnable implements Runnable{
 
@@ -24,10 +25,10 @@ public class PickSomethingRunnable implements Runnable{
 		// the AI creates all the possible worlds for the players before him, based on the box content
 		((AIController)playerController).createWorldsBeforeVision(this.box);
 		
-		Object[] obj = ((AISuspectController)playerController).pickSomething(position, box);
-		int diamondsPicked = (int) obj[0];
-		String tokenPicked = (String) obj[1];
-		String tokenHidden = (String) obj[2];
+		SecretID choice = ((AISuspectController)playerController).pickSomething(position, box);
+		int diamondsPicked = choice.getDiamondsTaken();
+		String tokenPicked = choice.getTokenTaken();
+		String tokenHidden = choice.getHiddenToken();
 		try {
 			App.gameController.endTurn(position, diamondsPicked, tokenPicked, tokenHidden);
 		} catch (PickingStrategyError e) {

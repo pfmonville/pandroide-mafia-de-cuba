@@ -1,16 +1,20 @@
 package model;
 
 public class SecretID {
-
 	private String roleName ;
 	private int diamondsTaken ;
 	private String tokenTaken ;
+	private String hiddenToken = null;
 	
 	public SecretID(String role, int nbDiamonds, String token){
-		
 		roleName = role ;
 		setDiamondsTaken(nbDiamonds) ;
 		setTokenTaken(token) ;
+	}
+	public SecretID(String role, int nbDiamonds, String token, String hiddenToken){
+		this(role, nbDiamonds, token);
+		this.setHiddenToken(hiddenToken);
+			
 	}
 	
 	public String getRole() {
@@ -35,6 +39,12 @@ public class SecretID {
 
 	public void setTokenTaken(String tokenTaken) {
 		this.tokenTaken = tokenTaken;
+	}
+	public String getHiddenToken() {
+		return hiddenToken;
+	}
+	public void setHiddenToken(String hiddenToken) {
+		this.hiddenToken = hiddenToken;
 	}
 	
 }

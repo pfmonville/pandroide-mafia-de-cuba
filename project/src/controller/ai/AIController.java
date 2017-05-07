@@ -520,6 +520,7 @@ public class AIController implements PlayerController {
 	
 	public void checkLiar(Talk talk){
 		int questionId = talk.getAnswer().getId();
+		boolean liarDetected;
 		Answer answer = talk.getAnswer();
 		int otherPlayerPosition = talk.getQuestion().getTargetPlayer(); 
 		switch(questionId){
@@ -592,6 +593,7 @@ public class AIController implements PlayerController {
 				}
 				break;
 
+			//TODO: on peut encore reperer d'autres cas de mensonges 
 			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
 			case 7: //Quels rôles contenait la boîte quand tu l'as passée ?
 				ArrayList<String> response = answer.getTokensAnswer();					
@@ -607,7 +609,7 @@ public class AIController implements PlayerController {
 					otherCptDict.put(tokenName, otherCptDict.get(tokenName) + 1);
 				}
 				ArrayList<String> rolesLeft;
-				boolean liarDetected = false;
+				liarDetected = false;
 				//on verifie pour chaque monde si cette repartition existe avant lui
 				//si le joueur cible est avant le joueur courant 
 				
@@ -629,11 +631,6 @@ public class AIController implements PlayerController {
 							break;
 						}
 					}
-					if(liarDetected){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						break; // break for the case
-					}
 				}
 				else{
 					/*
@@ -653,14 +650,15 @@ public class AIController implements PlayerController {
 							break;
 						}
 					}
+				}
 //					System.out.println("1. "+myCptDict);
 //					System.out.println("2. "+otherCptDict);
-					if(liarDetected){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						break; // break for the case
-					}					
-				}
+				if(liarDetected){
+					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+					break; // break for the case
+				}					
+				
 				break;
 				
 			case 8: // Es tu un ...
@@ -717,19 +715,55 @@ public class AIController implements PlayerController {
 				break;
 				
 			case 14:// As-tu écarté un jeton ? (au premier joueur)
-				int nbTokensBeforeStart = App.rules.getTokensFor(nbPlayers).size();
-				// All the players before have taken a token AND a token was moved aside by the first player
-				if(nbTokensBeforeStart - player.getBox().getTokens().size() - 1 == player.getPosition() - 2){
-					if(answer.getContent().equals("Non")){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-					}
+				liarDetected = true;
+				if(answer.getContent().equals("Oui")){
+					for(World w: worldsBefore){
+						// s'il existe un monde ou le 1er joueur a écarté un jeton 
+						if(w.getTokenMovedAside().intValue() != -1){
+							liarDetected = false;
+							break;
+						}
+					}							
 				}
-//				else{
-//					//TODO: on sait que le premier joueur n'a pas ecarte mais il repond "Oui"
-//				}
-				break;
-
+				else{
+					for(World w: worldsBefore){
+						// s'il existe un monde ou le 1er joueur n'a pas écarté un jeton 
+						if(w.getTokenMovedAside().intValue() == -1){
+							liarDetected = false;
+							break;
+						}
+					}	
+					
+				}
+				if(liarDetected){
+					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+				}			
+				break;	
+//			case 15://Quel jeton as-tu écarté ?  
+//				TODO: voir comment recuperer le jeton en question
+//				break;
 				
+			case 16://As-tu écarté un jeton ... ?
+				liarDetected = true;
+				if(answer.getContent().equals("Oui")){
+					String[] s = talk.getQuestion().getContent().split("[...]");
+					String roleAsked = s[s.length-1].replace('?', ' ').trim();
+					roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
+					for(World w: worldsBefore){
+						// s'il existe un monde ou le 1er joueur a ecarte ce jeton 
+						if(w.getTokenMovedAside().intValue() == roleNumber){
+							liarDetected = false;
+							break;
+						}
+					}
+					if(liarDetected){
+						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+					}					
+				}
+
+				break;
 		}
 	}
 	
@@ -759,7 +793,11 @@ public class AIController implements PlayerController {
 		}
 	}
 	
-	/* TODO: a tester
+	/* TODO: faire appel a la methode en cas d'accusation 
+	 * exemple: si un voleur a la position playerPosition a été trouvé, 
+	 * on garde que les mondes ou ce joueur est voleur
+	 * exemple 2: lorsqu'un joueur a été accusé à tort (et pas un agent) et que le parrain a un joker
+	 * 
 	 * keep only the worlds where the player at playerPosition has the role roleNumber 
 	 * (to be used after an accusation)
 	 */
