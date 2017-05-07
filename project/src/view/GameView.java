@@ -708,7 +708,7 @@ public class GameView extends View{
 			if(role.equals("Nettoyeur"))
 				token = Theme.pathCleaner;
 			if(role.equals("Enfant des Rues"))
-				token = Theme.pathThief; //TODO image enfant des rues
+				token = Theme.pathStreetUrchin;
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
 				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
@@ -1533,10 +1533,10 @@ public class GameView extends View{
 		//StreetUrchin
 		content+="\nEnfant des rues : ";
 		for(Player p : pi.getStreetUrchin()){
-			content+= "Joueur "+p.getPosition()+"  "; //TODO image
+			content+= "Joueur "+p.getPosition()+"  "; 
 			for (Button aiButton : aiButtons){
 				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
-					//aiButton.setGraphic(new ImageView(new Image(Theme.pathCleaner,45.0,45.0,false,true)));
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathStreetUrchin,45.0,45.0,false,true)));
 					aiButton.setText(null);
 					aiButton.setDisable(true);
 				}
@@ -1590,7 +1590,7 @@ public class GameView extends View{
 				roleImg = Theme.pathCleaner;
 			}
 			else if(target.getRole().getName().equals(App.rules.getNameStreetUrchin())){
-				roleImg = Theme.pathThief; //TODO image StreetUrchin
+				roleImg = Theme.pathStreetUrchin;
 			}
 			else if (target.getRole().getName().equals(App.rules.getNameAgentFBI()) ||target.getRole().getName().equals(App.rules.getNameAgentCIA())||target.getRole().getName().equals(App.rules.getNameAgentLambda())){
 				roleImg = Theme.pathAgent;
