@@ -38,6 +38,8 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -46,6 +48,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import model.Answer;
 import model.Phrase;
@@ -69,11 +72,12 @@ public class GameView extends View{
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
-	private ComboBox<String> choices_role, choices_tokenHidden ; //pour questions interactives
+	private ComboBox<String> choices_role, choices_tokenHidden ; //interactive questions
+	private ComboBox<String> announcement ; //allows Godfather to make an annoucement
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
-	private Button box, player, firstPlayer, emptyPocket, askQuestion, answerTo ;
+	private Button box, player, firstPlayer, emptyPocket, askQuestion, answerTo, makeAnnouncement ;
 	private Button replay, inspect, rules;
 	private ArrayList<Button> aiButtons;
 	
@@ -507,6 +511,7 @@ public class GameView extends View{
 				//la combo box
 
 				choices_role = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_role.setPromptText("Choix du rôle");
 				choices_role.setVisibleRowCount(4);
 				choices_role.setDisable(true);
 				choices_role.getStyleClass().add("question_box");
@@ -548,6 +553,7 @@ public class GameView extends View{
 				b.getStyleClass().add("question");
 				//la combo box
 				choices_tokenHidden = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_tokenHidden.setPromptText("Choix du jeton");
 				choices_tokenHidden.setVisibleRowCount(4);
 				choices_tokenHidden.setDisable(true);
 				choices_tokenHidden.getStyleClass().add("question_box");
@@ -746,6 +752,11 @@ public class GameView extends View{
 			diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
 			diamondsAway.setTooltip(super.createStandardTooltip("Diamonds removed"));
 			diamondsAway.setStyle("-fx-text-fill:white;");
+			
+			announcement = new ComboBox<>(FXCollections.observableArrayList("Ce que vous avez reçu","Ce que vous avez donné"));
+			announcement.setPromptText("Annoncer...");
+			announcement.getStyleClass().add("question_box");
+
 		}
 		jokers = new Label(App.rules.getNumberOfJokers()+"");
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
@@ -779,7 +790,16 @@ public class GameView extends View{
 		boxImg.setTooltip(super.createStandardTooltip("Ce que contenait la boîte que vous avez reçue :"));
 		Label box = new Label(":"); 
 		box.setStyle("-fx-text-fill:white;-fx-font : 20px Tahoma;");
-		infoAboutBox.getChildren().addAll(boxImg, box);
+		
+		if(announcement != null) {
+			// button to make an announcement
+			makeAnnouncement = new Button("Annoncer");
+			makeAnnouncement.setOnAction((event)->{
+				App.gameController.makeAnnouncement(announcement.getValue());
+			});
+			infoAboutBox.getChildren().addAll(makeAnnouncement,announcement,boxImg, box);
+		}
+		else infoAboutBox.getChildren().addAll(boxImg, box);
 		
 		if(App.gameController.getHumanPlayer().getBox().getDiamonds()>0){
 			Label diamImg = new Label();
@@ -1137,21 +1157,22 @@ public class GameView extends View{
 	 */
 	public void displayGFQuestions(){
 	// buttons to choose questions' thematic
-		box = new Button("Box");
+		box = new Button("Boîte");
 		box.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
 			box.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsBox);
 		});
-		player = new Button("Player");
+		player = new Button("Joueur");
 		player.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
 			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsPlayers);
 		});
-		firstPlayer = new Button("First player");
+		firstPlayer = new Button("Premier joueur");
+		firstPlayer.setWrapText(true);
 		firstPlayer.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
@@ -1367,9 +1388,10 @@ public class GameView extends View{
 		ArrayList<Talk> history =App.gameController.getGameHistory();
 		
 		String content = gameHistory.getText() ;
+		String player = ((history.get(history.size()-1).getQuestion().getTargetPlayer()==0))?"Le Parrain" : "Joueur "+((history.get(history.size()-1).getQuestion().getTargetPlayer()));
 			
 		content+= "Q"+history.get(history.size()-1).getQuestion().getNumero()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
-		+"Joueur "+history.get(history.size()-1).getQuestion().getTargetPlayer()+": "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
+		+player+" : "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
 		
 		gameHistory.setText(content);
 
@@ -1392,6 +1414,7 @@ public class GameView extends View{
 		if (info !=null)
 			info.getChildren().clear();
 		gameHistory.setText("");
+		target = 0;
 
 	}
 	
@@ -1429,6 +1452,8 @@ public class GameView extends View{
 		themeButtons.getChildren().clear();
 		pocket.getChildren().clear();
 		answerPicture.getChildren().clear();
+		announcement.setVisible(false);
+		makeAnnouncement.setVisible(false);
 		
 		//whether the human player has won or not
 		Label whoWon = new Label();

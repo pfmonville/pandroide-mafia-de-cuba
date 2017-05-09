@@ -3,12 +3,9 @@ package controller.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-<<<<<<< HEAD
 import controller.App;
 import controller.ai.position.IPositionStrategy;
 import error.StrategyError;
-=======
->>>>>>> origin/initial-implementation
 import model.Answer;
 import model.Box;
 import model.Lie;

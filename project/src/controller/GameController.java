@@ -3,22 +3,18 @@ package controller;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import org.controlsfx.control.Notifications;
 
-import controller.ai.GodFatherStrategy;
 import controller.ai.AIController;
 import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
+import controller.ai.GodFatherStrategy;
 import controller.ai.LoyalHenchmanStrategy;
-import model.Answer;
-import model.Box;
-import model.Driver;
-import model.Player;
-import model.PlayersInfo;
-import model.Question;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
@@ -33,7 +29,13 @@ import error.StrategyError;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
+import model.Answer;
+import model.Box;
+import model.Driver;
 import model.GodFather;
+import model.Player;
+import model.PlayersInfo;
+import model.Question;
 import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
@@ -378,6 +380,10 @@ public class GameController {
 	}
 	
 	public void askTo(Question questionToAsk){
+		if(questionToAsk.getTargetPlayer()==0) {
+			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
+			return;
+		}
 		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
 		questionToAsk.setNumero(currentTurn);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
@@ -403,7 +409,60 @@ public class GameController {
 		return drivers;
 	}
 	
+	
+	
+	
+	
+	/**
+	 * when the Godfather wants to make an announcement
+	 * @param announceType : if he wants to share what he gave or got back in the box
+	 */
+	public void makeAnnouncement(String announceType){
+		
+		if(announceType == null){
+			createPopUp("Sélectionnez le type d'annonce à faire.", "Attention", 3);
+			return;
+		}
+		
+		//for gameHistory
+		Question q = new Question(-1,"Le Parrain fait une annonce.", new ArrayList<>(),-1);
+		q.setTargetPlayer(0); q.setNumero(currentTurn);
+		
+		if(announceType.equals("Ce que vous avez donné")){
+			int nbDiams =App.rules.getNumberOfDiamonds()-((GodFather)getHumanPlayer().getRole()).getNbDiamondsHidden(); 
+			createPopUp("J'ai donné "+nbDiams+" diamants.", "Annonce du Parrain", 5);
+			// ID = -1 for announcements
+			Answer a = new Answer(-1,"J'ai donné "+nbDiams+" diamants." , new ArrayList<>());
+			a.setNbDiamondsAnswer(nbDiams);
+			gameHistory.add(new Talk(q, a));
+			App.gv.displayGameHistory();
+		}
+		else{
+			String content  ="J'ai reçu ";
+			Set<String> rolesTypes = new HashSet<String>(box.getTokens());
+			for (String role : rolesTypes){
+				content += box.getCount(role)+" "+role+", ";
+			}
+			content+=box.getDiamonds()+" diamants.";
+			createPopUp(content, "Annonce du Parrain", 5);
+			Answer a = new Answer(-1,content , new ArrayList<>());
+			a.setTokensAnswer(box.getTokens());
+			a.setNbDiamondsAnswer(box.getDiamonds());
+			gameHistory.add(new Talk(q, a));
+			App.gv.displayGameHistory();
+		} 
+		this.currentTurn += 1;
+		SelectingGodFathersAction();
+	}
+	
+	
+	
+	
 	public void emptyPocketsTo(int targetPlayer){
+		if(targetPlayer==0) {
+			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
+			return;
+		}
 		//display pop up
 		createPopUp("Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.\n", "Accusation", 4);
 		//question and answer for the Talk object
