@@ -18,6 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -37,11 +38,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -53,6 +49,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.Answer;
 import model.Phrase;
+import model.Player;
 import model.PlayersInfo;
 import model.Question;
 import model.Talk;
@@ -68,7 +65,7 @@ public class GameView extends View{
 	private StackPane table ;
 	private TilePane themeButtons ;
 	private FlowPane questionsArea,answerPicture; 
-	private GridPane questionsBox, questionsPlayers, questionsOthers, answers ;
+	private GridPane questionsBox, questionsPlayers, questionsFirstPlayer, answers ;
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
@@ -76,8 +73,9 @@ public class GameView extends View{
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
 	
-	private Button box, player, other, emptyPocket, askQuestion, answerTo ;
+	private Button box, player, firstPlayer, emptyPocket, askQuestion, answerTo ;
 	private Button replay, inspect, rules;
+	private ArrayList<Button> aiButtons;
 	
 	private ImageView boxOnTable;
 	
@@ -124,7 +122,7 @@ public class GameView extends View{
 				if(button == ButtonType.OK){
 					try {
 						cleanGameView();
-						forAnimation=1;
+						forAnimation=1; 
 						App.changePanel(super.getPanel(), App.ov.getPanel());
 					} catch (IOException e) {
 						e.printStackTrace();
@@ -186,7 +184,7 @@ public class GameView extends View{
 		//**************************
 		//
 		leftPart = new VBox();
-		leftPart.setPrefSize((super.getWidth()/3)*2, (super.getHeight()/2));
+		leftPart.setPrefSize((super.getWidth()/3)*2, (3*super.getHeight()/4));
 		
 		//**************************
 		//IMAGE AT CENTER
@@ -223,37 +221,17 @@ public class GameView extends View{
 		//RIGHT PART
 		//*********************************
 		logPart = new ScrollPane();	
-		logPart.setPrefSize(super.getWidth()/3, (super.getHeight()/2.5));
-
+		logPart.setPrefSize(super.getWidth()/3, (3*super.getHeight()/4));
+		
 		logPart.setHbarPolicy(ScrollBarPolicy.NEVER);
-		logPart.setFitToWidth(true);
-			
-		//logPart.setBackground(new Background(new BackgroundImage(new Image(Theme.pathGameHistory,super.getWidth()/3,super.getHeight()/1.5,false,true), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, BackgroundSize.DEFAULT)));
-		//TODO
+		logPart.setFitToWidth(true);			
+
 		gameHistory = new Label();
 		gameHistory.setId("log");
-		gameHistory.setPadding(new Insets(10,0,0,35));
-		gameHistory.setWrapText(true);
-		
-		//gameHistory.setBackground(null);
-		//logPart.setBackground(null);
-		//logPart.setContent(gameHistory);
-		
-		String image = "image/confidentialfile.png";
-		
-		//ImageView iv = new ImageView(im);
-		//iv.setFitHeight(500);
-		//iv.setFitWidth(400);
-		
-		//iv.fitWidthProperty().bind(App.mainStage.widthProperty());
-		
-		StackPane stackPane = new StackPane();
-		
-		//stackPane.getChildren().addAll(iv, gameHistory);
+		gameHistory.setPadding(new Insets(18,20,40,70));
+		gameHistory.setWrapText(true);	
 		
 		logPart.setContent(gameHistory);
-		Image im = new Image(image, super.getHeight()/3, super.getWidth()/2.5, true, true);
-		logPart.setBackground(new Background(new BackgroundImage(im, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, null, null)));
 		
 		top.getChildren().addAll(leftPart, logPart);
 		
@@ -261,14 +239,14 @@ public class GameView extends View{
 		//BOTTOM
 		//*********************************
 		themeButtons = new TilePane();
-		themeButtons.setMaxSize(super.getWidth()/12,(super.getHeight()/2));
+		themeButtons.setMaxSize(super.getWidth()/12,(super.getHeight()/4));
 		themeButtons.setVgap(10);
 		
 		//*********************************
 		// Questions area
 		//*********************************
 		questionsArea = new FlowPane();
-		questionsArea.setPrefSize((super.getWidth()/4)*3, super.getHeight()/3);// /2
+		questionsArea.setPrefSize((super.getWidth()/4)*3, 3*super.getHeight()/4);// /2
 		
 		pocket = new VBox() ;
 		pocket.setAlignment(Pos.TOP_CENTER);
@@ -303,7 +281,7 @@ public class GameView extends View{
 	 * @param humanPosition : the position where the human player is. If humanPosition = -1, no human player.
 	 */
 	public void createAIButton( int nbPlayers, int humanPosition) {
-		ArrayList<Button> iaButtons = new ArrayList<Button>();
+		aiButtons = new ArrayList<Button>();
 		Button godFather = new Button();
 		int topPlayers =0, botPlayers=0, rightPlayers = 0; 
 		HBox playerTop = new HBox(), playerBot=new HBox();
@@ -328,11 +306,12 @@ public class GameView extends View{
 			Integer index = indexImgPath.get(r.nextInt(indexImgPath.size())) ; 
 			indexImgPath.remove(index);
 			b.setGraphic(new ImageView( new Image(imgPath[index])));
+			b.setText(""+i); b.setStyle("-fx-text-fill:black;");
 			// if human has chosen this position (not godfather's one)-> different button
 			if(humanPosition!=1 && i == humanPosition){
 				b.getStyleClass().add("humanPlayer");
 				b.setTooltip(super.createStandardTooltip("Vous"));
-				iaButtons.add(b);
+				aiButtons.add(b);
 				continue ;
 			}
 			else{
@@ -342,8 +321,17 @@ public class GameView extends View{
 			//action
 			b.setOnAction((event)->{
 				target = Integer.parseInt(b.getId());
+				//disable first player questions if player is not the first
+				if(target!=2) {
+					firstPlayer.setVisible(false);
+					questionsFirstPlayer.setVisible(false);
+				}
+				else {
+					firstPlayer.setVisible(true);
+					questionsFirstPlayer.setVisible(true);
+				}
 				b.pseudoClassStateChanged(CHOSEN_PSEUDO_CLASS, true);
-				for(Button button : iaButtons){
+				for(Button button : aiButtons){
 					if(button != b)
 						button.pseudoClassStateChanged(CHOSEN_PSEUDO_CLASS, false);
 				}
@@ -355,11 +343,11 @@ public class GameView extends View{
 				answerPicture.getChildren().add(imv);
 
 			});
-			iaButtons.add(b);
+			aiButtons.add(b);
 		}
 		//if player is not the Godfather, disable all buttons except the one at player's position
 		if(humanPosition!=1){
-			for (Button ia : iaButtons){
+			for (Button ia : aiButtons){
 				if(! ia.getId().equals(humanPosition+""))
 					ia.setDisable(true);
 			}
@@ -376,16 +364,17 @@ public class GameView extends View{
 			rightPlayers = playersOnSide;
 		}
 		for (int i=0; i<topPlayers; i++)
-			playerTop.getChildren().add(iaButtons.get(i));	
+			playerTop.getChildren().add(aiButtons.get(i));	
 		
 		for (int i=topPlayers; i<topPlayers+rightPlayers; i++)
-			playerRight.getChildren().add(iaButtons.get(i));	 	
+			playerRight.getChildren().add(aiButtons.get(i));	 	
 		
 		for (int i=nbPlayers-2; i>=topPlayers+rightPlayers; i--)
-			playerBot.getChildren().add(iaButtons.get(i));	
+			playerBot.getChildren().add(aiButtons.get(i));	
 		
 		//godfather button
 		godFather.setGraphic(new ImageView(new Image(Theme.pathParain)));
+		godFather.setText("1"); godFather.setStyle("-fx-text-fill: black;");
 		godFather.setPrefSize(super.getWidth()/14, super.getHeight()/12);
 		//if human has chosen this role, different css style
 		if(humanPosition == 1){
@@ -537,22 +526,22 @@ public class GameView extends View{
 			int index= others.indexOf(q);
 			if(q.getInteractive()==0){
 				RadioButton b = new RadioButton(q.getContent());
-				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setPrefHeight(questionsFirstPlayer.getHeight()/5);
 				b.setWrapText(true);
 				b.setId(q.getId()+"");
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				if(index%2==0 && index!=0)
 					i++;
-				questionsOthers.add(b, index%nbCol,i);
-				questionsOthers.setMargin(b, new Insets(5,0,0,5));
+				questionsFirstPlayer.add(b, index%nbCol,i);
+				questionsFirstPlayer.setMargin(b, new Insets(5,0,0,5));
 			}else{
 				//une question à choix multiple
 				HBox button = new HBox() ;
 				button.setSpacing(2);
 				//le bouton radio de la question
 				RadioButton b = new RadioButton(q.getContent());
-				b.setPrefHeight(questionsOthers.getHeight()/5);
+				b.setPrefHeight(questionsFirstPlayer.getHeight()/5);
 				b.setWrapText(true);
 				b.setId(q.getId()+"");
 				b.setToggleGroup(questionsGroup);
@@ -569,8 +558,8 @@ public class GameView extends View{
 				
 				if(index%2==0 && index!=0)
 					i++;
-				questionsOthers.add(button, index%nbCol, i );
-				questionsOthers.setMargin(button, new Insets(5,0,0,5));
+				questionsFirstPlayer.add(button, index%nbCol, i );
+				questionsFirstPlayer.setMargin(button, new Insets(5,0,0,5));
 			}
 		}
 	}
@@ -585,8 +574,8 @@ public class GameView extends View{
 			box.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 		if(toChange==questionsPlayers)
 			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
-		if(toChange==questionsOthers)
-			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
+		if(toChange==questionsFirstPlayer)
+			firstPlayer.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, false);
 	}
 	
 	
@@ -719,7 +708,7 @@ public class GameView extends View{
 			if(role.equals("Nettoyeur"))
 				token = Theme.pathCleaner;
 			if(role.equals("Enfant des Rues"))
-				token = Theme.pathThief; //TODO image enfant des rues
+				token = Theme.pathStreetUrchin;
 			if(role.equals("Voleur")){
 				token = Theme.pathDiamond;
 				diamonds.setText(App.gameController.getHumanPlayer().getRole().getNbDiamondsStolen()+"");
@@ -1162,32 +1151,32 @@ public class GameView extends View{
 			player.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
 			questionsArea.getChildren().add(questionsPlayers);
 		});
-		other = new Button("Others");
-		other.setOnAction((event)->{
+		firstPlayer = new Button("First player");
+		firstPlayer.setOnAction((event)->{
 			GridPane removedNode = (GridPane)questionsArea.getChildren().remove(0);
 			changeStyle(removedNode);
-			other.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
-			questionsArea.getChildren().add(questionsOthers);
+			firstPlayer.pseudoClassStateChanged(SELECTED_PSEUDO_CLASS, true);
+			questionsArea.getChildren().add(questionsFirstPlayer);
 		});
 		box.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		player.setPrefSize(super.getWidth()/12, super.getHeight()/12);
-		other.setPrefSize(super.getWidth()/12, super.getHeight()/12);
+		firstPlayer.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		
-		themeButtons.getChildren().addAll(box, player,other);
+		themeButtons.getChildren().addAll(box, player,firstPlayer);
 		themeButtons.setMargin(box,new Insets(0,0,0,5));
 		themeButtons.setMargin(player,new Insets(0,0,0,5));
-		themeButtons.setMargin(other,new Insets(0,0,0,5));
+		themeButtons.setMargin(firstPlayer,new Insets(0,0,0,5));
 		
 		//questions area
 		questionsBox = new GridPane();
 		questionsPlayers = new GridPane();
-		questionsOthers = new GridPane();
+		questionsFirstPlayer = new GridPane();
 		questionsBox.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
 		questionsPlayers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
-		questionsOthers.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
+		questionsFirstPlayer.setPrefSize((super.getWidth()/4)*3.25, super.getHeight()/2);
 		questionsBox.setVgap(2); questionsBox.setHgap(3);
 		questionsPlayers.setVgap(2); questionsPlayers.setHgap(3);
-		questionsOthers.setVgap(2); questionsOthers.setHgap(3);
+		questionsFirstPlayer.setVgap(2); questionsFirstPlayer.setHgap(3);
 		
 		questionsArea.getChildren().add(questionsBox);//default : show the questions relative to the box		
 //		//*********************************
@@ -1379,7 +1368,7 @@ public class GameView extends View{
 		
 		String content = gameHistory.getText() ;
 			
-		content+= history.get(history.size()-1).getQuestion().getContent()+"\n"
+		content+= "Q"+history.get(history.size()-1).getQuestion().getNumero()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
 		+"Joueur "+history.get(history.size()-1).getQuestion().getTargetPlayer()+": "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
 		
 		gameHistory.setText(content);
@@ -1435,6 +1424,185 @@ public class GameView extends View{
 	 * @param pi
 	 */
 	public void displayEndBanner(PlayersInfo pi){
-		//TODO
+
+		questionsArea.getChildren().clear();
+		themeButtons.getChildren().clear();
+		pocket.getChildren().clear();
+		answerPicture.getChildren().clear();
+		
+		//whether the human player has won or not
+		Label whoWon = new Label();
+		whoWon.setStyle("-fx-font : 50px Tahoma ; -fx-text-fill: white;");
+		if(pi.getWinningSide().equals(PlayersInfo.GODFATHER)){
+			whoWon.setText("Vous avez gagné !");
+		} else{
+			whoWon.setText("Vous avez perdu...");
+		}
+
+		questionsArea.setAlignment(Pos.CENTER);
+		questionsArea.getChildren().add(whoWon);
+		
+		String content = gameHistory.getText()+"\n**********************************\n\n";
+		
+		//show the winners	
+		if(pi.getWinningSide().equals(PlayersInfo.GODFATHER)){
+			content+="Le camp du Parrain a gagné.\n";
+		} else if(pi.getWinningSide().equals(PlayersInfo.THIEVES)){
+			content+="Le camp des voleurs a gagné.\n";
+		} else if(pi.getWinningSide().equals(PlayersInfo.AGENT) || pi.getWinningSide().equals(PlayersInfo.FBI)||pi.getWinningSide().equals(PlayersInfo.CIA)){
+			content+="Un agent a gagné.\n";
+		} else if(pi.getWinningSide().equals(PlayersInfo.CLEANER)){
+			content+= "Un nettoyeur a gagné.\n";
+		}
+		content+="\nJoueurs gagnants : ";
+		for(Player p : pi.getWinners()){
+			content+="Joueur "+p.getPosition()+"  ";
+		}
+		
+		// reveal each player's role
+		content+="\n\nRépartition des rôles :\n\n";
+		//LoyalHenchmen
+		content+="Fidèle : ";
+		for(Player p : pi.getLoyalHenchmen()){
+			content+= "Joueur "+p.getPosition()+"  ";
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathLoyalHencman,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		//Driver
+		content+="\nChauffeur : ";
+		for(Player p : pi.getDrivers()){
+			content+= "Joueur "+p.getPosition()+"  ";
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathDriver,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		//Agent
+		content+="\nAgent : ";
+		for(Player p : pi.getAgents()){
+			content+= "Joueur "+p.getPosition()+"  ";
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathAgent,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		if(pi.getFBI()!=null) {
+			content+="\n\tFBI : Joueur "+pi.getFBI().getPosition();
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == pi.getFBI().getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathAgent,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		if(pi.getCIA()!=null) {
+			content+="\n\tCIA : Joueur "+pi.getCIA().getPosition();
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == pi.getCIA().getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathAgent,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		//Thieves
+		content+="\nVoleur : ";
+		for(Player p : pi.getThieves()){
+			content+= "Joueur "+p.getPosition()+"  ";
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setText(p.getRole().getNbDiamondsStolen()+"");
+					aiButton.setStyle("-fx-text-fill:black;");
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathDiamond)));
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		//StreetUrchin
+		content+="\nEnfant des rues : ";
+		for(Player p : pi.getStreetUrchin()){
+			content+= "Joueur "+p.getPosition()+"  "; 
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathStreetUrchin,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		//Cleaner
+		content+="\nNettoyeur : ";
+		for(Player p : pi.getCleaners()){
+			content+= "Joueur "+p.getPosition()+"  ";
+			for (Button aiButton : aiButtons){
+				if(Integer.parseInt(aiButton.getId()) == p.getPosition()){
+					aiButton.setGraphic(new ImageView(new Image(Theme.pathCleaner,45.0,45.0,false,true)));
+					aiButton.setText(null);
+					aiButton.setDisable(true);
+				}
+			}
+		}
+		
+		gameHistory.setText(content);
 	}
+	
+	
+	
+	
+	
+	
+	/**
+	 * reveal the ID of the target
+	 * @param target : the player whose ID will be revealed
+	 */
+	public void revealId(Player target){
+		//target is a thief -> button can be disable 
+		if(target.getRole().getName().equals(App.rules.getNameThief())){
+			for(Button ai : aiButtons){
+				if(Integer.parseInt(ai.getId()) == target.getPosition()){
+					ai.setGraphic(new ImageView(new Image(Theme.pathDiamond,45.0,45.0,false,true)));
+					ai.setText(target.getRole().getNbDiamondsStolen()+"");
+					ai.setDisable(true);
+				}
+			}
+		} else {
+			//for everyone else, just reveal the ID
+			String roleImg="" ;
+			if(target.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
+				roleImg = Theme.pathLoyalHencman;
+			} 
+			else if (target.getRole().getName().equals(App.rules.getNameDriver())){
+				roleImg = Theme.pathDriver;
+			} 
+			else if(target.getRole().getName().equals(App.rules.getNameCleaner())){
+				roleImg = Theme.pathCleaner;
+			}
+			else if(target.getRole().getName().equals(App.rules.getNameStreetUrchin())){
+				roleImg = Theme.pathStreetUrchin;
+			}
+			else if (target.getRole().getName().equals(App.rules.getNameAgentFBI()) ||target.getRole().getName().equals(App.rules.getNameAgentCIA())||target.getRole().getName().equals(App.rules.getNameAgentLambda())){
+				roleImg = Theme.pathAgent;
+			} 
+			for(Button ai : aiButtons){
+				if(Integer.parseInt(ai.getId()) == target.getPosition()){
+					ai.setGraphic(new ImageView(new Image(roleImg,45.0,45.0,false,true)));
+				}
+			}
+
+		}
+	} 
 }
+
+

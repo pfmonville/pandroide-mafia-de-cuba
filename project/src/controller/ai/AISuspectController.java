@@ -8,6 +8,8 @@ import model.Box;
 import model.Lie;
 import model.Player;
 import model.Question;
+import model.SecretID;
+
 import controller.App;
 import error.StrategyError;
 
@@ -39,11 +41,11 @@ public class AISuspectController extends AIController{
 	}
 	
 	//random
-	public Object[] pickSomething(int position, Box box){
-		Object[] result = new Object[3];
-		result[0] = 0;
-		result[1] = null;
-		result[2] = null;
+	public SecretID pickSomething(int position, Box box){
+		String roleName = "";
+		int diamondsTaken = 0;
+		String tokenTaken = null;
+		String hiddenToken = null;
 		
 		if(! box.isEmpty()){
 			ArrayList<String> tokens = new ArrayList<String>(box.getTokens());
@@ -54,9 +56,9 @@ public class AISuspectController extends AIController{
 				float alea = r.nextFloat();
 				// hide a random token
 				if(alea < 0.5){
-					result[2] = tokens.get(new Random().nextInt(tokens.size()));
-					tokens.remove(result[2]);
-					System.out.println("Joueur "+position+" a caché "+result[2]);
+					hiddenToken = tokens.get(new Random().nextInt(tokens.size()));
+					tokens.remove(hiddenToken);
+					System.out.println("Joueur "+position+" a caché "+hiddenToken);
 				}
 			}
 			
@@ -65,19 +67,19 @@ public class AISuspectController extends AIController{
 			if(position==App.rules.getCurrentNumberOfPlayer()){
 				//last player can pick nothing
 				if(new Random().nextFloat()<0.5)
-					return result;
+					return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//take a token ...
 			if(nbDiams==0 || !tokens.isEmpty() && aleatoire < 0.5){
-				result[1] = tokens.get(new Random().nextInt(tokens.size()));
-				System.out.println("Joueur "+position+" a pris "+result[1]);
+				tokenTaken = tokens.get(new Random().nextInt(tokens.size()));
+				System.out.println("Joueur "+position+" a pris "+tokenTaken);
 			} else { // ...or steal diamonds
-				result[0] = new Random().nextInt(nbDiams)+1;
-				System.out.println("Joueur "+position+" a volé "+result[0]);
+				diamondsTaken = new Random().nextInt(nbDiams)+1;
+				System.out.println("Joueur "+position+" a volé "+diamondsTaken);
 			}
 		}
 		
-		return result;
+		return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
 	}
 
 }
