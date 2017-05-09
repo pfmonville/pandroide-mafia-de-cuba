@@ -16,19 +16,50 @@ public class FirstPositionStrategy implements IPositionStrategy{
 		String hiddenToken = null;
 		Random r = new Random();
 		float alea = r.nextFloat();
-		
+		float rand;
+		String agent = null; // type of agent in the box
 		ArrayList<String> tokens = new ArrayList<String>(box.getTokens());
+		
+		if(tokens.contains(App.rules.getNameAgentCIA())){
+			agent = App.rules.getNameAgentCIA();
+		}
+		else if(tokens.contains(App.rules.getNameAgentFBI())){
+			agent = App.rules.getNameAgentFBI();
+		}
+		else if(tokens.contains(App.rules.getNameAgentLambda())){
+			agent = App.rules.getNameAgentLambda();
+		}
+		//TODO: faire appel a une methode qui initialise le mensonge 
 		
 		//Thief Strategy
 		if(alea < 0.25){
-			//TODO: take more diamonds?
+			rand = r.nextFloat();
+			//with 6 players: take all diamonds and move aside the only LoyalHenchman. there will be two street urchins on this player side
+			if(rand < 0.3 && App.rules.getCurrentNumberOfPlayer() == 6){
+				diamondsTaken = box.getDiamonds();
+				hiddenToken = App.rules.getNameLoyalHenchman();
+				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+			}
+			//with 6 or 7 players: taken at least half of diamonds + 1  and move aside a LoyalHenchman or an Agent
+			else if(rand < 0.6 && App.rules.getCurrentNumberOfPlayer() < 8){
+				diamondsTaken = r.nextInt(box.getDiamonds()/2) + box.getDiamonds()/2 + 1;
+				rand = r.nextFloat();
+				if(rand < 0.5){
+					return new SecretID(roleName, diamondsTaken, agent, hiddenToken);
+				}
+				hiddenToken = App.rules.getNameLoyalHenchman();
+				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+			}
+			//if there is more than 10 diamonds: leave 10 and move aside a LoyalHenchman or an Agent 
 			if(box.getDiamonds() > App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
 				diamondsTaken = box.getDiamonds() - App.rules.getNumberOfDiamonds() + App.rules.getMaxHiddenDiamonds();
-				alea = r.nextFloat();
+				rand = r.nextFloat();
 				//move aside one LoyalHenchman
-				//TODO: or an agent?
-				if(alea < 0.5){
+				if(rand < 0.75){
 					hiddenToken = App.rules.getNameLoyalHenchman();
+				}
+				else{
+					hiddenToken = agent;
 				}
 				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);			
 			}
@@ -36,73 +67,55 @@ public class FirstPositionStrategy implements IPositionStrategy{
 		// GodFather's Driver's strategy
 		if(alea < 0.5){
 			tokenTaken = App.rules.getNameDriver();
-			alea = r.nextFloat();
+			rand = r.nextFloat();
 			//move aside one Agent
-			if(alea < 0.5){
-				if(tokens.contains(App.rules.getNameAgentCIA())){
-					hiddenToken = App.rules.getNameAgentCIA();
-				}
-				else if(tokens.contains(App.rules.getNameAgentFBI())){
-					hiddenToken = App.rules.getNameAgentCIA();
-				}
-				else if(tokens.contains(App.rules.getNameAgentLambda())){
-					hiddenToken = App.rules.getNameAgentLambda();
-				}
+			if(rand < 0.5){
+				hiddenToken = agent;
 			}
 			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
 		
 		// LoyalHenchman/Cleaner's strategy
 		}if(alea < 0.75){
+			//choose LoyalHenchman
+			tokenTaken = App.rules.getNameLoyalHenchman();
+			
 			if(tokens.contains(App.rules.getNameCleaner())){
-				alea = r.nextFloat();
+				rand = r.nextFloat();
 				//choose Cleaner
-				if(alea < 0.3){
+				if(rand < 0.2){
 					tokenTaken = App.rules.getNameCleaner();
 				}
-				//choose LoyalHenchman
-				else{
-					tokenTaken = App.rules.getNameLoyalHenchman();
-				}
 			}
-			else{
-				tokenTaken = App.rules.getNameLoyalHenchman();
-			}
-			
-			alea = r.nextFloat();
+			rand = r.nextFloat();
 			//move aside one Agent
-			if(alea < 0.5){
-				if(tokens.contains(App.rules.getNameAgentCIA())){
-					hiddenToken = App.rules.getNameAgentCIA();
-				}
-				else if(tokens.contains(App.rules.getNameAgentFBI())){
-					hiddenToken = App.rules.getNameAgentCIA();
-				}
-				else{
-					hiddenToken = App.rules.getNameAgentLambda();
-				}
+			if(rand < 0.5){
+				hiddenToken = agent;
+			}else if(rand < 0.75){
+				hiddenToken = App.rules.getNameDriver();
 			}
 			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
 		
 		// Agent's strategy
 		}else{
-			if(tokens.contains(App.rules.getNameAgentCIA())){
-				tokenTaken = App.rules.getNameAgentCIA();
-			}
-			else if(tokens.contains(App.rules.getNameAgentFBI())){
-				tokenTaken = App.rules.getNameAgentCIA();
-			}
-			else if(tokens.contains(App.rules.getNameAgentLambda())){
-				tokenTaken = App.rules.getNameAgentLambda();
-			}
-			alea = r.nextFloat();
+			tokenTaken = agent;
+			
+			rand = r.nextFloat();
 			//move aside one LoyalHenchman
-			if(alea < 0.5){
-				hiddenToken = App.rules.getNameLoyalHenchman();
+			if(rand < 0.5){
+				if(tokens.contains(App.rules.getNameCleaner())){
+					hiddenToken = App.rules.getNameCleaner();
+				}
+				else{
+					hiddenToken = App.rules.getNameLoyalHenchman();
+				}
+			}
+			else if(rand < 0.75){
+				if(App.rules.getCurrentNumberOfPlayer() > 9){
+					hiddenToken = App.rules.getNameAgentFBI();
+				}
 			}
 			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
-		}
-		//TODO: d'autres cas? faire un peu d'aleatoire?
-		
+		}	
 	}
 
 }

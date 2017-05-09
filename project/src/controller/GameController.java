@@ -623,6 +623,7 @@ public class GameController {
 					playerControllers.put(position, new AIGodFatherController(player));
 				}else{
 					playerControllers.put(position, new AISuspectController(player));
+					//TODO initialiser les pos strategy
 				}
 			}
 		}

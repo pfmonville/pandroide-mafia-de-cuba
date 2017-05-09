@@ -67,7 +67,7 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentCIA(), hiddenToken);	
 					}
 					if(rolesReceived.contains(App.rules.getNameAgentFBI())){
-						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentCIA(), hiddenToken);	
+						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentFBI(), hiddenToken);	
 					}
 					if(rolesReceived.contains(App.rules.getNameAgentLambda())){
 						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentLambda(), hiddenToken);	
@@ -111,7 +111,7 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentCIA(), hiddenToken);	
 					}
 					if(rolesReceived.contains(App.rules.getNameAgentFBI())){
-						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentCIA(), hiddenToken);	
+						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentFBI(), hiddenToken);	
 					}
 					if(rolesReceived.contains(App.rules.getNameAgentLambda())){
 						return new SecretID(roleName, diamondsTaken, App.rules.getNameAgentLambda(), hiddenToken);	

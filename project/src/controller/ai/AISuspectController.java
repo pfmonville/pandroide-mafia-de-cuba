@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import controller.App;
+import controller.ai.position.IPositionStrategy;
 import error.StrategyError;
 import model.Answer;
 import model.Box;
@@ -13,6 +14,7 @@ import model.SecretID;
 
 public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
+	private IPositionStrategy posStrategy;
 	
 	public AISuspectController(Player player){
 		super(player);
@@ -35,7 +37,7 @@ public class AISuspectController extends AIController{
 	}
 	
 	//random
-	public SecretID pickSomething(int position, Box box){
+	public SecretID pickSomething(int position, Box box){ //TODO appelle posStrategy.chooseWhatToTake(Box);
 		String roleName = "";
 		int diamondsTaken = 0;
 		String tokenTaken = null;
@@ -74,6 +76,14 @@ public class AISuspectController extends AIController{
 		}
 		
 		return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+	}
+
+	public IPositionStrategy getPosStrategy() {
+		return posStrategy;
+	}
+
+	public void setPosStrategy(IPositionStrategy posStrategy) {
+		this.posStrategy = posStrategy;
 	}
 
 }

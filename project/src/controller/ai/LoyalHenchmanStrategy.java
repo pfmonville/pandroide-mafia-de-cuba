@@ -81,7 +81,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				return reponse ;
 				
 			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
-				reponse.setId(2);
+				reponse.setId(question.getId());
 				int myToken = (!player.getRole().getName().equals(App.rules.getNameStreetUrchin()) && player.getRole().getNbDiamondsStolen()==0)? 1:0;
 				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-myToken);
 				reponse.setContent("La boîte contenait "+(player.getBox().getTokens().size()-myToken)+" jetons personnage.");
