@@ -116,6 +116,7 @@ public class MainTestAIController {
 	        }
 	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
 	    }
+
 		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigBefore);
 		System.out.println();

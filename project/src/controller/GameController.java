@@ -654,15 +654,19 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					// TODO: generate lie?
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).generateLie();
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					// TODO: generate lie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					// TODO: generate lie
 				}
 			}
 		}
