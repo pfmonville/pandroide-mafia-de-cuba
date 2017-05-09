@@ -2,14 +2,16 @@ package controller.ai;
 
 import java.util.ArrayList;
 
+import data.World;
 import model.Answer;
+import model.Box;
 import model.Player;
 import model.Question;
 
 public class CleanerStrategy implements ISuspectStrategy{
 
 	@Override
-	public Answer chooseAnswer(Player player,Question question, ArrayList<Answer> answers) {
+	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter, Question question, ArrayList<Answer> answers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -24,6 +26,13 @@ public class CleanerStrategy implements ISuspectStrategy{
 	public boolean chooseToShoot(int target){
 		//TODO
 		return false;
+	}
+
+
+	@Override
+	public void generateLie(Player player) {
+		// TODO nothing to do. The cleaner don't lie.
+		
 	}
 
 

@@ -126,8 +126,7 @@ public class MainTestAIController {
 	    }
 		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigAfter);
-		System.out.println();		
-		
+		System.out.println();
 		
 	}
 
