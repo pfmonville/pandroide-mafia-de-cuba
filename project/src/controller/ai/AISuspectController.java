@@ -3,13 +3,15 @@ package controller.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import controller.App;
-import error.StrategyError;
 import model.Answer;
 import model.Box;
+import model.Lie;
 import model.Player;
 import model.Question;
 import model.SecretID;
+
+import controller.App;
+import error.StrategyError;
 
 public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
@@ -23,7 +25,11 @@ public class AISuspectController extends AIController{
 	}
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
-		return this.strategy.chooseAnswer(this.getPlayer(),question, answers);
+		return this.strategy.chooseAnswer(this.getPlayer(), this.getWorldsBefore(), this.getWorldsAfter(), question, answers);
+	}
+	
+	public void generateLie(){
+		this.strategy.generateLie(this.getPlayer());
 	}
 	
 	public boolean chooseToShoot(int target) throws StrategyError{

@@ -5,14 +5,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 import controller.App;
+import data.World;
 import model.Answer;
+import model.Box;
 import model.Player;
 import model.Question;
 
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
 
 	@Override
-	public Answer chooseAnswer(Player player, Question question, ArrayList<Answer> answers) {
+	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter, Question question, ArrayList<Answer> answers) {
 		Answer reponse = new Answer();
 		
 		int id = question.getId();
@@ -81,7 +83,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 				return reponse ;
 				
 			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
-				reponse.setId(2);
+				reponse.setId(question.getId());
 				int myToken = (!player.getRole().getName().equals(App.rules.getNameStreetUrchin()) && player.getRole().getNbDiamondsStolen()==0)? 1:0;
 				reponse.setNbTokensAnswer(player.getBox().getTokens().size()-myToken);
 				reponse.setContent("La boîte contenait "+(player.getBox().getTokens().size()-myToken)+" jetons personnage.");
@@ -116,7 +118,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 					reponse.setContent("Aucun.");
 					return reponse;
 				}
-				content = "J'ai reçu";
+				content = "J'ai passé";
 				rolesTypes = new HashSet<String>(tokens);
 				for(String role : rolesTypes){
 					int nb = player.getBox().getCount(role);
@@ -198,6 +200,12 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 		
 		
 		return reponse;
+	}
+
+	@Override
+	public void generateLie(Player player) {
+		// TODO the is nothing to do, he's not a liar!
+		
 	}
 
 
