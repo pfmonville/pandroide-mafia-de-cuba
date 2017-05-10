@@ -498,7 +498,6 @@ public class GameController {
 			cleanerWhoShot = cleanersWantingToShoot.get(new Random().nextInt(cleanersWantingToShoot.size()));
 		}
 	
-		//TODO : reveal the identity of the targetPlayer and of the cleaner who shot if one
 		App.gv.revealId(players.get(targetPlayer));
 		if(cleanerWhoShot!=null) App.gv.revealId(cleanerWhoShot);
 		//the list which will be sent to the view to display informations about players
@@ -722,7 +721,6 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie?
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
@@ -730,11 +728,9 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie
 				}
 			}
 		}
@@ -857,6 +853,14 @@ public class GameController {
 
 	public void setDiamondsTakenBack(int diamondsTakenBack) {
 		this.diamondsTakenBack = diamondsTakenBack;
+	}
+	
+	/**
+	 * 
+	 * @return true si le jeu respecte les règles de base false si les paramètres sont personnalisés
+	 */
+	public boolean isGameStandard(){
+		return App.rules.isGameStandard();
 	}
 	
 	

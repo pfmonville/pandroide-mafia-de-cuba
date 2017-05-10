@@ -25,6 +25,8 @@ public class AISuspectController extends AIController{
 	}
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
+		//TODO
+		question.getNumero();
 		return this.strategy.chooseAnswer(this.getPlayer(), this.getWorldsBefore(), this.getWorldsAfter(), question, answers);
 	}
 	
