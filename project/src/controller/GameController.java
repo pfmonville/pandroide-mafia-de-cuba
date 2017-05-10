@@ -33,6 +33,7 @@ import model.Answer;
 import model.Box;
 import model.Driver;
 import model.GodFather;
+import model.Inspect;
 import model.Player;
 import model.PlayersInfo;
 import model.Question;
@@ -40,6 +41,7 @@ import model.SecretID;
 import model.Talk;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
+import view.InspectView;
 
 
 public class GameController {
@@ -776,6 +778,17 @@ public class GameController {
 			e.printStackTrace();
 		}
 		this.updateControllers();
+		//dégriser le bouton inspect et récupérer tous les inspect des controlleurs IA
+		App.gv.enableInspectView();
+		ArrayList<Inspect> inspects = new ArrayList<>();
+		for(PlayerController pc: this.playerControllers.values()){
+			if(pc instanceof AIController){
+				inspects.add(((AIController) pc).getInspect());
+			}
+		}
+		App.iv = new InspectView(600, 600, inspects);
+		
+		//Suite des opérations
 		this.giveTheBoxToGodFather();
 	}
 	

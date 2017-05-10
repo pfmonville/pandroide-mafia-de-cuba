@@ -10,6 +10,7 @@ import java.util.Set;
 
 import model.Answer;
 import model.Box;
+import model.Inspect;
 import model.Player;
 import model.Rules;
 import model.SecretID;
@@ -30,6 +31,7 @@ public class AIController implements PlayerController {
 	private double distrustCoeff = 0.5;
 	private int nbPlayers; // In the application, nbPlayers is equivalent to App.rules.getCurrentNumberOfPlayer();
 	private boolean debugMode = false;
+	private Inspect inspect;
 	
 	
 	public AIController(Player player) {
@@ -41,6 +43,7 @@ public class AIController implements PlayerController {
 		this.fiability = new ArrayList<Double>(Collections.nCopies(App.rules.getCurrentNumberOfPlayer(), 50.0));
 		fiability.set(0, 100.0); //godfather reliable 
 		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
+		inspect = new Inspect(player.getPosition());
 	}
 	
 	public AIController(Player player2, Box box, Rules rules,
@@ -841,10 +844,15 @@ public class AIController implements PlayerController {
 	 * retourne une liste de liste représentant pour chaque joueur la probabilité 
 	 * d'appartenance à chaque role. le joueur 1 est à ArrayList<>.get(1)
 	 */
-	public ArrayList<ArrayList<Double>> getAssumedRolesForAllPlayers(){
+	public ArrayList<Inspect> getAssumedRolesForAllPlayers(){
 		//TODO
 		return null;
 	}
+	
+	public Inspect getInspect(){
+		return this.inspect;
+	}
+	
 	
 }
 

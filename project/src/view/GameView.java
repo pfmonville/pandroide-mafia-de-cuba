@@ -19,6 +19,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.css.PseudoClass;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
@@ -52,6 +53,7 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Answer;
 import model.Phrase;
 import model.Player;
@@ -87,6 +89,12 @@ public class GameView extends View{
 	
 	private int target, qrID ;
 	private int forAnimation = 1 ;
+	
+	
+	
+	//boolean to assure that there is only one windows of its type open
+	private boolean inspectViewOpen = false;
+	private Stage inspectViewStage;
 
 	// for css
 	protected static final PseudoClass SELECTED_PSEUDO_CLASS = PseudoClass.getPseudoClass("selected"); 
@@ -138,21 +146,31 @@ public class GameView extends View{
 			});
 		});
 		
+		
+		this.disableInspectView();
 		inspect.setOnAction((event)->{
-			Stage stage = new Stage();
+			if(!inspectViewOpen){
+				inspectViewOpen = true;
+				inspectViewStage = new Stage();
+				inspectViewStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			          public void handle(WindowEvent we) {
+			              inspectViewOpen = false;
+			          }
+			    });    
+				inspectViewStage.setTitle("Vision du monde des joueurs IA");
 
-			stage.setTitle("Réglages");
-
-			Pane layout = new Pane();
-			//TODO
-//			layout.getChildren().add(iv.getPanel());
-			Scene scene = new Scene(layout);
-			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-			App.loadCSS("css/app.css", scene);
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(Theme.pathMainLogo1));
-			stage.setResizable(false);
-	        stage.show();
+				Pane layout = new Pane();
+				layout.getChildren().add(App.iv.getPanel());
+				Scene scene = new Scene(layout);
+				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+				App.loadCSS("css/app.css", scene);
+				inspectViewStage.setScene(scene);
+				inspectViewStage.getIcons().add(new Image(Theme.pathMainLogo1));
+				inspectViewStage.setResizable(false);
+		        inspectViewStage.show();
+			}else{
+				inspectViewStage.requestFocus();
+			}
 		});
 		
 		rules.setOnAction((event)->{
@@ -1634,6 +1652,16 @@ public class GameView extends View{
 
 		}
 	} 
+	
+	
+	public void disableInspectView(){
+		this.inspect.setVisible(false);
+	}
+	
+	public void enableInspectView(){
+		this.inspect.setVisible(true);
+	}
+	
 }
 
 

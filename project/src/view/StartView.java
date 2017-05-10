@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import org.controlsfx.control.Notifications;
 
 import controller.App;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,6 +19,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import model.Theme;
 
 public class StartView extends View{
@@ -28,6 +30,13 @@ public class StartView extends View{
 	private Button btnAbout;
 	private Image logo ;
 	private ImageView vLogo ;
+	
+	private boolean rulesViewOpen = false;
+	private Stage rulesStage;
+	private boolean settingsViewOpen = false;
+	private Stage settingsStage;
+	private boolean aboutViewOpen = false;
+	private Stage aboutStage;
 	
 	public StartView(int x, int y){
 		super(x, y);
@@ -64,21 +73,33 @@ public class StartView extends View{
 		addElement(btnSettings);
 		
 		btnAbout.setOnAction((event)->{
-			Stage stage = new Stage();
-			stage.setTitle("A Propos");
-			Pane layout = new Pane();
-			//TODO
-//			layout.getChildren().add(av.getPanel());
-			Scene scene = new Scene(layout);
-			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-			App.loadCSS("css/app.css", scene);
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(Theme.pathMainLogo1));
-			stage.setResizable(false);
-	        stage.show();
+			if(!aboutViewOpen){
+				aboutViewOpen = true;
+				aboutStage = new Stage();
+				aboutStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			          public void handle(WindowEvent we) {
+			              aboutViewOpen = false;
+			          }
+			    });   
+				aboutStage.setTitle("A Propos");
+				Pane layout = new Pane();
+				//TODO
+//				layout.getChildren().add(av.getPanel());
+				Scene scene = new Scene(layout);
+				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+				App.loadCSS("css/app.css", scene);
+				aboutStage.setScene(scene);
+				aboutStage.getIcons().add(new Image(Theme.pathMainLogo1));
+				aboutStage.setResizable(false);
+		        aboutStage.show();
+			}else{
+				aboutStage.requestFocus();
+			}
+			
 		});
 		
 		btnRules.setOnAction((event)->{
+			//TODO il reste des problèmes avec cette vue, claire je te laisse tenter encore qqu, sinon on passe à la même vue que dans gameView
 			try {
 				App.rv.displayRules();
 				App.changePanel(super.getPanel(), App.rv.getPanel());
@@ -89,18 +110,29 @@ public class StartView extends View{
 		
 		
 		btnSettings.setOnAction((event)->{
-			Stage stage = new Stage();
-			stage.setTitle("Réglages");
-			Pane layout = new Pane();
-			//TODO
-//			layout.getChildren().add(setv.getPanel());
-			Scene scene = new Scene(layout);
-			scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
-			App.loadCSS("css/app.css", scene);
-			stage.setScene(scene);
-			stage.getIcons().add(new Image(Theme.pathMainLogo1));
-			stage.setResizable(false);
-	        stage.show();
+			if(!settingsViewOpen){
+				settingsViewOpen = true;
+				settingsStage = new Stage();
+				settingsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			          public void handle(WindowEvent we) {
+			              settingsViewOpen = false;
+			          }
+			    });   
+				settingsStage.setTitle("Réglages");
+				Pane layout = new Pane();
+				//TODO
+//				layout.getChildren().add(setv.getPanel());
+				Scene scene = new Scene(layout);
+				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+				App.loadCSS("css/app.css", scene);
+				settingsStage.setScene(scene);
+				settingsStage.getIcons().add(new Image(Theme.pathMainLogo1));
+				settingsStage.setResizable(false);
+		        settingsStage.show();
+			}else{
+				settingsStage.requestFocus();
+			}
+			
 		});
 		
 		btnPlay.setOnAction((event)->{

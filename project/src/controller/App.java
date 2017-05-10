@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import model.Rules;
 import model.Theme;
 import view.GameView;
+import view.InspectView;
 import view.OptionView;
 import view.RulesView;
 import view.StartView;
@@ -25,6 +26,7 @@ public class App extends Application {
 	public static StartView sv;
 	public static GameView gv;
 	public static RulesView rv ;
+	public static InspectView iv;
 	
 	public static Scene scene;
 	public static Cursor oldCursor;
