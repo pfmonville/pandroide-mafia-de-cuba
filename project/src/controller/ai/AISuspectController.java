@@ -5,6 +5,7 @@ import java.util.Random;
 
 import model.Answer;
 import model.Box;
+import model.Lie;
 import model.Player;
 import model.Question;
 import model.SecretID;
@@ -15,6 +16,7 @@ import error.StrategyError;
 public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
 	private IPositionStrategy posStrategy;
+	private Lie lie;
 	
 	public AISuspectController(Player player){
 		super(player);
@@ -25,11 +27,11 @@ public class AISuspectController extends AIController{
 	}
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
-		return this.strategy.chooseAnswer(this.getPlayer(), this.getWorldsBefore(), this.getWorldsAfter(), question, answers);
+		return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
 	}
 	
 	public void generateLie(){
-		this.strategy.generateLie(this.getPlayer());
+		this.strategy.generateLie(player);
 	}
 	
 	public boolean chooseToShoot(int target) throws StrategyError{

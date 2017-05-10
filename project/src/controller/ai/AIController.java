@@ -20,11 +20,11 @@ import controller.PlayerController;
 
 public class AIController implements PlayerController {
 
-	private Player player;
+	protected Player player;
 	// List for the roles still available in the box when the player receive the box
 	private ArrayList<Integer> rolesNumberReceived;
-	private ArrayList<World> worldsBefore;
-	private ArrayList<World> worldsAfter;
+	protected ArrayList<World> worldsBefore;
+	protected ArrayList<World> worldsAfter;
 	private ArrayList<Double> fiability;
 	private double trustCoeff = 1.5;
 	private double distrustCoeff = 0.5;
@@ -527,7 +527,7 @@ public class AIController implements PlayerController {
 			//Que contenait la boite quand tu l'a reçue?
 			case 0 :
 //				ArrayList<String> tokensLeft = answer.getTokensAnswer();
-//				ArrayList<String> tokensTaken = App.rules.getTokensFor(App.gameController.getNumberOfPlayers());
+//				ArrayList<String> tokensTaken = App.rules.getTokensFor(App.rules.getCurrentNumberOfPlayer());
 //				for(String role : tokensLeft){
 //					tokensTaken.remove(role);
 //				}
