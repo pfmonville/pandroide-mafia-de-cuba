@@ -1,17 +1,40 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import controller.App;
 import model.Answer;
 import model.Box;
+import model.DiamondsCouple;
 import model.Player;
 import model.Question;
 import model.World;
 
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
+	
+	public Map<DiamondsCouple, Double> chooseDiamondsToShow(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter){
+		
+		Map<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
+		int nbDiamonds = player.getBox().getDiamonds();
+		diamondResponseProbabilities.put(new DiamondsCouple(nbDiamonds, nbDiamonds), 1.0);
+		return diamondResponseProbabilities;
+	}
+	
+	public Map<String, Double> chooseTokenToShow(Player player){
+		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
+		tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
+		return tokenResponseProbabilities;
+	}
+	
+	public Map<String, Double> hiddenTokenToShow(Player player){
+		Map<String, Double> hiddenTokenResponseProbabilities = new HashMap<String, Double>();
+		hiddenTokenResponseProbabilities.put(player.getRole().getHiddenToken(), 1.0);
+		return hiddenTokenResponseProbabilities;
+	}
 
 	@Override
 	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter, Question question, ArrayList<Answer> answers) {
