@@ -15,7 +15,7 @@ public class Question extends Phrase{
 	 */
 	private int category;
 	private int interactive=0; // = 1 quand question propose plusieurs choix d'intitulé
-	private int numero;
+	private int number;
 	
 	public Question(int id, String content,ArrayList<Integer> answersIDs, int category) {
 		super(id, content);
@@ -86,12 +86,12 @@ public class Question extends Phrase{
 	 * le numéro de la question
 	 * @return un entier
 	 */
-	public int getNumero() {
-		return numero;
+	public int getNumber() {
+		return number;
 	}
 
-	public void setNumero(int numero) {
-		this.numero = numero;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 	
 	

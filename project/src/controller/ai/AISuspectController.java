@@ -26,7 +26,35 @@ public class AISuspectController extends AIController{
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
 		//TODO
-		question.getNumero();
+//		int number = question.getNumber();
+//		if(number == 0 || number == 1){
+//			//TODO partie pour les jetons/roles de la boite plus diamants
+//			this.strategy.showTokensInBox();
+//			this.strategy.chooseDiamondsToShow();
+//		}
+//		if(number == 4 || number == 5 || number == 6 || number == 7){
+//			//TODO partie pour les jetons/roles de la boite
+//			this.strategy.showTokensInBox();
+//		}
+//		if(number == 2 || number == 3){
+//			//TODO partie diamant seulement
+//			this.strategy.chooseDiamondsToShow();
+//		}
+//		if(number == 8 || number == 9){
+//			//TODO quel personnage veux tu montrer
+//			this.strategy.chooseTokenToShow();
+//		}
+//		if(number == 14 || number == 15 || number == 16){
+//			//TODO montrer le jeton caché si joueur 1 ?
+//			this.strategy.chooseHiddenTokenToShow();
+//			
+//		}
+//		if(number == 10 || number == 11 || number == 12 || number == 13){
+//			//TODO doit renvoyer une liste des roles présumés des autres
+//			this.strategy.showAssumedRolesForAllPlayers();
+//		}
+		
+		
 		return this.strategy.chooseAnswer(this.getPlayer(), this.getWorldsBefore(), this.getWorldsAfter(), question, answers);
 	}
 	

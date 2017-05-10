@@ -836,5 +836,15 @@ public class AIController implements PlayerController {
 		return worldsAfter;
 	}
 	
+	
+	/**
+	 * retourne une liste de liste représentant pour chaque joueur la probabilité 
+	 * d'appartenance à chaque role. le joueur 1 est à ArrayList<>.get(1)
+	 */
+	public ArrayList<ArrayList<Double>> getAssumedRolesForAllPlayers(){
+		//TODO
+		return null;
+	}
+	
 }
 

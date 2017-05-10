@@ -1393,7 +1393,7 @@ public class GameView extends View{
 		String content = gameHistory.getText() ;
 		String player = ((history.get(history.size()-1).getQuestion().getTargetPlayer()==0))?"Le Parrain" : "Joueur "+((history.get(history.size()-1).getQuestion().getTargetPlayer()));
 			
-		content+= "Q"+history.get(history.size()-1).getQuestion().getNumero()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
+		content+= "Q"+history.get(history.size()-1).getQuestion().getNumber()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
 		+player+" : "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
 		
 		gameHistory.setText(content);

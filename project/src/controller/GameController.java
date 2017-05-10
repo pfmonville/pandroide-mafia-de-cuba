@@ -393,7 +393,7 @@ public class GameController {
 			return;
 		}
 		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
-		questionToAsk.setNumero(currentTurn);
+		questionToAsk.setNumber(currentTurn);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
@@ -435,7 +435,7 @@ public class GameController {
 		
 		//for gameHistory
 		Question q = new Question(-1,"Le Parrain fait une annonce.", new ArrayList<>(),-1);
-		q.setTargetPlayer(0); q.setNumero(currentTurn);
+		q.setTargetPlayer(0); q.setNumber(currentTurn);
 		
 		if(announceType.equals("Ce que vous avez donné")){
 			int nbDiams =App.rules.getNumberOfDiamonds()-((GodFather)getHumanPlayer().getRole()).getNbDiamondsHidden(); 
@@ -477,7 +477,7 @@ public class GameController {
 		//question and answer for the Talk object
 		Question q = new Question(0, "Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.", new ArrayList<>(), -1);
 		q.setTargetPlayer(targetPlayer);
-		q.setNumero(currentTurn);
+		q.setNumber(currentTurn);
 		Answer a = new Answer(0,"",new ArrayList<>());
 		//handle the Cleaner shot
 		boolean targetHasBeenShot = false;
