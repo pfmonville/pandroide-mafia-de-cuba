@@ -63,6 +63,8 @@ public class GameController {
 	private String tokenHidden;
 	private int diamondsHidden;
 	
+	private Thread mainThread = null;
+	
 	public GameController(){
 	
 	}	
@@ -230,6 +232,7 @@ public class GameController {
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -266,6 +269,7 @@ public class GameController {
 			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.currentPlayer, this.box, playerControllers.get(this.currentPlayer)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -351,6 +355,7 @@ public class GameController {
 	
 	private void giveTheBoxToGodFather(){
 		Thread thread = new Thread(new GetBackTheBoxRunnable(playerControllers.get(1), this.box));
+		this.mainThread = thread;
 		thread.start();
 		//Platform.runLater(thread);
 	}
@@ -360,6 +365,7 @@ public class GameController {
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else if (humanPosition != this.currentPlayer){
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -372,9 +378,11 @@ public class GameController {
 		// if it's 0 then 
 		if (action == 0){
 			Thread thread = new Thread(new ChooseQuestionRunnable(playerControllers.get(1), questions));
+			this.mainThread = thread;
 			thread.start();
 		}else{
 			Thread thread = new Thread(new EmptyPocketsRunnable(playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -390,6 +398,7 @@ public class GameController {
 			App.gv.displayPlayerAnswers();
 		}else{
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -789,6 +798,10 @@ public class GameController {
 	public void finish(){
 		playerControllers = new HashMap<>();
 		players = new HashMap<>();
+		//Stop le thread qui serait en plein calcul
+		if(this.mainThread.isAlive()){
+			this.mainThread.interrupt();
+		}
 		//App.pv.resetCursor();
 //		if(App.gv.getPanel().getChildren().contains(App.gv.getCursor())){
 //			App.gv.removeWaitingCursor();

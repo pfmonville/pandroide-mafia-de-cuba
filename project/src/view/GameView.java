@@ -10,6 +10,8 @@ import java.util.Random;
 
 import org.controlsfx.control.Notifications;
 
+import com.sun.media.jfxmediaimpl.platform.Platform;
+
 import controller.App;
 import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
@@ -125,6 +127,7 @@ public class GameView extends View{
 			result.ifPresent(button -> { 
 				if(button == ButtonType.OK){
 					try {
+						App.gameController.finish();
 						cleanGameView();
 						forAnimation=1; 
 						App.changePanel(super.getPanel(), App.ov.getPanel());
