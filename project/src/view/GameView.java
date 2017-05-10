@@ -1484,6 +1484,9 @@ public class GameView extends View{
 			content+="Joueur "+p.getPosition()+"  ";
 		}
 		
+		//reveal hidden token
+		content+="\n\nJeton écarté : ";
+		if(App.gameController.getTokenHidden()!=null) content+=App.gameController.getTokenHidden();
 		// reveal each player's role
 		content+="\n\nRépartition des rôles :\n\n";
 		//LoyalHenchmen
@@ -1598,7 +1601,7 @@ public class GameView extends View{
 			for(Button ai : aiButtons){
 				if(Integer.parseInt(ai.getId()) == target.getPosition()){
 					ai.setGraphic(new ImageView(new Image(Theme.pathDiamond,45.0,45.0,false,true)));
-					ai.setText(target.getRole().getNbDiamondsStolen()+"");
+//					ai.setText(target.getRole().getNbDiamondsStolen()+"");
 					ai.setDisable(true);
 				}
 			}

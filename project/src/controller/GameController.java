@@ -445,7 +445,7 @@ public class GameController {
 			}
 			content+=box.getDiamonds()+" diamants.";
 			createPopUp(content, "Annonce du Parrain", 5);
-			Answer a = new Answer(-1,content , new ArrayList<>());
+			Answer a = new Answer(-2,content , new ArrayList<>());
 			a.setTokensAnswer(box.getTokens());
 			a.setNbDiamondsAnswer(box.getDiamonds());
 			gameHistory.add(new Talk(q, a));
