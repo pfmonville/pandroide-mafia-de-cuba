@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import controller.App;
-import data.World;
 import model.Answer;
 import model.Box;
 import model.Driver;
@@ -14,6 +13,7 @@ import model.LoyalHenchman;
 import model.Player;
 import model.Question;
 import model.Role;
+import model.World;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
@@ -227,6 +227,37 @@ public class ThiefStrategy implements ISuspectStrategy {
 			lie.setFalseBox(player.getBox().clone());
 		}
 	}
-
+	
+	// TODO: Work In Progress!
+	public void generateLie_V2(Player player){
+		lie = new Lie();
+		
+		int nbOfLoyalHenchmanInTheBox = player.getBox().getCount(App.rules.getNameLoyalHenchman());
+		int totalNbOfLoyalHenchman = App.rules.getNumberOfLoyalHenchmen();
+		
+		int nbOfDriverInTheBox = player.getBox().getCount(App.rules.getNameDriver());
+		int nbOfAgentInTheBox = player.getBox().getCount(App.rules.getNameAgentCIA())
+				+ player.getBox().getCount(App.rules.getNameAgentFBI())
+				+ player.getBox().getCount(App.rules.getNameAgentLambda());
+		
+		double beforeLHRatio = player.getPosition() > 2 
+				? (totalNbOfLoyalHenchman - nbOfLoyalHenchmanInTheBox) / (double)(player.getPosition() - 2) : 0;
+		double afterLHRatio = player.getPosition() != App.rules.getCurrentNumberOfPlayer() ?
+				nbOfLoyalHenchmanInTheBox / (double)(App.rules.getCurrentNumberOfPlayer() - player.getPosition()) : 0;
+			
+		// More LH before me than after me
+		if(beforeLHRatio <= afterLHRatio){
+			if(nbOfLoyalHenchmanInTheBox > 0 && nbOfDriverInTheBox > 0 && nbOfAgentInTheBox > 0){
+				double lhWeight = 0.6;
+				double dWeight = 0.3;
+				double aWeight = 0.1;
+				double nbTokens = player.getBox().getTokens().size();
+				
+				double newLHWeight = (nbOfLoyalHenchmanInTheBox * lhWeight) / nbTokens;
+				double newDWeight = (nbOfDriverInTheBox * dWeight) / nbTokens;
+				double newAWeight = (nbOfAgentInTheBox * aWeight) / nbTokens;
+			}
+		}
+	}
 
 }

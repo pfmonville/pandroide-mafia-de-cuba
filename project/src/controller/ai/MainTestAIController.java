@@ -9,8 +9,8 @@ import model.Player;
 import model.Question;
 import model.Role;
 import model.Talk;
+import model.World;
 import controller.App;
-import data.World;
 
 public class MainTestAIController {
 

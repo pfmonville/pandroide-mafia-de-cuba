@@ -5,11 +5,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import controller.App;
-import data.World;
 import model.Answer;
 import model.Box;
 import model.Player;
 import model.Question;
+import model.World;
 
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
 

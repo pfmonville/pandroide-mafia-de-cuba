@@ -3,17 +3,13 @@ package controller.ai;
 import java.util.ArrayList;
 import java.util.Random;
 
-import controller.App;
-import controller.ai.position.IPositionStrategy;
-import error.StrategyError;
 import model.Answer;
 import model.Box;
-import model.Lie;
 import model.Player;
 import model.Question;
 import model.SecretID;
-
 import controller.App;
+import controller.ai.position.IPositionStrategy;
 import error.StrategyError;
 
 public class AISuspectController extends AIController{

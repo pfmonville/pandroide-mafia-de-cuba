@@ -14,9 +14,9 @@ import model.Player;
 import model.Rules;
 import model.SecretID;
 import model.Talk;
+import model.World;
 import controller.App;
 import controller.PlayerController;
-import data.World;
 
 public class AIController implements PlayerController {
 

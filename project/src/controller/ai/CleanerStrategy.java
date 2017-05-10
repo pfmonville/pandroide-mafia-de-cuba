@@ -2,11 +2,11 @@ package controller.ai;
 
 import java.util.ArrayList;
 
-import data.World;
 import model.Answer;
 import model.Box;
 import model.Player;
 import model.Question;
+import model.World;
 
 public class CleanerStrategy implements ISuspectStrategy{
 
