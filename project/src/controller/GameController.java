@@ -63,6 +63,8 @@ public class GameController {
 	private String tokenHidden;
 	private int diamondsHidden;
 	
+	private Thread mainThread = null;
+	
 	public GameController(){
 	
 	}	
@@ -230,6 +232,7 @@ public class GameController {
 			App.gv.godFatherHideDiamondsView() ;
 		}else{
 			Thread thread = new Thread(new PrepareBoxRunnable(this.box, playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -266,6 +269,7 @@ public class GameController {
 			Platform.runLater(() -> App.gv.playerPickView());
 		}else{
 			Thread thread = new Thread(new PickSomethingRunnable(this.currentPlayer, this.box, playerControllers.get(this.currentPlayer)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -351,6 +355,7 @@ public class GameController {
 	
 	private void giveTheBoxToGodFather(){
 		Thread thread = new Thread(new GetBackTheBoxRunnable(playerControllers.get(1), this.box));
+		this.mainThread = thread;
 		thread.start();
 		//Platform.runLater(thread);
 	}
@@ -360,6 +365,7 @@ public class GameController {
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else if (humanPosition != this.currentPlayer){
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -372,9 +378,11 @@ public class GameController {
 		// if it's 0 then 
 		if (action == 0){
 			Thread thread = new Thread(new ChooseQuestionRunnable(playerControllers.get(1), questions));
+			this.mainThread = thread;
 			thread.start();
 		}else{
 			Thread thread = new Thread(new EmptyPocketsRunnable(playerControllers.get(1)));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -385,11 +393,12 @@ public class GameController {
 			return;
 		}
 		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
-		questionToAsk.setNumero(currentTurn);
+		questionToAsk.setNumber(currentTurn);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));
+			this.mainThread = thread;
 			thread.start();
 		}
 	}
@@ -426,7 +435,7 @@ public class GameController {
 		
 		//for gameHistory
 		Question q = new Question(-1,"Le Parrain fait une annonce.", new ArrayList<>(),-1);
-		q.setTargetPlayer(0); q.setNumero(currentTurn);
+		q.setTargetPlayer(0); q.setNumber(currentTurn);
 		
 		if(announceType.equals("Ce que vous avez donné")){
 			int nbDiams =App.rules.getNumberOfDiamonds()-((GodFather)getHumanPlayer().getRole()).getNbDiamondsHidden(); 
@@ -445,7 +454,7 @@ public class GameController {
 			}
 			content+=box.getDiamonds()+" diamants.";
 			createPopUp(content, "Annonce du Parrain", 5);
-			Answer a = new Answer(-1,content , new ArrayList<>());
+			Answer a = new Answer(-2,content , new ArrayList<>());
 			a.setTokensAnswer(box.getTokens());
 			a.setNbDiamondsAnswer(box.getDiamonds());
 			gameHistory.add(new Talk(q, a));
@@ -468,7 +477,7 @@ public class GameController {
 		//question and answer for the Talk object
 		Question q = new Question(0, "Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.", new ArrayList<>(), -1);
 		q.setTargetPlayer(targetPlayer);
-		q.setNumero(currentTurn);
+		q.setNumber(currentTurn);
 		Answer a = new Answer(0,"",new ArrayList<>());
 		//handle the Cleaner shot
 		boolean targetHasBeenShot = false;
@@ -489,7 +498,6 @@ public class GameController {
 			cleanerWhoShot = cleanersWantingToShoot.get(new Random().nextInt(cleanersWantingToShoot.size()));
 		}
 	
-		//TODO : reveal the identity of the targetPlayer and of the cleaner who shot if one
 		App.gv.revealId(players.get(targetPlayer));
 		if(cleanerWhoShot!=null) App.gv.revealId(cleanerWhoShot);
 		//the list which will be sent to the view to display informations about players
@@ -713,7 +721,6 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie?
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
@@ -721,11 +728,9 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					// TODO: generate lie
 				}
 			}
 		}
@@ -789,6 +794,10 @@ public class GameController {
 	public void finish(){
 		playerControllers = new HashMap<>();
 		players = new HashMap<>();
+		//Stop le thread qui serait en plein calcul
+		if(this.mainThread.isAlive()){
+			this.mainThread.interrupt();
+		}
 		//App.pv.resetCursor();
 //		if(App.gv.getPanel().getChildren().contains(App.gv.getCursor())){
 //			App.gv.removeWaitingCursor();
@@ -844,6 +853,14 @@ public class GameController {
 
 	public void setDiamondsTakenBack(int diamondsTakenBack) {
 		this.diamondsTakenBack = diamondsTakenBack;
+	}
+	
+	/**
+	 * 
+	 * @return true si le jeu respecte les règles de base false si les paramètres sont personnalisés
+	 */
+	public boolean isGameStandard(){
+		return App.rules.isGameStandard();
 	}
 	
 	

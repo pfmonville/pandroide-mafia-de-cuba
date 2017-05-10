@@ -26,6 +26,7 @@ public class Rules {
 	private List<Integer> defaultNumberOfAgents;
 	private List<Integer> defaultNumberOfDrivers;
 	private List<Integer> defaultNumberOfJoker;
+	private Integer defaultNumberOfDiamonds;
 	
 	
 	//String declarations
@@ -80,7 +81,7 @@ public class Rules {
 		this.defaultNumberOfAgents = Arrays.asList(1,1,1,1,2,2,2);
 		this.defaultNumberOfDrivers = Arrays.asList(1,1,1,1,1,2,2);
 		this.defaultNumberOfJoker = Arrays.asList(0,0,1,1,1,2,2);
-		
+		this.defaultNumberOfDiamonds = 15;
 		
 		this.maxHiddenDiamonds = 5;
 		this.maxHiddenTokens = 1;
@@ -164,12 +165,12 @@ public class Rules {
 			tokens.add(nameCleaner);
 		}
 		for(int i = 0; i < this.numberOfAgents; i++){
-			if(i ==0){
+			if(this.numberAgent > 2){
+				tokens.add(nameAgentLambda);
+			}else if(i ==0){
 				tokens.add(nameAgentFBI);
 			}else if(i == 1){
 				tokens.add(nameAgentCIA);
-			}else{
-				tokens.add(nameAgentLambda);
 			}
 		}
 		for(int i = 0; i < this.numberOfDrivers; i++){
@@ -606,6 +607,32 @@ public class Rules {
 
 	public void setCurrentNumberOfPlayer(int currentNumberOfPlayer) {
 		this.currentNumberOfPlayer = currentNumberOfPlayer;
+	}
+	
+	/**
+	 * 
+	 * @return true si le jeu est conforme aux règles standards, faux sinon
+	 */
+	public boolean isGameStandard(){
+		if(numberOfAgents != getDefaultNumberOfAgentsFor(currentNumberOfPlayer)){
+			return false;
+		}
+		if(numberOfCleaners != getDefaultNumberOfCleanersFor(currentNumberOfPlayer)){
+			return false;
+		}
+		if(numberOfDrivers != getDefaultNumberOfDriversFor(currentNumberOfPlayer)){
+			return false;
+		}
+		if(numberOfLoyalHenchmen != getDefaultNumberOfLoyalHenchmenFor(currentNumberOfPlayer)){
+			return false;
+		}
+		if(numberOfDiamonds != defaultNumberOfDiamonds){
+			return false;
+		}
+		if(numberOfJokers != getDefaultNumberOfJokerFor(currentNumberOfPlayer)){
+			return false;
+		}
+		return true;
 	}
 	
 

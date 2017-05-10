@@ -10,6 +10,8 @@ import java.util.Random;
 
 import org.controlsfx.control.Notifications;
 
+import com.sun.media.jfxmediaimpl.platform.Platform;
+
 import controller.App;
 import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
@@ -125,6 +127,7 @@ public class GameView extends View{
 			result.ifPresent(button -> { 
 				if(button == ButtonType.OK){
 					try {
+						App.gameController.finish();
 						cleanGameView();
 						forAnimation=1; 
 						App.changePanel(super.getPanel(), App.ov.getPanel());
@@ -1390,7 +1393,7 @@ public class GameView extends View{
 		String content = gameHistory.getText() ;
 		String player = ((history.get(history.size()-1).getQuestion().getTargetPlayer()==0))?"Le Parrain" : "Joueur "+((history.get(history.size()-1).getQuestion().getTargetPlayer()));
 			
-		content+= "Q"+history.get(history.size()-1).getQuestion().getNumero()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
+		content+= "Q"+history.get(history.size()-1).getQuestion().getNumber()+": "+history.get(history.size()-1).getQuestion().getContent()+"\n"
 		+player+" : "+history.get(history.size()-1).getAnswer().getContent()+"\n\n";
 		
 		gameHistory.setText(content);
@@ -1484,6 +1487,9 @@ public class GameView extends View{
 			content+="Joueur "+p.getPosition()+"  ";
 		}
 		
+		//reveal hidden token
+		content+="\n\nJeton écarté : ";
+		if(App.gameController.getTokenHidden()!=null) content+=App.gameController.getTokenHidden();
 		// reveal each player's role
 		content+="\n\nRépartition des rôles :\n\n";
 		//LoyalHenchmen
@@ -1598,7 +1604,7 @@ public class GameView extends View{
 			for(Button ai : aiButtons){
 				if(Integer.parseInt(ai.getId()) == target.getPosition()){
 					ai.setGraphic(new ImageView(new Image(Theme.pathDiamond,45.0,45.0,false,true)));
-					ai.setText(target.getRole().getNbDiamondsStolen()+"");
+//					ai.setText(target.getRole().getNbDiamondsStolen()+"");
 					ai.setDisable(true);
 				}
 			}

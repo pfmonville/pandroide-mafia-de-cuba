@@ -24,7 +24,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
 		}
 		//there are only diamonds in the box
-		//TODO: changer les probas en fonction du nb de diamants?
+		//TODO: changer les probas en fonction du nb de diamants? 
 		if(tokens.isEmpty()){
 			//take all remaining diamonds 
 			if(alea < 0.33){
