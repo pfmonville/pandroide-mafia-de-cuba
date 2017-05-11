@@ -17,7 +17,7 @@ public class MainTestAIController {
 	public static void main(String[] args){
 		// Initialisation de la boite que recoit le joueur courant
 		ArrayList<String> stringList = new ArrayList<String>();
-//		stringList.add(App.rules.getNameLoyalHenchman());
+		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
@@ -30,7 +30,7 @@ public class MainTestAIController {
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Nombre de joueurs dans la partie
-		int nbPlayers = 6;
+		int nbPlayers = 7;
 		
 		// Initialisation du joueur courant
 		int positionDuJoueur = 3; // inclus dans [2 ; n], le parrain est le joueur 1
@@ -50,7 +50,7 @@ public class MainTestAIController {
 //		iac.getPlayer().takeDiamonds(nombreDeDiamantsVoles);
 		
 		// Joueur non voleur
-		String nomDuRole = App.rules.getNameDriver();
+		String nomDuRole = App.rules.getNameLoyalHenchman();
 		aic.getPlayer().setRole(new Role(nomDuRole));
 		
 		Box testBoxAfter = testBox.clone();
@@ -96,15 +96,20 @@ public class MainTestAIController {
 		System.out.println("temps d'execution [ms] : "+endConfigAfter);
 		System.out.println();
 		
-		Question q = new Question(14, " ", new ArrayList<Integer>(), 0);
-		q.setTargetPlayer(2);
+		
+		//Tests de checkLiar
+		Question q = new Question(1, " ", new ArrayList<Integer>(), 0);
+		q.setTargetPlayer(4);
+		//pour question 8
 		//q.setContent("Est-tu un... Agent?");
-		Answer a = new Answer(14, "Non",  new ArrayList<Integer>());
-//		a.setNbDiamondsAnswer(6);
-//		ArrayList<String> list = new ArrayList<String>();
-//		list.add(App.rules.getNameLoyalHenchman());
-//		list.add(App.rules.getNameDriver());
-//		a.setTokensAnswer(list);
+		
+		Answer a = new Answer(3, "",  new ArrayList<Integer>());
+		a.setNbDiamondsAnswer(9);
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(App.rules.getNameLoyalHenchman());
+		list.add(App.rules.getNameAgentFBI());
+		a.setTokensAnswer(list);
+		
 		Talk t = new Talk(q, a);
 		aic.checkLiar(t);
 		System.out.println("configBefore apres mise a jour:");
@@ -120,18 +125,18 @@ public class MainTestAIController {
 		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigBefore);
 		System.out.println();
-//		System.out.println("*** ConfigAfter apres maj***");
-//		for (World al : aic.getWorldsAfter()) {
-//	        String appender = "";
-//	        for (Integer i : al.getRolesDistribution()) {
-//	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
-//	            appender = " ";
-//	        }
-//	        System.out.println();
-//	    }
-//		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
-//		System.out.println("temps d'execution [ms] : "+endConfigAfter);
-//		System.out.println();			
+		System.out.println("*** ConfigAfter apres maj***");
+		for (World al : aic.getWorldsAfter()) {
+	        String appender = "";
+	        for (Integer i : al.getRolesDistribution()) {
+	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
+	            appender = " ";
+	        }
+	        System.out.println();
+	    }
+		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
+		System.out.println("temps d'execution [ms] : "+endConfigAfter);
+		System.out.println();			
 	}
 
 }
