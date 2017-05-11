@@ -1,6 +1,7 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 import model.Answer;
@@ -27,38 +28,71 @@ public class AISuspectController extends AIController{
 	}
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
-
+		//TODO en cours
+		
+		Answer response= new Answer();
 		//TODO
-//		int number = question.getNumber();
-//		if(number == 0 || number == 1){
-//			//TODO partie pour les jetons/roles de la boite plus diamants
-//			this.strategy.showTokensInBox();
-//			this.strategy.chooseDiamondsToShow();
-//		}
-//		if(number == 4 || number == 5 || number == 6 || number == 7){
-//			//TODO partie pour les jetons/roles de la boite
-//			this.strategy.showTokensInBox();
-//		}
-//		if(number == 2 || number == 3){
-//			//TODO partie diamant seulement
-//			this.strategy.chooseDiamondsToShow();
-//		}
-//		if(number == 8 || number == 9){
-//			//TODO quel personnage veux tu montrer
-//			this.strategy.chooseTokenToShow();
-//		}
-//		if(number == 14 || number == 15 || number == 16){
-//			//TODO montrer le jeton caché si joueur 1 ?
-//			this.strategy.chooseHiddenTokenToShow();
-//			
-//		}
-//		if(number == 10 || number == 11 || number == 12 || number == 13){
-//			//TODO doit renvoyer une liste des roles présumés des autres
-//			this.strategy.showAssumedRolesForAllPlayers();
-//		}
+		int number = question.getNumber();
 		
 		
-		return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
+		if(number == 0 || number == 1){
+			//TODO partie pour les jetons/roles de la boite plus diamants
+			if(lie.isBoxSet()){
+				response.setTokensAnswer(lie.getFalseBox().getTokens());
+				response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
+			}else{
+				HashMap<ArrayList<String>, Double> tokensConfigurations = this.strategy.showTokensInBox();
+				HashMap<Integer, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow();
+				//plus response
+				//plus MAJ
+			}
+			if(number == 1){
+				//traitement spécial pour la question "quand tu l'as passée"
+				if(lie.hasShownRole()){
+					if(App.rules.isAValidToken(lie.getFalseRoleName())){
+						response.setRoleAnswer(lie.getFalseRoleName());
+						response.getTokensAnswer().remove(lie.getFalseRoleName());
+					}
+				}else{
+					String token = this.strategy.chooseTokenToShow();
+				}
+			}
+		}
+		
+		
+		if(number == 4 || number == 5 || number == 6 || number == 7){
+			//TODO partie pour les jetons/roles de la boite
+			this.strategy.showTokensInBox();
+		}
+		
+		
+		if(number == 2 || number == 3){
+			//TODO partie diamant seulement
+			this.strategy.chooseDiamondsToShow();
+		}
+		
+		
+		if(number == 8 || number == 9){
+			//TODO quel personnage veux tu montrer
+			this.strategy.chooseTokenToShow();
+		}
+		
+		
+		if(number == 14 || number == 15 || number == 16){
+			//TODO montrer le jeton caché si joueur 1 ?
+			this.strategy.chooseHiddenTokenToShow();
+		}
+		
+		
+		if(number == 10 || number == 11 || number == 12 || number == 13){
+			//TODO doit renvoyer une liste des roles présumés des autres
+			this.strategy.showAssumedRolesForAllPlayers();
+		}
+		
+		response.setId(question.getId());
+		return response;
+		
+		//return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
 
 	}
 	

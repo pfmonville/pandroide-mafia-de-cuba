@@ -7,7 +7,7 @@ public class Box {
 	private int diamonds;
 	private ArrayList<String> tokens;
 	
-	public Box(int diamonds, ArrayList<String> tokens){
+	public Box(Integer diamonds, ArrayList<String> tokens){
 		this.diamonds = diamonds ;
 		this.tokens = tokens ;
 	}
@@ -18,7 +18,7 @@ public class Box {
 		return res ;
 	}
 	
-	public int getDiamonds(){
+	public Integer getDiamonds(){
 		return diamonds ;
 	}
 	

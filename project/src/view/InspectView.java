@@ -77,7 +77,12 @@ public class InspectView extends View {
 		
 		combo.valueProperty().addListener(new ChangeListener<Integer>() {
 	        @Override public void changed(ObservableValue ov, Integer t, Integer t1) {
-	        	changeInspect(t1);
+	        	try {
+					changeInspect(t1);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 	        }    
 	    });
 		
@@ -91,9 +96,19 @@ public class InspectView extends View {
 	}
 	
 	
-	public void changeInspect(Integer value){
-		this.obs = FXCollections.observableArrayList(this.inspects.get(value).getAllInspectViews());
-		this.table.setItems(obs);
+	public void changeInspect(Integer value) throws Exception{
+		boolean changed = false;
+		for(Inspect inspect: inspects){
+			if(inspect.getId() == value){
+				this.obs = FXCollections.observableArrayList(inspect.getAllInspectViews());
+				this.table.setItems(obs);
+				changed = true;
+			}
+		}
+		if(changed == false){
+			throw new Exception("la valeur: "+ value+ " n'est pas présente dans la liste des inspects");
+		}
+		
 	}
 
 }

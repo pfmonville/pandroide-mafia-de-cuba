@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils.Collections;
+
 public class Rules {
 	
 	private int maxHiddenDiamonds;
@@ -798,5 +800,11 @@ public class Rules {
 
 	public String[] getNameRolesTab() {
 		return nameRolesTab;
+	}
+	
+	public ArrayList<String> getRolesList(){
+		ArrayList<String> result = new ArrayList<>();
+		result.addAll(Arrays.asList(nameAgentCIA, nameAgentFBI, nameAgentLambda, nameCleaner, nameDriver, nameGodFather, nameLoyalHenchman, nameStreetUrchin, nameThief));
+		return result;
 	}
 }
