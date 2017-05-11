@@ -4,22 +4,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
 
+import controller.App;
+import controller.ai.position.IPositionStrategy;
+import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
-import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.Question;
 import model.RoleProbaCouple;
 import model.SecretID;
-import controller.App;
-import controller.ai.position.IPositionStrategy;
-import error.StrategyError;
 
 public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
@@ -55,7 +56,7 @@ public class AISuspectController extends AIController{
 			getRole(response, substract, true);
 			if(player.isFirstPlayer()){
 				//on demande s'il a caché un jeton
-				getHiddenToken(response, substract);
+				getHiddenToken(response, substract, true);
 			}
 		}
 	}
@@ -135,195 +136,196 @@ public class AISuspectController extends AIController{
 	
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
+		//TODO à desactiver une fois que toutes les stratégies ont été implémentées
 		
-		Answer response= new Answer();
-		String content;
-		int number = question.getNumber();
+//		Answer response= new Answer();
+//		String content = "";
+//		int number = question.getNumber();
+//		
+//		
+//		if(number == 0 || number == 1){
+//			if(number == 1){
+//				getBox(response, false, true);
+//			}else{
+//				getBox(response, true, false);
+//			}
+//			if(response.getTokensAnswer().isEmpty() && response.getNbDiamondsAnswer() == 0){
+//				response.setContent("La boîte était vide");
+//				response.setId(question.getId());
+//				return response;
+//			}
+//			content = "La boite contenait ";
+//			Set<String> rolesTypes = new HashSet<String>(response.getTokensAnswer());
+//			for(String role : rolesTypes){
+//				int nb = response.getCount(role);
+//				if( nb > 0){
+//					content+= nb+" "+role+", ";
+//				}
+//			}
+//			content+=response.getNbDiamondsAnswer()+" diamants.";
+//		}
+//		
+//		
+//		if(number == 4 || number == 5 || number == 6 || number == 7){
+//			// partie pour les jetons/roles de la boite
+//			if(number == 4 || number == 6){
+//				getTokensInBox(response, true, false);	
+//			}
+//			if(number == 5 || number == 7){
+//				getTokensInBox(response, false, true);
+//			}
+//			
+//			if(lie.getFalseBox().getTokens().isEmpty()){
+//				response.setContent("Aucun.");
+//				response.setId(question.getId());
+//				return response;
+//			}
+//			content = "La boite contenait ";
+//			
+//			if(number == 6 || number == 7){
+//				Set<String> rolesTypes = new HashSet<String>(response.getTokensAnswer());
+//				for(String role : rolesTypes){
+//					int nb = response.getCount(role);
+//					if( nb > 0){
+//						content+= ", "+nb+" "+role;
+//					}
+//				}
+//				content+=".";
+//				content.replaceFirst("[,]", " ");	
+//			}else{
+//				content += (response.getTokensAnswer().size())+" jetons personnage.";
+//			}
+//
+//
+//		}
+//		
+//		
+//		if(number == 2 || number == 3){
+//			//partie diamant seulement
+//			if(number == 2){
+//				getDiamondsInBox(response, true);
+//			}else{
+//				getDiamondsInBox(response, false);
+//			}
+//			
+//			content+= "La boîte contenait "+response.getNbDiamondsAnswer()+ " diamants.";
+//			
+//		}
+//		
+//		
+//		if(number == 8){
+//			getRole(response, false, false);
+//			String[] s = question.getContent().split("[...]");
+//			String roleAsked = s[s.length-1].replace('?', ' ').trim();
+//			if(roleAsked.equals(lie.getFalseRoleName())){
+//				content ="Oui";
+//			}
+//			else if(roleAsked.equals("Agent") && (lie.getFalseRoleName().equals(App.rules.getNameAgentFBI())||lie.getFalseRoleName().equals(App.rules.getNameAgentCIA()) || lie.getFalseRoleName().equals(App.rules.getNameAgentLambda()))){
+//				content ="Oui";
+//			}else{
+//				content ="Non";
+//			}
+//		}
+//
+//		if(number==9){
+//			getRole(response, false, true);
+//			content = "Je suis "+lie.getFalseRoleName()+".";
+//		}
+//		
+//		if(number == 14 || number == 15 || number == 16){
+//			// montrer le jeton caché si joueur 1 ?
+//			String tokenAsked = "";
+//			if(number == 15){
+//				getHiddenToken(response, false, true);
+//			}else{
+//				getHiddenToken(response, false, false);
+//			}
+//			if(number == 16){
+//				String [] tab = question.getContent().split("[...]");
+//				tokenAsked = tab[tab.length-1].replace('?', ' ').trim();
+//				
+//			}
+//			if(response.getTokenMovedAside() != null){
+//				if(number == 14){
+//					content = "Oui";
+//				}
+//				if(number == 15){
+//					content = "J'ai écarté "+response.getTokenMovedAside()+".";
+//				}
+//				if(number == 16){
+//					if(tokenAsked.equals(response.getTokenMovedAside())){
+//						lie.updateHiddenToken(tokenAsked);
+//						content = "Oui";
+//					}else{
+//						lie.updateNotHiddenToken(tokenAsked);
+//						content = "Non";
+//					}
+//				}
+//			}else{
+//				if(number == 14 || number == 16){
+//					content = "Non";
+//					if(number == 14){
+//						lie.dontHideToken();
+//					}
+//				}
+//				if(number == 15){
+//					content = "Je n'ai écarté aucun jeton.";
+//				}
+//			}
+//		}
+//		
+//		
+//		if(number == 10 || number == 11 || number == 12 || number == 13){
+//			//doit renvoyer une liste des roles présumés des autres
+//			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers();
+//			
+//			ArrayList<Integer> targets = new ArrayList<>();
+//			for(Entry<Integer, RoleProbaCouple> entry: assumedRoles.entrySet()){
+//				if(App.rules.getNameThief().equals(entry.getValue().getRole())){
+//					targets.add(entry.getKey());
+//				}
+//			}
+//			if(number == 10){
+//				//TODO response.setTargets(targets);
+//				content += "Selon moi, j'accuserais les joueurs: \n";
+//				for(Integer target: targets){
+//					content += target +" ";
+//				}
+//			}else{
+//				String[] s = question.getContent().split("[...]");
+//				int roleAsked = Integer.parseInt(s[s.length-1].replace('?', ' ').trim());
+//				if(number == 11){
+//					if(assumedRoles.get(roleAsked) != null && assumedRoles.get(roleAsked).getPercentage() == 1){
+//						content += "Oui";
+//					}else{
+//						content += "Non";
+//					}
+//				}
+//				if(number == 12){
+//					if(assumedRoles.get(roleAsked)!=null){
+//						//TODO response.setRoleProbaCouple(roleAsked, assumedRoles.get(roleAsked).getRole());
+//						content += "Le joueur "+roleAsked+ " est selon moi un "+assumedRoles.get(roleAsked);
+//					}else{
+//						//TODO response.setRoleProbaCouple(roleAsked, null);
+//						content +="Je n'ai pas assez d'informations concernant le joueur "+roleAsked;
+//					}
+//				}
+//				if(number == 13){
+//					if(targets.contains(roleAsked)){
+//						content +="Oui";
+//					}else{
+//						content += "Non";
+//					}
+//				}
+//
+//			}			
+//		}
+//		
+//		response.setId(question.getId());
+//		response.setContent(content);
+//		return response;
 		
-		
-		if(number == 0 || number == 1){
-			if(number == 1){
-				getBox(response, false, true);
-			}else{
-				getBox(response, true, false);
-			}
-			if(response.getTokensAnswer().isEmpty() && response.getNbDiamondsAnswer() == 0){
-				response.setContent("La boîte était vide");
-				response.setId(question.getId());
-				return response;
-			}
-			content = "La boite contenait ";
-			Set<String> rolesTypes = new HashSet<String>(response.getTokensAnswer());
-			for(String role : rolesTypes){
-				int nb = response.getCount(role);
-				if( nb > 0){
-					content+= nb+" "+role+", ";
-				}
-			}
-			content+=response.getNbDiamondsAnswer()+" diamants.";
-		}
-		
-		
-		if(number == 4 || number == 5 || number == 6 || number == 7){
-			// partie pour les jetons/roles de la boite
-			if(number == 4 || number == 6){
-				getTokensInBox(response, true, false);	
-			}
-			if(number == 5 || number == 7){
-				getTokensInBox(response, false, true);
-			}
-			
-			if(lie.getFalseBox().getTokens().isEmpty()){
-				response.setContent("Aucun.");
-				response.setId(question.getId());
-				return response;
-			}
-			content = "La boite contenait ";
-			
-			if(number == 6 || number == 7){
-				Set<String> rolesTypes = new HashSet<String>(response.getTokensAnswer());
-				for(String role : rolesTypes){
-					int nb = response.getCount(role);
-					if( nb > 0){
-						content+= ", "+nb+" "+role;
-					}
-				}
-				content+=".";
-				content.replaceFirst("[,]", " ");	
-			}else{
-				content += (response.getTokensAnswer().size())+" jetons personnage.";
-			}
-
-
-		}
-		
-		
-		if(number == 2 || number == 3){
-			//partie diamant seulement
-			if(number == 2){
-				getDiamondsInBox(response, true);
-			}else{
-				getDiamondsInBox(response, false);
-			}
-			
-			content+= "La boîte contenait "+response.getNbDiamondsAnswer()+ " diamants.";
-			
-		}
-		
-		
-		if(number == 8){
-			getRole(response, false, false);
-			String[] s = question.getContent().split("[...]");
-			String roleAsked = s[s.length-1].replace('?', ' ').trim();
-			if(roleAsked.equals(lie.getFalseRoleName())){
-				content ="Oui";
-			}
-			else if(roleAsked.equals("Agent") && (lie.getFalseRoleName().equals(App.rules.getNameAgentFBI())||lie.getFalseRoleName().equals(App.rules.getNameAgentCIA()) || lie.getFalseRoleName().equals(App.rules.getNameAgentLambda()))){
-				content ="Oui";
-			}else{
-				content ="Non";
-			}
-		}
-
-		if(number==9){
-			getRole(response, false, true);
-			content = "Je suis "+lie.getFalseRoleName()+".";
-		}
-		
-		if(number == 14 || number == 15 || number == 16){
-			// montrer le jeton caché si joueur 1 ?
-			String tokenAsked;
-			if(number == 15){
-				getHiddenToken(response, false, true);
-			}else{
-				getHiddenToken(response, false, false);
-			}
-			if(number == 16){
-				String [] tab = question.getContent().split("[...]");
-				tokenAsked = tab[tab.length-1].replace('?', ' ').trim();
-				
-			}
-			if(response.getTokenMovedAside() != null){
-				if(number == 14){
-					content = "Oui";
-				}
-				if(number == 15){
-					content = "J'ai écarté "+response.getTokenMovedAside()+".";
-				}
-				if(number == 16){
-					if(tokenAsked.equals(response.getTokenMovedAside())){
-						lie.updateHiddenToken(tokenAsked);
-						content = "Oui";
-					}else{
-						lie.updateNotHiddenToken(tokenAsked);
-						content = "Non";
-					}
-				}
-			}else{
-				if(number == 14 || number == 16){
-					content = "Non";
-					if(number == 14){
-						lie.dontHideToken();
-					}
-				}
-				if(number == 15){
-					content = "Je n'ai écarté aucun jeton.";
-				}
-			}
-		}
-		
-		
-		if(number == 10 || number == 11 || number == 12 || number == 13){
-			//doit renvoyer une liste des roles présumés des autres
-			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers();
-			
-			ArrayList<Integer> targets = new ArrayList<>();
-			for(Entry<Integer, RoleProbaCouple> entry: assumedRoles.entrySet()){
-				if(App.rules.getNameThief().equals(entry.getValue().getRole())){
-					targets.add(entry.getKey());
-				}
-			}
-			if(number == 10){
-				//TODO response.setTargets(targets);
-				content += "Selon moi, j'accuserais les joueurs: \n";
-				for(Integer target: targets){
-					content += target +" ";
-				}
-			}else{
-				String[] s = question.getContent().split("[...]");
-				int roleAsked = Integer.parseInt(s[s.length-1].replace('?', ' ').trim());
-				if(number == 11){
-					if(assumedRoles.get(roleAsked) != null && assumedRoles.get(roleAsked).getPercentage() == 1){
-						content += "Oui";
-					}else{
-						content += "Non";
-					}
-				}
-				if(number == 12){
-					if(assumedRoles.get(roleAsked)!=null){
-						//TODO response.setRoleProbaCouple(roleAsked, assumedRoles.get(roleAsked).getRole());
-						content += "Le joueur "+roleAsked+ " est selon moi un "+assumedRoles.get(roleAsked);
-					}else{
-						//TODO response.setRoleProbaCouple(roleAsked, null);
-						content +="Je n'ai pas assez d'informations concernant le joueur "+roleAsked;
-					}
-				}
-				if(number == 13){
-					if(targets.contains(roleAsked)){
-						content +="Oui";
-					}else{
-						content += "Non";
-					}
-				}
-
-			}			
-		}
-		
-		response.setId(question.getId());
-		response.setContent(content);
-		return response;
-		
-		//return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
+		return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
 
 	}
 	

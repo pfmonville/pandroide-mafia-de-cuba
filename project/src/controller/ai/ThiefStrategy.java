@@ -11,6 +11,7 @@ import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.Question;
+import model.RoleProbaCouple;
 import model.World;
 import controller.App;
 
@@ -150,12 +151,12 @@ public class ThiefStrategy implements ISuspectStrategy {
 	 * il faut une fonction pour pouvoir mentir sur le contenu de la boite quand on la reçoit.
 	 * Pour le moment, mentir au minimum, juste pour ajouter notre fausse identité. Voir comment améliorer. 
 	 */
-	public Map<List<String>, Double> showTokensInBox(){
+	public HashMap<ArrayList<String>, Double> showTokensInBox(){
 		// TODO
 		return null;
 	}
 	
-	public Map<String, Double> chooseHiddenTokenToShow (){
+	public HashMap<String, Double> chooseHiddenTokenToShow (){
 		// TODO
 		return null;
 	}
@@ -164,7 +165,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 	 * showAssumedRolesForAllPLayers
 	 * que penses tu des autres joueurs, renvoie un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
 	 */	
-	public  Map<Map<Integer, String>, Double> showAssumedRolesForAllPlayers(){
+	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(){
 		// TODO
 		return null;
 	}
@@ -229,6 +230,18 @@ public class ThiefStrategy implements ISuspectStrategy {
 	public void generateLie(Player player) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Double> chooseTokenToShow() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

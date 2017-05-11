@@ -73,7 +73,6 @@ public class Inspect {
 	}
 	
 	
-	
 	public class InspectView{
 		private final SimpleStringProperty id;
 		private final SimpleStringProperty loyalHenchman;
@@ -201,7 +200,9 @@ public class Inspect {
 			}
 			return App.rules.getNameDriver();
 
+			
 		}
+		
 		
 	}
 	
