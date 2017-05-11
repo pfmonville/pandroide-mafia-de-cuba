@@ -12,6 +12,7 @@ import controller.App;
 import controller.PlayerController;
 import model.Answer;
 import model.Box;
+import model.DiamondsCouple;
 import model.Inspect;
 import model.Player;
 import model.SecretID;
@@ -33,6 +34,8 @@ public class AIController implements PlayerController {
 	private int nbPlayers; // In the application, nbPlayers is equivalent to App.rules.getCurrentNumberOfPlayer();
 	private boolean debugMode = false;
 	private Inspect inspect;
+	protected ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers; // GF included, so beware of the index,
+	
 	
 	
 	public AIController(Player player) {
@@ -46,6 +49,10 @@ public class AIController implements PlayerController {
 		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
 		inspect = new Inspect(player.getPosition());
 		notLoyalHenchman = new ArrayList<Integer>();
+		diamondsAnnoncedbyOtherPlayers = new ArrayList<DiamondsCouple>();
+		for(int i = 0 ; i < App.rules.getCurrentNumberOfPlayer() ; i++){
+			diamondsAnnoncedbyOtherPlayers.add(new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
+		}
 	}
 	
 	// Specific constructor uses to debugging in MainTestAIController class
@@ -524,11 +531,13 @@ public class AIController implements PlayerController {
 	
 	public void updateWorldsVision(Talk talk){
 		//TODO
-		//ATTENTION: si c'est moi le joueur cible, pas de update 
+		//ATTENTION: si c'est moi le joueur cible, pas de update
+		// TODO màj de la liste diamondsAnnoncedbyOtherPlayers
 	}
 	
 	public void updateWorldsVision(SecretID secret){
 		//TODO
+		// faire appel à keepWorldsWhere
 	}
 	
 	public void checkLiar(Talk talk){

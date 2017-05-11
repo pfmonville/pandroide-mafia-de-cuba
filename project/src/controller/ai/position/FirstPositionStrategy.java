@@ -38,17 +38,17 @@ public class FirstPositionStrategy implements IPositionStrategy{
 			if(rand < 0.3 && App.rules.getCurrentNumberOfPlayer() == 6){
 				diamondsTaken = box.getDiamonds();
 				hiddenToken = App.rules.getNameLoyalHenchman();
-				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//with 6 or 7 players: taken at least half of diamonds + 1  and move aside a LoyalHenchman or an Agent
 			else if(rand < 0.6 && App.rules.getCurrentNumberOfPlayer() < 8){
 				diamondsTaken = r.nextInt(box.getDiamonds()/2) + box.getDiamonds()/2 + 1;
 				rand = r.nextFloat();
 				if(rand < 0.5){
-					return new SecretID(roleName, diamondsTaken, agent, hiddenToken);
+					return new SecretID(App.rules.getNameThief(), diamondsTaken, agent, hiddenToken);
 				}
 				hiddenToken = App.rules.getNameLoyalHenchman();
-				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//if there is more than 10 diamonds: leave 10 and move aside a LoyalHenchman or an Agent 
 			if(box.getDiamonds() > App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
@@ -61,7 +61,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 				else{
 					hiddenToken = agent;
 				}
-				return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);			
+				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);			
 			}
 		}
 		// GodFather's Driver's strategy
@@ -72,7 +72,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 			if(rand < 0.5){
 				hiddenToken = agent;
 			}
-			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+			return new SecretID(tokenTaken, diamondsTaken, tokenTaken, hiddenToken);
 		
 		// LoyalHenchman/Cleaner's strategy
 		}if(alea < 0.75){
@@ -93,7 +93,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 			}else if(rand < 0.75){
 				hiddenToken = App.rules.getNameDriver();
 			}
-			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+			return new SecretID(tokenTaken, diamondsTaken, tokenTaken, hiddenToken);
 		
 		// Agent's strategy
 		}else{
@@ -114,7 +114,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 					hiddenToken = App.rules.getNameAgentFBI();
 				}
 			}
-			return new SecretID(roleName, diamondsTaken, tokenTaken, hiddenToken);
+			return new SecretID(tokenTaken, diamondsTaken, tokenTaken, hiddenToken);
 		}	
 	}
 

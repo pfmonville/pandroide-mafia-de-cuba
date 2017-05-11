@@ -2,25 +2,67 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
-import controller.App;
 import model.Answer;
-import model.Box;
-import model.Driver;
-import model.Lie;
-import model.LoyalHenchman;
+import model.DiamondsCouple;
 import model.Player;
 import model.Question;
-import model.Role;
 import model.World;
+import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
-	public Map<Integer, Double> chooseDiamondsToShow(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter){
-		Map<Integer, Double> diamondResponseProbabilities = new HashMap<Integer, Double>();
+	public Map<DiamondsCouple, Double> chooseDiamondsToShow(Player player, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+		Map<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
+		double lieOnReceivedProba;
+		double lieOnGivenProba;
+		/*
+		 * Special case for the to last player, he can't lie to the GF. 
+		 * So for his lie, he forcefully says that he gave what he virtually received 
+		 */
+		if (player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+			int nbDiamonds = player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen();
+			diamondResponseProbabilities.put(new DiamondsCouple(nbDiamonds, nbDiamonds), 1.0); 
+			return diamondResponseProbabilities;
+		}
+		
+		/*
+		 * Less tokens in the box than taken before me
+		 * More probably I will bring the doubt on the players before me
+		 * (reduce the number of diamonds I received
+		 * i.e. I subtract the diamond I stole from the real amount
+		 * so I create a virtual thief before me)
+		 */
+		if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()){
+			lieOnReceivedProba = 0.7;
+			lieOnGivenProba = 1.0 - lieOnReceivedProba;
+		}
+		/*
+		 *  More tokens in the box than taken before me
+		 *  More probably, I will bring the doubt on the players after me
+		 *  (increase the number of diamonds I gave
+		 *  i.e. I virtually gave the same number of diamonds that I received)
+		 */
+		else{
+			lieOnReceivedProba = 0.3;
+			lieOnGivenProba = 1.0 - lieOnReceivedProba;
+		}
+		
+		int diamondsTrullyReceived = player.getBox().getDiamonds();
+		int diamondsTrullyGiven = diamondsTrullyReceived - player.getRole().getNbDiamondsStolen();
+		diamondResponseProbabilities.put(new DiamondsCouple(diamondsTrullyGiven, diamondsTrullyGiven), lieOnReceivedProba);
+		diamondResponseProbabilities.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived), lieOnGivenProba);
+		
+		for(int i = player.getPosition() - 1 ; i > 1 ; i--){
+			// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
+//			if(diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven() != -1
+//					&& diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven() == ){
+//				
+//			}
+		}
 		
 		// TODO
 		return diamondResponseProbabilities;
@@ -29,59 +71,60 @@ public class ThiefStrategy implements ISuspectStrategy {
 	public Map<String, Double> chooseTokenToShow(Player player){
 		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		
-		double lhWeight = 0.6;
-		double dWeight = 0.3;
-		double aWeight = 0.1;
+		double lhProba = 0.6;
+		double dProba = 0.3;
+		double aProba = 0.1;
 		
-		// More tokens in the box than taken before me
-		if(player.getBox().getTokens().size() >= App.rules.getTokens().size()){
-			int lhNb = player.getBox().getCount(App.rules.getNameLoyalHenchman());
-			int dNb = player.getBox().getCount(App.rules.getNameDriver());
-			int aNb = player.getBox().getCount(App.rules.getNameAgentCIA()) 
-					+ player.getBox().getCount(App.rules.getNameAgentFBI())
-					+ player.getBox().getCount(App.rules.getNameAgentLambda());
-			
-			tokenResponseProbabilities = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhWeight, dWeight, aWeight);
-		}
-		// More tokens taken before me than in the box
-		else{
-			int lhNb = App.rules.getNumberOfLoyalHenchmen() - player.getBox().getCount(App.rules.getNameLoyalHenchman());
+		// First degree
+		// Less tokens in the box than taken before me
+		if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size() 
+				|| player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+			int lhNb = App.rules.getNumberOfLoyalHenchmen() - player.getBox().getCount(App.rules.getNameLoyalHenchman())
+					+ App.rules.getNumberOfCleaners() - player.getBox().getCount(App.rules.getNameCleaner());
 			int dNb = App.rules.getNumberOfDrivers() - player.getBox().getCount(App.rules.getNameDriver());
 			int aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
 					+ player.getBox().getCount(App.rules.getNameAgentFBI())
 					+ player.getBox().getCount(App.rules.getNameAgentLambda()));
 			
-			tokenResponseProbabilities = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhWeight, dWeight, aWeight);
-		}
-		return tokenResponseProbabilities;
-	}
-	
-	private Map<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhWeight, double dWeight, double aWeight){
-		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
-		
-		if(lhNb > 0 && dNb > 0 && aNb > 0){
-			double totalSum = lhNb * lhWeight + dNb * dWeight + aNb * aWeight;
-			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhWeight * lhNb / totalSum);
-			tokenResponseProbabilities.put(App.rules.getNameDriver(), dWeight * dNb / totalSum);
-			if(App.rules.getNumberAgent() == 1){
-				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aWeight * aNb / totalSum);
-			}else if(App.rules.getNumberAgent() == 2){
-				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aWeight * aNb / (2 *totalSum));
-				tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aWeight * aNb / (2 *totalSum));
-			}else{
-				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aWeight * aNb / (App.rules.getNumberAgent() * totalSum));
-				tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aWeight * aNb /  (App.rules.getNumberAgent() * totalSum));
-				tokenResponseProbabilities.put(App.rules.getNameAgentLambda(), (App.rules.getNumberAgent() -2 ) * aWeight * aNb / (App.rules.getNumberAgent() *totalSum));
+			tokenResponseProbabilities = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba);
+			
+			// If i'm last player I can pretend to be a street urchin
+			if(player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+				double suProba = 0.3;
+				for(Entry<String, Double> entry : tokenResponseProbabilities.entrySet()){
+					tokenResponseProbabilities.put(entry.getKey(), entry.getValue() - suProba * entry.getValue());
+				}
+				tokenResponseProbabilities.put(App.rules.getNameStreetUrchin(), suProba);	
 			}
-		}else if(lhNb > 0 && dNb > 0){
-			aNb /= 2;
-			lhNb += aNb;
-			dNb += aNb;
-			double totalSum = lhNb * lhWeight + dNb * dWeight;
-			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhWeight * lhNb / totalSum);
-			tokenResponseProbabilities.put(App.rules.getNameDriver(), dWeight * dNb / totalSum);
-		}else{
-			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
+		}
+		// More tokens in the box than taken before me
+		else{
+			int lhNb = player.getBox().getCount(App.rules.getNameLoyalHenchman())
+					+ player.getBox().getCount(App.rules.getNameCleaner());
+			int dNb = player.getBox().getCount(App.rules.getNameDriver());
+			int aNb = player.getBox().getCount(App.rules.getNameAgentCIA()) 
+					+ player.getBox().getCount(App.rules.getNameAgentFBI())
+					+ player.getBox().getCount(App.rules.getNameAgentLambda());
+			
+			tokenResponseProbabilities = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba);
+		}
+		
+		// Second degree
+		// Number of agent token taken before me
+		int aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
+				+ player.getBox().getCount(App.rules.getNameAgentFBI())
+				+ player.getBox().getCount(App.rules.getNameAgentLambda()));
+		
+		/* 
+		 * At least 1 agent token missing
+		 * I can pretend to be this agent, and say I'm a thief => 2nd degree strategy
+		 */
+		if(aNb >= 1){
+			double tProba = 0.2;
+			for(Entry<String, Double> entry : tokenResponseProbabilities.entrySet()){
+				tokenResponseProbabilities.put(entry.getKey(), entry.getValue() - tProba * entry.getValue());
+			}	
+			tokenResponseProbabilities.put(App.rules.getNameThief(), tProba);
 		}
 		
 		return tokenResponseProbabilities;
@@ -93,11 +136,73 @@ public class ThiefStrategy implements ISuspectStrategy {
 	 * il faut une fonction pour pouvoir mentir sur le contenu de la boite quan on la reçoit.
 	 * Pour le moment, mentir au minimum, juste pour ajouter notre fausse identité. Voir comment améliorer. 
 	 */
+	public Map<List<String>, Double> showTokensInBox(){
+		// TODO
+		return null;
+	}
 	
 	/*
 	 * showAssumedRolesForAllPLayers
 	 * TODO : que penses tu des joueurs, renvoie un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
 	 */
+	public Map<String, Double> chooseHiddenTokenToShow (){
+		// TODO
+		return null;
+	}
+	
+	public  Map<Map<Integer, String>, Double> showAssumedRolesForAllPlayers(){
+		// TODO
+		return null;
+	}
+	
+	
+	private Map<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhProba, double dProba, double aProba){
+		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
+		int totalNb = lhNb + dNb + aNb;
+		
+		if(lhNb == totalNb){
+			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
+			return tokenResponseProbabilities;
+		}else if(dNb == totalNb){
+			tokenResponseProbabilities.put(App.rules.getNameDriver(), 1.0);
+			return tokenResponseProbabilities;
+		}else if(aNb == totalNb){
+			if(App.rules.getNumberAgent() == 1){
+				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 1.0);
+			}else{
+				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 0.5);
+				tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), 0.5);
+			}	
+			return tokenResponseProbabilities;
+		}else if(lhNb == 0){
+			lhProba /= 2;
+			dProba += lhProba;
+			aProba += lhProba;
+		}else if(dNb == 0){
+			dProba /= 2;
+			lhProba += dProba;
+			aProba += dProba;
+		}else if(aNb == 0){
+			aProba /= 2;
+			lhProba += aProba;
+			dProba += aProba;
+		}
+		
+		double totalSum = lhNb * lhProba + dNb * dProba + aNb * aProba;
+		tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhProba * lhNb / totalSum);
+		tokenResponseProbabilities.put(App.rules.getNameDriver(), dProba * dNb / totalSum);
+		if(App.rules.getNumberAgent() == 1){
+			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / totalSum);
+		}else if(App.rules.getNumberAgent() == 2){
+			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (2 *totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (2 *totalSum));
+		}else{
+			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (App.rules.getNumberAgent() * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb /  (App.rules.getNumberAgent() * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentLambda(), (App.rules.getNumberAgent() -2 ) * aProba * aNb / (App.rules.getNumberAgent() *totalSum));
+		}
+		return tokenResponseProbabilities;
+	}
 	
 	@Override
 	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore,
