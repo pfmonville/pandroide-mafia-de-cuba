@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import model.Answer;
 import model.DiamondsCouple;
+import model.Lie;
 import model.Player;
 import model.Question;
 import model.World;
@@ -15,12 +16,13 @@ import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
-	public Map<DiamondsCouple, Double> chooseDiamondsToShow(Player player, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+	public Map<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
 		Map<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
 		double lieOnReceivedProba;
 		double lieOnGivenProba;
+		
 		/*
-		 * Special case for the to last player, he can't lie to the GF. 
+		 * Special case for the last player, he can't lie to the GF. 
 		 * So for his lie, he forcefully says that he gave what he virtually received 
 		 */
 		if (player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
@@ -40,6 +42,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			lieOnReceivedProba = 0.7;
 			lieOnGivenProba = 1.0 - lieOnReceivedProba;
 		}
+		
 		/*
 		 *  More tokens in the box than taken before me
 		 *  More probably, I will bring the doubt on the players after me
@@ -56,23 +59,34 @@ public class ThiefStrategy implements ISuspectStrategy {
 		diamondResponseProbabilities.put(new DiamondsCouple(diamondsTrullyGiven, diamondsTrullyGiven), lieOnReceivedProba);
 		diamondResponseProbabilities.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived), lieOnGivenProba);
 		
-		for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-			// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
-//			if(diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven() != -1
-//					&& diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven() == ){
-//				
-//			}
+		// If I lie about being a LH, I can't follow a bluff said by someone before
+		if(lie.getFalseRole().getName().equals(App.rules.getNameLoyalHenchman())){
+			return diamondResponseProbabilities;
 		}
-		
-		// TODO
+		// Add the possibility to follow a bluff from a previous player
+		else{
+			double proba = 0.2;
+			double decrease = proba / (player.getPosition() - 1);
+			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
+				// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
+				int diamondsGivenByOther = diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven();
+				if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
+					for(Entry<DiamondsCouple, Double> entry : diamondResponseProbabilities.entrySet()){
+						diamondResponseProbabilities.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
+					}	
+					diamondResponseProbabilities.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther), proba);
+				}
+				proba -= decrease; 
+			}
+		}
 		return diamondResponseProbabilities;
 	}
 	
 	public Map<String, Double> chooseTokenToShow(Player player){
 		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		
-		double lhProba = 0.6;
-		double dProba = 0.3;
+		double lhProba = 0.65;
+		double dProba = 0.25;
 		double aProba = 0.1;
 		
 		// First degree
@@ -111,29 +125,29 @@ public class ThiefStrategy implements ISuspectStrategy {
 		
 		// Second degree
 		// Number of agent token taken before me
-		int aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
-				+ player.getBox().getCount(App.rules.getNameAgentFBI())
-				+ player.getBox().getCount(App.rules.getNameAgentLambda()));
-		
-		/* 
-		 * At least 1 agent token missing
-		 * I can pretend to be this agent, and say I'm a thief => 2nd degree strategy
-		 */
-		if(aNb >= 1){
-			double tProba = 0.2;
-			for(Entry<String, Double> entry : tokenResponseProbabilities.entrySet()){
-				tokenResponseProbabilities.put(entry.getKey(), entry.getValue() - tProba * entry.getValue());
-			}	
-			tokenResponseProbabilities.put(App.rules.getNameThief(), tProba);
-		}
+//		int aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
+//				+ player.getBox().getCount(App.rules.getNameAgentFBI())
+//				+ player.getBox().getCount(App.rules.getNameAgentLambda()));
+//		
+//		/* 
+//		 * At least 1 agent token missing
+//		 * I can pretend to be this agent, and say I'm a thief => 2nd degree strategy
+//		 */
+//		if(aNb >= 1){
+//			double tProba = 0.2;
+//			for(Entry<String, Double> entry : tokenResponseProbabilities.entrySet()){
+//				tokenResponseProbabilities.put(entry.getKey(), entry.getValue() - tProba * entry.getValue());
+//			}	
+//			tokenResponseProbabilities.put(App.rules.getNameThief(), tProba);
+//		}
 		
 		return tokenResponseProbabilities;
 	}
 	
 	/*
 	 * showTokenInBox
-	 * TODO : fonction pas encore prevue : avec chooseTokenToShow on ment sur notre propre identité
-	 * il faut une fonction pour pouvoir mentir sur le contenu de la boite quan on la reçoit.
+	 * avec chooseTokenToShow on ment sur notre propre identité
+	 * il faut une fonction pour pouvoir mentir sur le contenu de la boite quand on la reçoit.
 	 * Pour le moment, mentir au minimum, juste pour ajouter notre fausse identité. Voir comment améliorer. 
 	 */
 	public Map<List<String>, Double> showTokensInBox(){
@@ -141,20 +155,19 @@ public class ThiefStrategy implements ISuspectStrategy {
 		return null;
 	}
 	
-	/*
-	 * showAssumedRolesForAllPLayers
-	 * TODO : que penses tu des joueurs, renvoie un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
-	 */
 	public Map<String, Double> chooseHiddenTokenToShow (){
 		// TODO
 		return null;
 	}
 	
+	/*
+	 * showAssumedRolesForAllPLayers
+	 * que penses tu des autres joueurs, renvoie un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
+	 */	
 	public  Map<Map<Integer, String>, Double> showAssumedRolesForAllPlayers(){
 		// TODO
 		return null;
 	}
-	
 	
 	private Map<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhProba, double dProba, double aProba){
 		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
