@@ -3,6 +3,7 @@ package model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.Random;
 
 import javax.naming.directory.AttributeInUseException;
 
@@ -142,7 +143,7 @@ public class Lie {
 	public void addFalseDiamondsToBox(int diamonds){
 		
 	}
-	public void addFalseTokenSToBox(ArrayList<String> tokens){
+	public void addFalseTokensToBox(ArrayList<String> tokens){
 		
 	}
 	
@@ -188,26 +189,95 @@ public class Lie {
 		return false;
 	}
 	
-	public void updateTokenPicked(){
-		//TODO
+	public void updateRole(String role){
+		try {
+			this.addFalseRoleName(role);
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		} catch (CoeherenceException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void updateDiamondsPicked(){
-		//TODO
+	public void updateNotRole(String role){
+		try {
+			this.addFalseNotAssumedRole(role);
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		} catch (CoeherenceException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void updateDiamondsInBox(){
-		//TODO
+	public void updateDiamondsPicked(int diamonds){
+		try {
+			this.addFalseDiamondsStolen(diamonds);
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void updateTokenHidden(){
-		//TODO
+	public void updateDiamondsInBox(DiamondsCouple diamonds){
+		this.addFalseDiamondsToBox(diamonds.getDiamondsReceived());
+		try {
+			this.addFalseDiamondsStolen(diamonds.getDiamondsReceived() - diamonds.getDiamondsGiven());
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		}
 	}
 	
-	public void updateTokensInBox(){
-		//TODO
+	public void updateHiddenToken(String token){
+		try {
+			this.addFalseHiddenToken(token);
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		} catch (CoeherenceException e) {
+			e.printStackTrace();
+		}
 	}
 	
+	public void updateNotHiddenToken(String token){
+		try {
+			this.addFalseNotHiddenToken(token);
+		} catch (AttributeInUseException e) {
+			e.printStackTrace();
+		} catch (CoeherenceException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateTokensInBox(ArrayList<String> tokens){
+		this.addFalseTokensToBox(tokens);
+	}
+	
+	/**
+	 * tire aléatoirement parmi une liste de <T> selon leur poids Double pourcentage.
+	 * normalise aussi les poids
+	 * @param choice : la hashmap contenant la liste <T> et son poids Double
+	 * @return l'élément <T> choisi aléatoirement
+	 */
+	public static <T> T rollDice(HashMap<T, Double> choice){
+		Double rand = new Random().nextDouble();
+		Double acc = 0D;
+		T result = null;
+		Double maxValue = 0D;
+		//normalize
+		for(Double value: choice.values()){
+			maxValue += value;
+		}
+		if(maxValue != 1){
+			rand = new Random().nextDouble() * maxValue;
+		}
+		
+		for(Entry<T, Double> entry: choice.entrySet()){
+			if(rand < entry.getValue() + acc){
+				result = entry.getKey();
+			}else{
+				acc += entry.getValue();
+			}
+		}
+		return result;
+	}
 
 	
 }

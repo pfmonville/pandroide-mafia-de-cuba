@@ -60,7 +60,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 		diamondResponseProbabilities.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived), lieOnGivenProba);
 		
 		// If I lie about being a LH, I can't follow a bluff said by someone before
-		if(lie.getFalseRole().getName().equals(App.rules.getNameLoyalHenchman())){
+		if(lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())){
 			return diamondResponseProbabilities;
 		}
 		// Add the possibility to follow a bluff from a previous player

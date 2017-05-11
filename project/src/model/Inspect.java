@@ -1,8 +1,12 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.Map.Entry;
 
+import controller.App;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Inspect {
@@ -46,6 +50,26 @@ public class Inspect {
 		ArrayList<Inspect.InspectView> inspectViews = new ArrayList<>();
 		inspectViews.addAll(inspects.values());
 		return inspectViews;
+	}
+	
+	/**
+	 * retourne une map<Integer, String> avec pour chaque joueur son rôle tiré au sort selon les probas des rôles le concernant
+	 */
+	public HashMap<Integer, String> rollDice(){
+		HashMap<Integer, String> result = new HashMap<>();
+		for(Entry<Integer, InspectView> entry: inspects.entrySet()){
+			result.put(entry.getKey(), entry.getValue().rollDice());
+		}
+		return result;
+	}
+	
+	public InspectView getInspectFor(int positionPlayer){
+		for(Entry<Integer, InspectView> entry: inspects.entrySet()){
+			if(entry.getKey().equals(positionPlayer)){
+				return entry.getValue();
+			}
+		}
+		return null;
 	}
 	
 	
@@ -136,6 +160,47 @@ public class Inspect {
 			this.setThief(thief);
 			this.setStreetUrchin(streetUrchin);
 			this.setDriver(driver);
+		}
+		
+		public ArrayList<Double> getAllRolesValue(){
+			return (ArrayList<Double>) Arrays.asList(Double.parseDouble(loyalHenchman.getValue()), Double.parseDouble(cleaner.getValue()), 
+					Double.parseDouble(agent.getValue()), Double.parseDouble(thief.getValue()), 
+					Double.parseDouble(streetUrchin.getValue()), Double.parseDouble(driver.getValue()));
+		}
+		
+		public String rollDice(){
+			Double rand = new Random().nextDouble();
+			Double acc = 0D;
+			Double maxValue = 0D;
+			//normalize
+			for(Double value: getAllRolesValue()){
+				maxValue += value;
+			}
+			if(maxValue != 1){
+				rand = new Random().nextDouble() * maxValue;
+			}
+			
+			if(rand < Double.parseDouble(loyalHenchman.getValue())){
+				return App.rules.getNameLoyalHenchman();
+			}
+			acc += Double.parseDouble(loyalHenchman.getValue());
+			if(rand < Double.parseDouble(cleaner.getValue())){
+				return App.rules.getNameCleaner();
+			}
+			acc += Double.parseDouble(cleaner.getValue());
+			if(rand < Double.parseDouble(agent.getValue())){
+				return App.rules.getNameAgentLambda();
+			}
+			acc += Double.parseDouble(agent.getValue());
+			if(rand < Double.parseDouble(thief.getValue())){
+				return App.rules.getNameThief();
+			}
+			acc += Double.parseDouble(thief.getValue());
+			if(rand < Double.parseDouble(streetUrchin.getValue())){
+				return App.rules.getNameStreetUrchin();
+			}
+			return App.rules.getNameDriver();
+
 		}
 		
 	}
