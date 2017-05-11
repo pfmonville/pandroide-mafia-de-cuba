@@ -8,16 +8,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import controller.App;
+import controller.PlayerController;
 import model.Answer;
 import model.Box;
 import model.Inspect;
 import model.Player;
-import model.Rules;
 import model.SecretID;
 import model.Talk;
 import model.World;
-import controller.App;
-import controller.PlayerController;
 
 public class AIController implements PlayerController {
 
@@ -27,8 +26,10 @@ public class AIController implements PlayerController {
 	protected ArrayList<World> worldsBefore;
 	protected ArrayList<World> worldsAfter;
 	private ArrayList<Double> fiability;
+	private ArrayList<Integer> notLoyalHenchman;
 	private double trustCoeff = 1.5;
-	private double distrustCoeff = 0.5;
+	private double contradictionCoeff = 0.5;
+	private double distrustCoeff = 0.8;
 	private int nbPlayers; // In the application, nbPlayers is equivalent to App.rules.getCurrentNumberOfPlayer();
 	private boolean debugMode = false;
 	private Inspect inspect;
@@ -44,11 +45,6 @@ public class AIController implements PlayerController {
 		fiability.set(0, 100.0); //godfather reliable 
 		fiability.set(player.getPosition() - 1, 100.0);// i'm reliable
 		inspect = new Inspect(player.getPosition());
-	}
-	
-	public AIController(Player player2, Box box, Rules rules,
-			int numberOfPlayers) {
-		// TODO Auto-generated constructor stub
 	}
 	
 	// Specific constructor uses to debugging in MainTestAIController class
@@ -389,8 +385,7 @@ public class AIController implements PlayerController {
 							}
 						}	
 					}
-				}
-				
+				}			
 				/*
 				 * Specific case: Not enough items for everybody
 				 * ex: 6 players (god father included)
@@ -556,13 +551,13 @@ public class AIController implements PlayerController {
 				int nbDiamonds = answer.getNbDiamondsAnswer();
 				if(otherPlayerPosition < player.getPosition()){
 					if(nbDiamonds < player.getBox().getDiamonds()){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}
 				}
 				else{
 					if(nbDiamonds > player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}
 				}
@@ -573,7 +568,7 @@ public class AIController implements PlayerController {
 				int nbTokens = answer.getNbTokensAnswer();
 				if(otherPlayerPosition < player.getPosition()){
 					if(nbTokens < player.getBox().getTokens().size()){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}
 				}
@@ -590,7 +585,7 @@ public class AIController implements PlayerController {
 					}
 						
 					if(nbTokens > player.getBox().getTokens().size() - tokenTaken){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}
 				}
@@ -657,64 +652,83 @@ public class AIController implements PlayerController {
 //					System.out.println("1. "+myCptDict);
 //					System.out.println("2. "+otherCptDict);
 				if(liarDetected){
-					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-					break; // break for the case
 				}					
 				
 				break;
 				
 			case 8: // Es tu un ...
-				if(answer.getContent().equals("Oui")){
-					String[] s = talk.getQuestion().getContent().split("[...]");
-					String roleAsked = s[s.length-1].replace('?', ' ').trim();
-					Integer roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
-					
+				liarDetected = true;
+				String[] s = talk.getQuestion().getContent().split("[...]");
+				String roleAsked = s[s.length-1].replace('?', ' ').trim();
+				Integer roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
+				
+				//if the player admits he's not a LoyalHenchman
+				if(answer.getContent().equals("Oui") && !roleNumber.equals(App.rules.getNumberLoyalHenchman())){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*distrustCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+				}
+				else if(answer.getContent().equals("Non") && roleNumber.equals(App.rules.getNumberLoyalHenchman())){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*distrustCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());					
+				}	
+				
+				if(answer.getContent().equals("Oui")){					
 					if(otherPlayerPosition < player.getPosition()){
 						//s'il existe un monde avant ou ce joueur a le role roleNumber
 						for(World w: worldsBefore){
 							if(w.getRolesDistribution().get(otherPlayerPosition-2).equals(roleNumber)){
+								liarDetected = false;
 								break;
 							}
 						}
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}
 					else{
 						//s'il existe un monde apres ou ce joueur a le role roleNumber
 						for(World w: worldsAfter){
 							if(w.getRolesDistribution().get(otherPlayerPosition-player.getPosition()-1).equals(roleNumber)){
+								liarDetected = false;
 								break;
-							}
+							} 
 						}
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}					
 				}
+				if(liarDetected){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+				}		
 				break;
-			case 9: //Quel personnage es tu ? 
-				Integer roleNumber = App.rules.convertRoleNameIntoNumber(answer.getRoleAnswer());
 				
+			case 9: //Quel personnage es tu ? 
+				liarDetected = true;
+				roleNumber = App.rules.convertRoleNameIntoNumber(answer.getRoleAnswer());
+				if(!roleNumber.equals(App.rules.getNumberLoyalHenchman())){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*distrustCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+				}
 				if(otherPlayerPosition < player.getPosition()){
 					//s'il existe un monde avant ou ce joueur a le role roleNumber
 					for(World w: worldsBefore){
 						if(w.getRolesDistribution().get(otherPlayerPosition-2).equals(roleNumber)){
+							liarDetected = false;
 							break;
 						}
 					}
-					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 				}
 				else{
 					//s'il existe un monde apres ou ce joueur a le role roleNumber
 					for(World w: worldsAfter){
 						if(w.getRolesDistribution().get(otherPlayerPosition-player.getPosition()-1).equals(roleNumber)){
+							liarDetected = false;
 							break;
 						}
 					}
-					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+				}
+				if(liarDetected){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-				}	
+				}
 				break;
 				
 			case 14:// As-tu écarté un jeton ? (au premier joueur)
@@ -739,7 +753,7 @@ public class AIController implements PlayerController {
 					
 				}
 				if(liarDetected){
-					fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 				}			
 				break;	
@@ -749,21 +763,31 @@ public class AIController implements PlayerController {
 				
 			case 16://As-tu écarté un jeton ... ?
 				liarDetected = true;
+				s = talk.getQuestion().getContent().split("[...]");
+				roleAsked = s[s.length-1].replace('?', ' ').trim();
+				roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
+				
 				if(answer.getContent().equals("Oui")){
-					String[] s = talk.getQuestion().getContent().split("[...]");
-					String roleAsked = s[s.length-1].replace('?', ' ').trim();
-					roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
 					for(World w: worldsBefore){
 						// s'il existe un monde ou le 1er joueur a ecarte ce jeton 
 						if(w.getTokenMovedAside().intValue() == roleNumber){
 							liarDetected = false;
 							break;
 						}
-					}
-					if(liarDetected){
-						fiability.set(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 					}					
+				}
+				else{ //first player says he didn't move aside that token
+					for(World w: worldsBefore){
+						// s'il existe un monde ou le 1er joueur n'a pas ecarte ce jeton 
+						if(w.getTokenMovedAside().intValue() != roleNumber){
+							liarDetected = false;
+							break;
+						}
+					}
+				}
+				if(liarDetected){
+					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
+					pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
 				}
 
 				break;
