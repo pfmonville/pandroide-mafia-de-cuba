@@ -17,8 +17,9 @@ import controller.App;
 
 public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 	
-	public Map<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
-		Map<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
+	@Override
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+		HashMap<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
 		double truthProba = 0.6;
 		double randomProba = 1 - truthProba;
 		int diamondsReceived = player.getBox().getDiamonds();
@@ -48,50 +49,27 @@ public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 		return diamondResponseProbabilities;
 	}
 	
-	public Map<String, Double> chooseTokenToShow(Player player){
-		Map<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
+	@Override
+	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie){
+		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		tokenResponseProbabilities.put(App.rules.getNameThief(), 1.0);
 		return tokenResponseProbabilities;
 	}
 	
-	public HashMap<ArrayList<String>, Double> showTokensInBox(){
+	@Override
+	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player, Lie lie){
 		// TODO
 		return null;
 	}
 	
-	public HashMap<String, Double> chooseHiddenTokenToShow (){
+	@Override
+	public HashMap<String, Double> chooseHiddenTokenToShow (Player player, Lie lie){
 		// TODO
 		return null;
 	}
 	
 	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(){
 		// TODO
-		return null;
-	}
-	
-	@Override
-	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore,
-			ArrayList<World> worldsAfter, Question question,
-			ArrayList<Answer> answers) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void generateLie(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<String, Double> chooseTokenToShow() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -8,19 +8,13 @@ import java.util.Map;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
+import model.Lie;
 import model.Player;
 import model.Question;
 import model.RoleProbaCouple;
 import model.World;
 
-public class CleanerStrategy implements ISuspectStrategy{
-
-	@Override
-	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter, Question question, ArrayList<Answer> answers) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
+public class CleanerStrategy implements ISuspectStrategy{	
 	
 	/**
 	 * calcule si le joueur doit tirer sur la cible ou non
@@ -33,47 +27,36 @@ public class CleanerStrategy implements ISuspectStrategy{
 		return false;
 	}
 
-
 	@Override
-	public void generateLie(Player player) {
-		// TODO nothing to do. The cleaner don't lie.
-		
-	}
-
-
-	@Override
-	public HashMap<ArrayList<String>, Double> showTokensInBox() {
+	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
+			Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow() {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
+			Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
-	public HashMap<String, Double> chooseHiddenTokenToShow() {
+	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
+			Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
 	@Override
-	public HashMap<String, Double> chooseTokenToShow() {
+	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	@Override
 	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
 }

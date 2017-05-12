@@ -726,7 +726,7 @@ public class GameController {
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
-					((AISuspectController) playerControllers.get(position)).generateLie();
+					//TODO choisir le degré de stratégie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());

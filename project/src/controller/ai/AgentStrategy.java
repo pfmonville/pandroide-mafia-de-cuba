@@ -6,6 +6,7 @@ import java.util.HashMap;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
+import model.Lie;
 import model.Player;
 import model.Question;
 import model.RoleProbaCouple;
@@ -14,37 +15,28 @@ import model.World;
 public class AgentStrategy implements ISuspectStrategy {
 
 	@Override
-	public Answer chooseAnswer(Player player, ArrayList<World> worldsBefore, ArrayList<World> worldsAfter, Question question, ArrayList<Answer> answers) {
+	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
+			Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void generateLie(Player player) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public HashMap<ArrayList<String>, Double> showTokensInBox() {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
+			Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow() {
+	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
+			Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public HashMap<String, Double> chooseHiddenTokenToShow() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<String, Double> chooseTokenToShow() {
+	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -54,6 +46,5 @@ public class AgentStrategy implements ISuspectStrategy {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
+	
 }

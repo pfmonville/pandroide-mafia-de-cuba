@@ -43,7 +43,7 @@ public class AISuspectController extends AIController{
 		if(lie.isTokensInBoxSet()){
 			response.setTokensAnswer(lie.getFalseBox().getTokens());
 		}else{
-			HashMap<ArrayList<String>, Double> tokensConfigurations = this.strategy.showTokensInBox();
+			HashMap<ArrayList<String>, Double> tokensConfigurations = this.strategy.showTokensInBox(player, lie);
 			//roll dice
 			ArrayList<String> tokens = Lie.rollDice(tokensConfigurations);
 			//update response
@@ -65,7 +65,7 @@ public class AISuspectController extends AIController{
 		if(lie.isDiamondsInBoxSet()){
 			response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
 		}else{
-			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow();
+			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie, diamondsAnnoncedbyOtherPlayers);
 			//roll dice
 			DiamondsCouple diamonds = Lie.rollDice(diamondsConfigurations);
 			//update response
@@ -88,7 +88,7 @@ public class AISuspectController extends AIController{
 			}
 			
 		}else{
-			HashMap<String, Double> hiddenTokenConfigurations = this.strategy.chooseHiddenTokenToShow();
+			HashMap<String, Double> hiddenTokenConfigurations = this.strategy.chooseHiddenTokenToShow(player, lie);
 			//rollDice
 			String hiddenToken = Lie.rollDice(hiddenTokenConfigurations);
 			//update response
@@ -113,7 +113,7 @@ public class AISuspectController extends AIController{
 				}
 			}
 		}else{
-			HashMap<String, Double> tokenConfigurations = this.strategy.chooseTokenToShow();
+			HashMap<String, Double> tokenConfigurations = this.strategy.chooseTokenToShow(player, lie);
 			//roll dice
 			String token = Lie.rollDice(tokenConfigurations);
 			//plus response
@@ -136,6 +136,7 @@ public class AISuspectController extends AIController{
 	
 	
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers){
+		return null;
 		//TODO à desactiver une fois que toutes les stratégies ont été implémentées
 		
 //		Answer response= new Answer();
@@ -245,7 +246,7 @@ public class AISuspectController extends AIController{
 //				tokenAsked = tab[tab.length-1].replace('?', ' ').trim();
 //				
 //			}
-//			if(response.getTokenMovedAside() != null){
+//			if(!response.getTokenMovedAside().equals(App.rules.getNameNoRemovedToken()){
 //				if(number == 14){
 //					content = "Oui";
 //				}
@@ -324,13 +325,6 @@ public class AISuspectController extends AIController{
 //		response.setId(question.getId());
 //		response.setContent(content);
 //		return response;
-		
-		return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
-
-	}
-	
-	public void generateLie(){
-		this.strategy.generateLie(player);
 	}
 	
 	public boolean chooseToShoot(int target) throws StrategyError{

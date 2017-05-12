@@ -3,7 +3,7 @@ package model;
 public class Role {
 	
 	private String name;
-	private String hiddenToken = null;
+	private String hiddenToken = null; //TODO remplacer le null par App.rule.getNameNoRemoveToken()
 	
 	public Role(String name){
 		this.name = name;
