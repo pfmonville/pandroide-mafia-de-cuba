@@ -447,13 +447,13 @@ public class Rules {
 
 
 
-	public String getNameNoTokenRemoved() {
+	public String getNameNoRemovedToken() {
 		return nameNoRemovedToken;
 	}
 
 
-	public void setNameNoTokenRemoved(String nameNoTokenRemoved) {
-		this.nameNoRemovedToken = nameNoTokenRemoved;
+	public void setNameNoRemovedToken(String nameNoRemovedToken) {
+		this.nameNoRemovedToken = nameNoRemovedToken;
 	}
 
 

@@ -29,8 +29,9 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
 			Lie lie) {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<ArrayList<String>, Double> response = new HashMap<ArrayList<String>, Double>();
+		response.put(player.getBox().getTokens(), 1.0);
+		return response;
 	}
 
 	@Override
