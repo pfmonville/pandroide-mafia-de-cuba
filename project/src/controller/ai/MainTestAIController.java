@@ -1,16 +1,15 @@
 package controller.ai;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 
+import controller.App;
 import model.Answer;
 import model.Box;
 import model.Player;
 import model.Question;
 import model.Role;
-import model.Talk;
 import model.World;
-import controller.App;
 
 public class MainTestAIController {
 
@@ -26,11 +25,11 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameAgentFBI());
 		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 10;
+		int nombreDeDiamantsDansBoite = 12;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Nombre de joueurs dans la partie
-		int nbPlayers = 7;
+		int nbPlayers = 6;
 		
 		// Initialisation du joueur courant
 		int positionDuJoueur = 3; // inclus dans [2 ; n], le parrain est le joueur 1
@@ -97,8 +96,26 @@ public class MainTestAIController {
 		System.out.println();
 		
 		
+//		start = System.currentTimeMillis();
+//		for(World w : aic.getWorldsAfter()){
+//			ArrayList<Integer> list = w.getRolesDistribution();
+//			list.set(4, App.rules.getNumberLoyalHenchman());
+//			w.setRoleDistribution(list);
+//		}
+//		endConfigAfter = System.currentTimeMillis() - start;
+//		System.out.println("test worldsAfter, temps (ms): "+endConfigAfter );
+		
+		
+		//Tests getHashMap
+//		HashMap<Integer, Integer> hp;
+//		for(World w : aic.getWorldsAfter()){
+//			System.out.println(w.getRolesDistribution());
+//			hp = aic.getHashMapDistributionForWorldAfter(w);
+//			System.out.println(hp);
+//		}
+		
 		//Tests de checkLiar
-		Question q = new Question(15, "", new ArrayList<Integer>(), 0);
+		Question q = new Question(1, "", new ArrayList<Integer>(), 0);
 		q.setTargetPlayer(2);
 		//pour question 8
 		//q.setContent("Est-tu un... Chauffeur?");
@@ -113,33 +130,33 @@ public class MainTestAIController {
 //		list.add(App.rules.getNameAgentFBI());
 //		a.setTokensAnswer(list);
 		
-		Talk t = new Talk(q, a);
-		aic.checkLiar(t);
-		System.out.println("configBefore apres mise a jour:");
-		for (World al : aic.getWorldsBefore()) {
-	        String appender = "";
-	        for (Integer i : al.getRolesDistribution()) {
-	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
-	            appender = " ";
-	        }
-	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
-	    }
-
-		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
-		System.out.println("temps d'execution [ms] : "+endConfigBefore);
-		System.out.println();
-		System.out.println("*** ConfigAfter apres maj***");
-		for (World al : aic.getWorldsAfter()) {
-	        String appender = "";
-	        for (Integer i : al.getRolesDistribution()) {
-	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
-	            appender = " ";
-	        }
-	        System.out.println();
-	    }
-		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
-		System.out.println("temps d'execution [ms] : "+endConfigAfter);
-		System.out.println();			
+//		Talk t = new Talk(q, a);
+//		aic.checkLiar(t);
+//		System.out.println("configBefore apres mise a jour:");
+//		for (World al : aic.getWorldsBefore()) {
+//	        String appender = "";
+//	        for (Integer i : al.getRolesDistribution()) {
+//	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
+//	            appender = " ";
+//	        }
+//	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
+//	    }
+//
+//		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
+//		System.out.println("temps d'execution [ms] : "+endConfigBefore);
+//		System.out.println();
+//		System.out.println("*** ConfigAfter apres maj***");
+//		for (World al : aic.getWorldsAfter()) {
+//	        String appender = "";
+//	        for (Integer i : al.getRolesDistribution()) {
+//	            System.out.print(appender + App.rules.convertNumberIntoRoleName(i));
+//	            appender = " ";
+//	        }
+//	        System.out.println();
+//	    }
+//		System.out.println("nb configAfter: "+aic.getWorldsAfter().size() );
+//		System.out.println("temps d'execution [ms] : "+endConfigAfter);
+//		System.out.println();			
 	}
 
 }
