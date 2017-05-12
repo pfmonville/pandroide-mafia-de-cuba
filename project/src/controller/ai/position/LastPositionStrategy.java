@@ -11,7 +11,6 @@ import model.SecretID;
 public class LastPositionStrategy implements IPositionStrategy{
 
 	public SecretID chooseWhatToTake(Integer position, Box box) {
-		String roleName = ""; //TODO: use roleName?
 		int diamondsTaken = 0;
 		String tokenTaken = null;
 		String hiddenToken = null;
@@ -23,7 +22,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 		 
 		if(box.isEmpty()){
 			//player is a street urchin
-			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, App.rules.getNameStreetUrchin(), hiddenToken);
+			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, tokenTaken, hiddenToken);
 		}
 		//there are only diamonds in the box 
 		if(tokens.isEmpty()){
