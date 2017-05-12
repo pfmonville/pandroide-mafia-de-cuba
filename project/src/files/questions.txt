@@ -16,7 +16,7 @@ Index des questions : de 0 à nombre de lignes
 10 : Qui dois-je accuser selon toi? : 1 : 2,3,15
 11 : Est-ce que tu sais quel est le rôle de cette personne? : 1 : 0,1,2,3
 12 : Selon toi quel est le rôle de cette personne ? : 1 : 2,3,13
-13 : Est-ce que tu penses que cette personne a pris des diamants? Combien? : 1 : 0,1,2,3
+13 : Est-ce que tu penses que cette personne a pris des diamants? ... : 1 : 0,1,2,3
 14 : As-tu écarté un jeton ? : 2 : 0,1,2,3,14
 15 : Quel jeton as-tu écarté ? : 2 : 2,3,14
 16 : As-tu écarté le jeton ... ? : 2 : 0,1,2,3,14 : 1

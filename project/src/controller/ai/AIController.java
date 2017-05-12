@@ -540,6 +540,7 @@ public class AIController implements PlayerController {
 		// faire appel à keepWorldsWhere
 	}
 	
+
 	public void checkLiar(Talk talk){
 		System.out.println("Liste des non fideles: "+notLoyalHenchman);
 		
@@ -557,7 +558,7 @@ public class AIController implements PlayerController {
 			int nbDiamonds = answer.getNbDiamondsAnswer();
 			
 			//player just before me
-			if(otherPlayerPosition == player.getPosition()-1){
+			if((questionId == 1 || questionId == 3) && otherPlayerPosition == player.getPosition()-1){
 				if(nbDiamonds != player.getBox().getDiamonds()){
 					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 					if(!notLoyalHenchman.contains(otherPlayerPosition)){
@@ -567,7 +568,7 @@ public class AIController implements PlayerController {
 				}
 			}
 			//player just after me
-			else if(otherPlayerPosition == player.getPosition()+1){
+			else if((questionId == 0 || questionId == 2) && otherPlayerPosition == player.getPosition()+1){
 				if(nbDiamonds != player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
 					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 					if(!notLoyalHenchman.contains(otherPlayerPosition)){
@@ -576,7 +577,6 @@ public class AIController implements PlayerController {
 					}
 				}
 			}
-			
 			else if(otherPlayerPosition < player.getPosition()){
 				if(nbDiamonds < player.getBox().getDiamonds()){
 					fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
@@ -675,10 +675,52 @@ public class AIController implements PlayerController {
 				break;				
 
 			case 4: //Combien de jetons contenait la boîte quand tu l'as reçue ?
+				int nbTokensAnswer = answer.getNbTokensAnswer();
+				int tokenTaken; 
+				if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
+					tokenTaken = 0;
+				}					
+				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != null){
+					tokenTaken = 2;
+				}				
+				else{
+					tokenTaken = 1;
+				}	
+				//player just after me
+				if(otherPlayerPosition == player.getPosition()+1){
+					if(nbTokensAnswer != player.getBox().getTokens().size() - tokenTaken){
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(otherPlayerPosition)){
+							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+							notLoyalHenchman.add(otherPlayerPosition);
+						}
+					}
+					break;
+				}
 			case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
-				int nbTokens = answer.getNbTokensAnswer();
-				if(otherPlayerPosition < player.getPosition()){
-					if(nbTokens < player.getBox().getTokens().size()){
+				nbTokensAnswer = answer.getNbTokensAnswer();
+
+				if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
+					tokenTaken = 0;
+				}					
+				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != null){
+					tokenTaken = 2;
+				}				
+				else{
+					tokenTaken = 1;
+				}				
+				//player just before me
+				if(otherPlayerPosition == player.getPosition()-1){
+					if(nbTokensAnswer != player.getBox().getTokens().size()){
+						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(otherPlayerPosition)){
+							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
+							notLoyalHenchman.add(otherPlayerPosition);
+						}
+					}
+				}				
+				else if(otherPlayerPosition < player.getPosition()){
+					if(nbTokensAnswer < player.getBox().getTokens().size()){
 						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						if(!notLoyalHenchman.contains(otherPlayerPosition)){
 							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
@@ -686,19 +728,8 @@ public class AIController implements PlayerController {
 						}					
 					}
 				}
-				else{
-					int tokenTaken; 
-					if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
-						tokenTaken = 0;
-					}					
-					else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != null){
-						tokenTaken = 2;
-					}				
-					else{
-						tokenTaken = 1;
-					}
-						
-					if(nbTokens > player.getBox().getTokens().size() - tokenTaken){
+				else{						
+					if(nbTokensAnswer > player.getBox().getTokens().size() - tokenTaken){
 						fiability.set(otherPlayerPosition-1, fiability.get(otherPlayerPosition-1)*contradictionCoeff);
 						if(!notLoyalHenchman.contains(otherPlayerPosition)){
 							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
@@ -707,8 +738,6 @@ public class AIController implements PlayerController {
 					}
 				}
 				break;
-
-
 				
 			case 8: // Es tu un ...
 				liarDetected = true;

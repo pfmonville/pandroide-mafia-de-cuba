@@ -38,6 +38,9 @@ public class Answer extends Phrase{
 		this.nbDiamondsAnswer = nbDiamondsAnswer;
 	}
 
+	public void substractDiamondsToAnswer(int substract){
+		this.nbDiamondsAnswer -= substract;
+	}
 	public ArrayList<String> getTokensAnswer() {
 		return tokensAnswer;
 	}
@@ -70,5 +73,18 @@ public class Answer extends Phrase{
 		this.tokenMovedAside = tokenMovedAside;
 	}
 
-
+	/**
+	 * 
+	 * @param role
+	 * @return
+	 */
+	public int getCount(String role){
+		int cpt = 0 ;
+		for (String tok : tokensAnswer){
+			if (tok.equals(role))
+				cpt++;
+		}
+		return cpt ;
+	}
+	
 }

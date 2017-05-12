@@ -11,6 +11,7 @@ import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.Question;
+import model.RoleProbaCouple;
 import model.World;
 import controller.App;
 
@@ -53,17 +54,17 @@ public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 		return tokenResponseProbabilities;
 	}
 	
-	public Map<List<String>, Double> showTokensInBox(){
+	public HashMap<ArrayList<String>, Double> showTokensInBox(){
 		// TODO
 		return null;
 	}
 	
-	public Map<String, Double> chooseHiddenTokenToShow (){
+	public HashMap<String, Double> chooseHiddenTokenToShow (){
 		// TODO
 		return null;
 	}
 	
-	public  Map<Map<Integer, String>, Double> showAssumedRolesForAllPlayers(){
+	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(){
 		// TODO
 		return null;
 	}
@@ -80,6 +81,18 @@ public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 	public void generateLie(Player player) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Double> chooseTokenToShow() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -1,18 +1,26 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
+import java.util.Set;
 
-import model.Answer;
-import model.Box;
-import model.Lie;
-import model.Player;
-import model.Question;
-import model.SecretID;
 import controller.App;
 import controller.ai.position.IPositionStrategy;
 import error.StrategyError;
+import model.Answer;
+import model.Box;
+import model.DiamondsCouple;
+import model.Lie;
+import model.Player;
+import model.Question;
+import model.RoleProbaCouple;
+import model.SecretID;
 
 public class AISuspectController extends AIController{
 	private ISuspectStrategy strategy;
@@ -31,6 +39,105 @@ public class AISuspectController extends AIController{
 		return posStrategy;
 	}
 
+	private void getBox(Answer response, boolean before, boolean substract){
+		getTokensInBox(response, before, substract);
+		getDiamondsInBox(response, before);
+	}
+	private void getTokensInBox(Answer response, boolean before, boolean substract){
+		if(lie.isTokensInBoxSet()){
+			response.setTokensAnswer(lie.getFalseBox().getTokens());
+		}else{
+			HashMap<ArrayList<String>, Double> tokensConfigurations = this.strategy.showTokensInBox();
+			//roll dice
+			ArrayList<String> tokens = Lie.rollDice(tokensConfigurations);
+			//update response
+			response.setTokensAnswer(tokens);
+			//update lie
+			lie.updateTokensInBox(tokens);
+		}
+		if(!before){
+			//traitement spécial pour la question "quand tu l'as passée" on retire le jeton que le joueur décide de prendre
+			getRole(response, substract, true);
+			if(player.isFirstPlayer()){
+				//on demande s'il a caché un jeton
+				getHiddenToken(response, substract, true);
+			}
+		}
+	}
+	
+	private void getDiamondsInBox(Answer response, boolean before){
+		if(lie.isDiamondsInBoxSet()){
+			response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
+		}else{
+			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow();
+			//roll dice
+			DiamondsCouple diamonds = Lie.rollDice(diamondsConfigurations);
+			//update response
+			response.setNbDiamondsAnswer(diamonds.getDiamondsReceived());
+			//update lie
+			lie.updateDiamondsInBox(diamonds);
+		}
+		if(!before){
+			//traitement spécial pour la question "quand tu l'as passée" on retire les diamants que le joueur décide de prendre
+			response.substractDiamondsToAnswer(lie.getFalseDiamondsStolen());
+		}
+	}
+	private void getHiddenToken(Answer response, boolean substract, boolean update){
+		//on demande s'il a caché un jeton
+		if(lie.hasShownHiddenToken()){
+			if(substract){
+				response.getTokensAnswer().remove(lie.getFalseHiddenToken());
+			}else{
+				response.setTokenMovedAside(lie.getFalseHiddenToken());
+			}
+			
+		}else{
+			HashMap<String, Double> hiddenTokenConfigurations = this.strategy.chooseHiddenTokenToShow();
+			//rollDice
+			String hiddenToken = Lie.rollDice(hiddenTokenConfigurations);
+			//update response
+			if(substract){
+				response.getTokensAnswer().remove(hiddenToken);
+			}else{
+				response.setTokenMovedAside(hiddenToken);
+			}
+			//update lie
+			if(update){
+				lie.updateHiddenToken(hiddenToken);
+			}
+		}
+	}
+	private void getRole(Answer response, boolean substract, boolean update){
+		if(lie.hasShownRole()){
+			if(App.rules.isAValidToken(lie.getFalseRoleName())){
+				if(substract){
+					response.getTokensAnswer().remove(lie.getFalseRoleName());
+				}else{
+					response.setTokensAnswer((ArrayList<String>) Arrays.asList(lie.getFalseRoleName()));
+				}
+			}
+		}else{
+			HashMap<String, Double> tokenConfigurations = this.strategy.chooseTokenToShow();
+			//roll dice
+			String token = Lie.rollDice(tokenConfigurations);
+			//plus response
+			if(substract){
+				response.getTokensAnswer().remove(token);
+			}else{
+				response.setTokensAnswer((ArrayList<String>) Arrays.asList(token));
+			}
+			//update lie
+			if(update){
+				lie.updateRole(token);
+			}else{
+				lie.updateNotRole(token);
+			}
+			
+		}
+	}
+	
+	
+	
 	public void setPosStrategy(IPositionStrategy posStrategy) {
 		this.posStrategy = posStrategy;
 	}
@@ -102,6 +209,7 @@ public class AISuspectController extends AIController{
 //		
 //		//return this.strategy.chooseAnswer(player, worldsBefore, worldsAfter, question, answers);
 //
+		return null;
 	}
 	
 	public void generateLie(){

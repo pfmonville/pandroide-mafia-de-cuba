@@ -98,17 +98,20 @@ public class MainTestAIController {
 		
 		
 		//Tests de checkLiar
-		Question q = new Question(14, "Non", new ArrayList<Integer>(), 0);
+		Question q = new Question(15, "", new ArrayList<Integer>(), 0);
 		q.setTargetPlayer(2);
 		//pour question 8
-		//q.setContent("Est-tu un... Agent?");
+		//q.setContent("Est-tu un... Chauffeur?");
 		
-		Answer a = new Answer(q.getId(), "",  new ArrayList<Integer>());
-		a.setNbDiamondsAnswer(9);
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(App.rules.getNameLoyalHenchman());
-		list.add(App.rules.getNameAgentFBI());
-		a.setTokensAnswer(list);
+		Answer a = new Answer(q.getId(), "Oui",  new ArrayList<Integer>());
+		//question 15
+		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
+		
+//		a.setNbDiamondsAnswer(9);
+//		ArrayList<String> list = new ArrayList<String>();
+//		list.add(App.rules.getNameLoyalHenchman());
+//		list.add(App.rules.getNameAgentFBI());
+//		a.setTokensAnswer(list);
 		
 		Talk t = new Talk(q, a);
 		aic.checkLiar(t);
