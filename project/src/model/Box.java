@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Box {
 	
-	private int diamonds;
+	private Integer diamonds;
 	private ArrayList<String> tokens;
 	
 	public Box(Integer diamonds, ArrayList<String> tokens){
@@ -26,7 +26,7 @@ public class Box {
 		return tokens;
 	}
 	
-	public void setDiamonds(int newNumber) {
+	public void setDiamonds(Integer newNumber) {
 		diamonds = newNumber ;
 	}
 	
@@ -57,7 +57,7 @@ public class Box {
 		return false;
 	}
 	
-	public boolean removeDiamonds(int diamondsToRemove){
+	public boolean removeDiamonds(Integer diamondsToRemove){
 		if(this.diamonds >= diamondsToRemove){
 			this.diamonds -= diamondsToRemove;
 			return true;

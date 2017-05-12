@@ -1,9 +1,11 @@
 package model;
 
+import controller.App;
+
 public class Role {
 	
 	private String name;
-	private String hiddenToken = null; //TODO remplacer le null par App.rule.getNameNoRemoveToken()
+	private String hiddenToken = App.rules.getNameNoRemovedToken();
 	
 	public Role(String name){
 		this.name = name;

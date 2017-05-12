@@ -66,10 +66,10 @@ public class Lie {
 		}
 	}
 	public void addFalseHiddenToken(String token) throws AttributeInUseException, CoeherenceException{
-		if(this.hideToken != false){
+		if(this.hideToken != null && this.hideToken != false){
 			throw new CoeherenceException("Le joueur avait déjà dit qu'il ne cachait pas de jeton");
 		}
-		if(App.rules.isAValidToken(token)){
+		if(App.rules.isAValidToken(token) || token == App.rules.getNameNoRemovedToken()){
 			if(this.falseHiddenToken == null){
 				if(!this.falseNotHiddenToken.contains(token)){
 					this.falseHiddenToken = token;
@@ -141,10 +141,12 @@ public class Lie {
 	}
 	
 	public void addFalseDiamondsToBox(int diamonds){
-		
+		// TODO faire une meilleure version avec gestion des exceptions
+		falseBox.setDiamonds(diamonds);
 	}
 	public void addFalseTokensToBox(ArrayList<String> tokens){
-		
+		// TODO faire une meilleure version avec gestion des exceptions comme la méthode addFalseNotAssumedRole()
+		falseBox.setTokens(tokens);
 	}
 	
 	
