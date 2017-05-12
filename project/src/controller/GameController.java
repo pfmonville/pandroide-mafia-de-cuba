@@ -70,6 +70,9 @@ public class GameController {
 	private int diamondsHidden;
 	
 	private Thread mainThread = null;
+	private long startTimer;
+	private boolean hasTimerStarted = false;
+	private long duration;
 	
 	public GameController(){
 	
@@ -189,6 +192,15 @@ public class GameController {
 		return numberOfPlayers ;
 	}
 	
+	public ArrayList<Integer> getAllPlayersPosition(){
+		ArrayList<Integer> result = new ArrayList<>();
+		for(Player player: players.values()){
+			result.add(player.getPosition());
+		}
+		
+		return result;
+	}
+	
 	public int getActualTurn() {
 		return currentTurn;
 	}
@@ -227,12 +239,7 @@ public class GameController {
 	 */
 	private void prepareBox(){
 		Platform.runLater( ()-> App.gv.displayBoxAnimation());
-		//PAUSE
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		startTimer(500);
 		this.getCurrentPlayer().setBox(box.clone());
 		if(this.isCurrentPlayerHuman()){
 			App.gv.godFatherHideDiamondsView() ;
@@ -257,6 +264,12 @@ public class GameController {
 			((GodFather)players.get(1).getRole()).hideDiamonds(numberOfDiamondsHidden);
 		}
 		this.currentPlayer = 2;
+		
+		try {
+			reachTimer();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		this.nextTurn();
 	}
 	
@@ -265,11 +278,7 @@ public class GameController {
 	 */
 	private void nextTurn(){
 		//Forcing pause (only for testing)
-		try {
-			Thread.sleep(300);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		startTimer(500);
 		Platform.runLater( ()-> App.gv.displayBoxAnimation());
 		if(this.isCurrentPlayerHuman()){
 			Platform.runLater(() -> App.gv.playerPickView());
@@ -286,6 +295,12 @@ public class GameController {
 	 */
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden) throws PickingStrategyError{
 
+		try {
+			reachTimer();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
 		this.getCurrentPlayer().setBox(box.clone()); 
 
 		if(diamondsPicked > 0 && tokenPicked != null){
@@ -323,12 +338,6 @@ public class GameController {
 			}else{
 				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
 			}
-		}
-		
-		// if the current player is an AI
-		if(!this.isCurrentPlayerHuman()){
-			// the AI creates all the possible worlds for the players after him, based on the box content
-			((AIController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
 		}
 		
 		//if this is the last player then start the second half
@@ -370,6 +379,7 @@ public class GameController {
 		if(humanPosition == this.currentPlayer && currentTurn==1){ 
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else if (humanPosition != this.currentPlayer){
+			startTimer(500);
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
 			this.mainThread = thread;
 			thread.start();
@@ -394,6 +404,11 @@ public class GameController {
 	}
 	
 	public void askTo(Question questionToAsk){
+		try {
+			reachTimer();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		if(questionToAsk.getTargetPlayer()==0) {
 			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
 			return;
@@ -403,6 +418,7 @@ public class GameController {
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
+			startTimer(500);
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));
 			this.mainThread = thread;
 			thread.start();
@@ -474,6 +490,11 @@ public class GameController {
 	
 	
 	public void emptyPocketsTo(int targetPlayer){
+		try {
+			reachTimer();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
 		if(targetPlayer==0) {
 			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
 			return;
@@ -606,6 +627,11 @@ public class GameController {
 	
 	
 	public void getAnswerToQuestion(Question question, Answer answer){
+		try {
+			reachTimer();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		Platform.runLater(()->
 			createPopUp("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent(), "Action en cours", 5));
 		Talk talk = new Talk(question, answer);
@@ -882,6 +908,25 @@ public class GameController {
 
 	public void setDiamondsTakenBack(int diamondsTakenBack) {
 		this.diamondsTakenBack = diamondsTakenBack;
+	}
+	
+	
+	public void startTimer(long period){
+		if(!hasTimerStarted){
+			hasTimerStarted = true;
+		}
+		this.duration = period;
+		startTimer = System.currentTimeMillis();		
+	}
+	
+	public void reachTimer() throws InterruptedException{
+		if(hasTimerStarted){
+			long interval = System.currentTimeMillis() - startTimer;
+			if(interval < duration){
+				Thread.sleep(interval);
+			}
+			hasTimerStarted = false;
+		}
 	}
 	
 	/**

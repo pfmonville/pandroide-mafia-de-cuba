@@ -41,6 +41,7 @@ public class Rules {
 	private String nameDriver;
 	private String nameThief;
 	private String nameStreetUrchin;
+	private String nameNoRemovedToken;
 	// Ugly as hell, but whatever: Be careful, the names are defined in the constructor too
 	private final String nameRolesTab[] = {"Fidèle", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
 	
@@ -77,6 +78,7 @@ public class Rules {
 		this.nameDriver = "Chauffeur";
 		this.nameThief= "Voleur";
 		this.nameStreetUrchin = "Enfant des rues";
+		this.nameNoRemovedToken = "noTokenRemoved";
 		
 		this.defaultNumberOfLoyalHenchmen = Arrays.asList(1,2,3,4,4,4,5);
 		this.defaultNumberOfCleaners = Arrays.asList(0,0,0,0,0,0,0);
@@ -443,6 +445,16 @@ public class Rules {
 		this.nameStreetUrchin = nameStreetUrchin;
 	}
 
+
+
+	public String getNameNoTokenRemoved() {
+		return nameNoRemovedToken;
+	}
+
+
+	public void setNameNoTokenRemoved(String nameNoTokenRemoved) {
+		this.nameNoRemovedToken = nameNoTokenRemoved;
+	}
 
 
 	public int getNumberOfLoyalHenchmen() {
