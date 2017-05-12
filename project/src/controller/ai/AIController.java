@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import controller.App;
@@ -1064,6 +1065,64 @@ public class AIController implements PlayerController {
 	
 	public Inspect getInspect(){
 		return this.inspect;
+	}
+	
+	
+	//met à jour les probas des roles des joueurs
+	public void updateInspect(){
+		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
+		//instancier la hashmap
+		for(int position:App.gameController.getAllPlayersPosition()){
+			if(position != player.getPosition() && position != 1){
+				playersAssumedRoles.put(position, new HashMap<>());
+			}
+		}
+		
+		//count all roles (with the weight of each world)
+		for(World world: worldsBefore){
+			//sera un hashMap<Integer, Integer>
+			HashMap<Integer, Integer> distribution = getHashMapDistributionForWorldBefore(world);
+			Double weight = world.getWeight(fiability);
+			for(Entry<Integer, Integer> entry: distribution.entrySet()){
+				int player = entry.getKey();
+				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
+				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
+				playerRoles.put(role, weight + playerRoles.get(role));
+			}
+		}
+		for(World world: worldsAfter){
+			HashMap<Integer, Integer> distribution = getHashMapDistributionForWorldAfter(world);
+			Double weight = world.getWeight(fiability);
+			for(Entry<Integer, Integer> entry: distribution.entrySet()){
+				int player = entry.getKey();
+				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
+				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
+				playerRoles.put(role, weight + playerRoles.get(role));
+			}
+		}
+	
+		
+		
+		for(Entry<Integer, HashMap<String, Double>> entry: playersAssumedRoles.entrySet()){
+			int id = entry.getKey();
+			HashMap<String, Double> roles = entry.getValue();
+			
+			//normalize
+			Double maxValue = 0D;
+			for(Double value: roles.values()){
+				maxValue += value;
+			}
+			for(String key: roles.keySet()){
+				roles.put(key, roles.get(key)/maxValue);
+			}
+			
+			//update inspect
+			inspect.updateAssumedRoleForPlayer(id, roles.get(App.rules.getNameLoyalHenchman()), 
+					roles.get(App.rules.getNameCleaner()), roles.get(App.rules.getNameAgentLambda()), 
+					roles.get(App.rules.getNameThief()), roles.get(App.rules.getNameStreetUrchin()),
+					roles.get(App.rules.getNameDriver()));
+
+		}
 	}
 	
 	

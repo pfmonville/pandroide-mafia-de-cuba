@@ -128,26 +128,44 @@ public class Inspect {
 		}
 		
 		public void setLoyalHenchman(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.loyalHenchman.set(value.toString());
 		}
 		
 		public void setCleaner(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.cleaner.set(value.toString());
 		}
 		
 		public void setAgent(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.agent.set(value.toString());
 		}
 		
 		public void setThief(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.thief.set(value.toString());
 		}
 		
 		public void setStreetUrchin(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.streetUrchin.set(value.toString());
 		}
 		
 		public void setDriver(Double value){
+			if(value == null){
+				value = 0D;
+			}
 			this.driver.set(value.toString());
 		}
 		

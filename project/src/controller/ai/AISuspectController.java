@@ -16,6 +16,7 @@ import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.Question;
@@ -224,9 +225,19 @@ public class AISuspectController extends AIController{
 		return ((CleanerStrategy) this.strategy).chooseToShoot(target);
 	}
 	
-	//random
+	
 	public SecretID pickSomething(int position, Box box){
-		return posStrategy.chooseWhatToTake(position, box);
+		Box myBox = box.clone();
+		SecretID secret = posStrategy.chooseWhatToTake(position, box);
+		myBox.removeToken(secret.getTokenTaken());
+		myBox.removeToken(secret.getHiddenToken());
+		myBox.removeDiamonds(secret.getDiamondsTaken());
+		
+		createWorldsAfterVision(myBox);
+		super.updateInspect();
+		return secret;
+		
+		//Anciennement pour avoir un choix aléatoire
 //		String roleName = "";
 //		int diamondsTaken = 0;
 //		String tokenTaken = null;

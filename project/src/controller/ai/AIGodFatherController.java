@@ -28,7 +28,10 @@ public class AIGodFatherController extends AIController{
 	}
 	
 	public int chooseHowManyDiamondsToHide(Box box){
-		return this.strategy.chooseHowManyDiamondsToHide(box);
+		int removedDiamonds = this.strategy.chooseHowManyDiamondsToHide(box);
+		//mise à jour des visions des joueurs
+		super.updateInspect();
+		return removedDiamonds;
 	}
 	
 	public int chooseAction(){
