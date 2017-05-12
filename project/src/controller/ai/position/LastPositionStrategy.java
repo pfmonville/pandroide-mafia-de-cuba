@@ -32,7 +32,13 @@ public class LastPositionStrategy implements IPositionStrategy{
 			}
 			//take some diamonds: at least one but never all
 			if(alea < 0.6){
-				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1) + 1, tokenTaken, hiddenToken);
+				if(box.getDiamonds()==1){
+					diamondsTaken=1;
+				}
+				else {
+					diamondsTaken = r.nextInt(box.getDiamonds()-1) + 1 ;
+				}
+				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//take nothing
 			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, tokenTaken, hiddenToken);
@@ -48,7 +54,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameThief(), box.getDiamonds(), tokenTaken, hiddenToken);
 				}
 				//take some diamonds: at least one but never all
-				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1) + 1, tokenTaken, hiddenToken);
+				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1)+1, tokenTaken, hiddenToken);
 			}
 		}
 		//if there is no diamonds or the player does not steal 

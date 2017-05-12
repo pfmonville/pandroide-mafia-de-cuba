@@ -56,7 +56,12 @@ public class MiddlePositionStrategy implements IPositionStrategy{
 					}
 				}
 				if(alea < 0.5){
-					diamondsTaken = r.nextInt(diamsBox/2) + diamsBox/2+1;
+					if(diamsBox==1){
+						diamondsTaken = diamsBox;
+					}
+					else {
+						diamondsTaken = r.nextInt(diamsBox/2) + diamsBox/2+1;
+					}
 					return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken);	
 				} 
 			}
