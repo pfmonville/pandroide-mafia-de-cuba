@@ -52,7 +52,6 @@ public class Player {
 		switch (token) {
 
 			case "Fidèle" :
-
 				role = new LoyalHenchman();
 				break ;
 			case "FBI" :
@@ -63,6 +62,7 @@ public class Player {
 				break; 
 			case "Agent":
 				role = new Agent(App.rules.getNameAgentLambda());
+				break;
 			case "Nettoyeur" :
 				role = new Cleaner() ;
 				break ;

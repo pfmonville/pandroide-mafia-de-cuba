@@ -1,24 +1,26 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class World {
 	private ArrayList<Integer> rolesDistribution;
 	private Integer tokenMovedAside;
 	
-	public World(Integer tokenMovedAside, ArrayList<Integer> roleDistribution){
+	//cle: position du joeur
+	// valeur appartient {-1, 0, 1}, indique si ce monde est vrai d'apres la reponse de ce joueur
+	private HashMap<Integer, Integer> truthValue; 
+	
+	public World(Integer tokenMovedAside, ArrayList<Integer> roleDistribution, HashMap<Integer, Integer> truthValue){
 		this.rolesDistribution = roleDistribution;
 		this.tokenMovedAside = tokenMovedAside;
-	}
-
-	public World(World w){
-		this.rolesDistribution = (ArrayList<Integer>) w.getRolesDistribution().clone();
-		this.tokenMovedAside = w.getTokenMovedAside();		
+		this.truthValue = truthValue;
 	}
 	
 	public World(){
 		this.rolesDistribution = new ArrayList<Integer>();
 		this.tokenMovedAside = -1;
+		this.truthValue = new HashMap<Integer, Integer>();
 	}
 
 	public boolean equals(Object obj){
@@ -59,10 +61,14 @@ public class World {
 	
 	public World clone(){
 		ArrayList<Integer> clonedRolesDistribution = new ArrayList<Integer>();
+		HashMap<Integer, Integer> clonedTruthValue = new HashMap<Integer, Integer>();
 		for (Integer i : rolesDistribution){
 			clonedRolesDistribution.add(new Integer(i.intValue()));
 		}
-		return new World(tokenMovedAside, clonedRolesDistribution);
+		for(Integer id: clonedTruthValue.keySet()){
+			clonedTruthValue.put(id, truthValue.get(id));
+		}
+		return new World(tokenMovedAside, clonedRolesDistribution, clonedTruthValue);
 	}
 	
 	public ArrayList<Integer> getRolesDistribution() {
@@ -81,5 +87,19 @@ public class World {
 		this.tokenMovedAside = tokenMovedAside;
 	}
 	
-	
+	public HashMap<Integer, Integer> getTruthValue() {
+		return truthValue;
+	}
+
+	public void setTruthValue(HashMap<Integer, Integer> truthValue) {
+		this.truthValue = truthValue;
+	}
+
+	public Double getWeight(HashMap<Integer, Double> fiability){
+		Double sum = 0.0;
+		for(Integer id : truthValue.keySet()){
+			sum += truthValue.get(id)*fiability.get(id);
+		}
+		return sum;
+	}
 }

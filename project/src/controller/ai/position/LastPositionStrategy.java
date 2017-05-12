@@ -11,7 +11,6 @@ import model.SecretID;
 public class LastPositionStrategy implements IPositionStrategy{
 
 	public SecretID chooseWhatToTake(Integer position, Box box) {
-		String roleName = ""; //TODO: use roleName?
 		int diamondsTaken = 0;
 		String tokenTaken = null;
 		String hiddenToken = null;
@@ -23,7 +22,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 		 
 		if(box.isEmpty()){
 			//player is a street urchin
-			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, App.rules.getNameStreetUrchin(), hiddenToken);
+			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, tokenTaken, hiddenToken);
 		}
 		//there are only diamonds in the box 
 		if(tokens.isEmpty()){
@@ -33,7 +32,13 @@ public class LastPositionStrategy implements IPositionStrategy{
 			}
 			//take some diamonds: at least one but never all
 			if(alea < 0.6){
-				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1) + 1, tokenTaken, hiddenToken);
+				if(box.getDiamonds()==1){
+					diamondsTaken=1;
+				}
+				else {
+					diamondsTaken = r.nextInt(box.getDiamonds()-1) + 1 ;
+				}
+				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//take nothing
 			return new SecretID(App.rules.getNameStreetUrchin(), diamondsTaken, tokenTaken, hiddenToken);
@@ -49,7 +54,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameThief(), box.getDiamonds(), tokenTaken, hiddenToken);
 				}
 				//take some diamonds: at least one but never all
-				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1) + 1, tokenTaken, hiddenToken);
+				return new SecretID(App.rules.getNameThief(), r.nextInt(box.getDiamonds()-1)+1, tokenTaken, hiddenToken);
 			}
 		}
 		//if there is no diamonds or the player does not steal 

@@ -15,6 +15,10 @@ import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
 import controller.ai.GodFatherStrategy;
 import controller.ai.LoyalHenchmanStrategy;
+import controller.ai.position.FirstPositionStrategy;
+import controller.ai.position.LastPositionStrategy;
+import controller.ai.position.MiddlePositionStrategy;
+import controller.ai.position.SecondPositionStrategy;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
@@ -290,7 +294,7 @@ public class GameController {
 		if(tokenPicked != null){
 			if(App.rules.isAValidToken(tokenPicked)){
 				if(!this.box.removeToken(tokenPicked)){
-					throw new PickingStrategyError("this token is not in the box");
+					throw new PickingStrategyError("this token is not in the box :"+tokenPicked);
 				}
 				players.get(position).takeToken(tokenPicked);
 				
@@ -692,7 +696,19 @@ public class GameController {
 					playerControllers.put(position, new AIGodFatherController(player));
 				}else{
 					playerControllers.put(position, new AISuspectController(player));
-					//TODO initialiser les pos strategy
+					//set position strategy
+					if(position==2){
+						((AISuspectController)playerControllers.get(position)).setPosStrategy(new FirstPositionStrategy());
+					}
+					else if(position == 3){
+						((AISuspectController)playerControllers.get(position)).setPosStrategy(new SecondPositionStrategy());
+					} 
+					else if(position== App.rules.getCurrentNumberOfPlayer()){
+						((AISuspectController)playerControllers.get(position)).setPosStrategy(new LastPositionStrategy());
+					}
+					else {
+						((AISuspectController)playerControllers.get(position)).setPosStrategy(new MiddlePositionStrategy());
+					}
 				}
 			}
 		}

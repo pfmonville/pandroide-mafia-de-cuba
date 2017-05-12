@@ -231,8 +231,11 @@ public class ThiefStrategy implements ISuspectStrategy {
 		HashMap<String, Double> hiddenTokenProbabilitiesResponse = new HashMap<String, Double>();
 		
 		if(player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman())){
+			double hidAgentProb = 0.4;
+			double hidDriverProb = 0.3;
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), 0.3);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), 0.3);
+//			hiddenTokenProbabilitiesResponse.put(App.rules.getNameNoRemovedToken(), 0.3);
 		}
 		// TODO
 		return null;

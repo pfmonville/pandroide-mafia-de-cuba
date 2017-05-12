@@ -18,6 +18,8 @@ import error.PrepareBoxStrategyError;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -31,6 +33,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -76,7 +79,7 @@ public class GameView extends View{
 	private ScrollPane logPart ;
 
 	private ToggleGroup questionsGroup ;
-	private ComboBox<String> choices_role, choices_tokenHidden ; //interactive questions
+	private ComboBox<String> choices_role, choices_tokenHidden, choices_player11, choices_player12, choices_player13 ; //interactive questions
 	private ComboBox<String> announcement ; //allows Godfather to make an annoucement
 	private ToolBar toolBar ;
 	private Label answer,diamondsBack, diamondsAway, jokers, gameHistory ;
@@ -447,11 +450,40 @@ public class GameView extends View{
 						if(((Question)quest.get(j)).getInteractive()==0){
 							choices_role.setDisable(true);
 							choices_tokenHidden.setDisable(true);
+							choices_player11.setDisable(true);
+							choices_player12.setDisable(true);
+							choices_player13.setDisable(true);
 						} else {
-							if(((Question)quest.get(j)).getId()==8)
+							if(((Question)quest.get(j)).getId()==8){
 								choices_tokenHidden.setDisable(true);
-							if(((Question)quest.get(j)).getId()==16)
+								choices_player11.setDisable(true);
+								choices_player12.setDisable(true);
+								choices_player13.setDisable(true);
+							}
+							if(((Question)quest.get(j)).getId()==16){
 								choices_role.setDisable(true);
+								choices_player11.setDisable(true);
+								choices_player12.setDisable(true);
+								choices_player13.setDisable(true);
+							}
+							if(((Question)quest.get(j)).getId()==11){
+								choices_role.setDisable(true);
+								choices_tokenHidden.setDisable(true);
+								choices_player12.setDisable(true);
+								choices_player13.setDisable(true);
+							}
+							if(((Question)quest.get(j)).getId()==12){
+								choices_role.setDisable(true);
+								choices_tokenHidden.setDisable(true);
+								choices_player11.setDisable(true);
+								choices_player13.setDisable(true);
+							}
+							if(((Question)quest.get(j)).getId()==13){
+								choices_role.setDisable(true);
+								choices_tokenHidden.setDisable(true);
+								choices_player12.setDisable(true);
+								choices_player11.setDisable(true);
+							}
 						}
 						break;
 					}
@@ -524,22 +556,76 @@ public class GameView extends View{
 				button.setSpacing(2);
 				//le bouton radio de la question
 				RadioButton b = new RadioButton(q.getContent());
-				b.setPrefHeight(questionsBox.getHeight()/5);
+				b.setMaxWidth(300);
 				b.setWrapText(true);
 				b.setId(q.getId()+"");
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				//la combo box
-
-				choices_role = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
-				choices_role.setPromptText("Choix du rôle");
-				choices_role.setVisibleRowCount(4);
-				choices_role.setDisable(true);
-				choices_role.getStyleClass().add("question_box");
-				b.setOnAction((event)->{
-					choices_role.setDisable(false);
-				});
-				button.getChildren().addAll(b,choices_role);
+				if(q.getId() == 8){
+					choices_role = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+					if(App.rules.getTokens().contains(App.rules.getNameCleaner())){
+						ObservableList<String> tmplist = choices_role.getItems();
+						tmplist.add("Nettoyeur?");
+						choices_role.setItems(tmplist);
+					}
+					choices_role.setPromptText("Choix du rôle");
+					choices_role.setVisibleRowCount(4);
+					choices_role.setDisable(true);
+					choices_role.getStyleClass().add("question_box");
+					b.setOnAction((event)->{
+						choices_role.setDisable(false);
+					});
+					button.getChildren().addAll(b,choices_role);
+				}
+				if(q.getId()==11) {
+					choices_player11 = new ComboBox<>();
+					ObservableList<String> tmp = choices_player11.getItems();
+					for (int nb =2 ; nb<=App.rules.getCurrentNumberOfPlayer(); nb++){
+						tmp.add("Joueur "+nb);
+					}
+					choices_player11.setItems(tmp);
+					choices_player11.setPromptText("Choix du joueur");
+					choices_player11.setVisibleRowCount(4);
+					choices_player11.setDisable(true);
+					choices_player11.getStyleClass().add("question_box");
+					b.setOnAction((event)->{
+						choices_player11.setDisable(false);
+					});
+					button.getChildren().addAll(b,choices_player11);
+				}
+				if(q.getId()==12) {
+					choices_player12 = new ComboBox<>();
+					ObservableList<String> tmp = choices_player12.getItems();
+					for (int nb =2 ; nb<=App.rules.getCurrentNumberOfPlayer(); nb++){
+						tmp.add("Joueur "+nb);
+					}
+					choices_player12.setItems(tmp);
+					choices_player12.setPromptText("Choix du joueur");
+					choices_player12.setVisibleRowCount(4);
+					choices_player12.setDisable(true);
+					choices_player12.getStyleClass().add("question_box");
+					b.setOnAction((event)->{
+						choices_player12.setDisable(false);
+					});
+					button.getChildren().addAll(b,choices_player12);
+				}
+				if(q.getId()==13) {
+					choices_player13 = new ComboBox<>();
+					ObservableList<String> tmp = choices_player13.getItems();
+					for (int nb =2 ; nb<=App.rules.getCurrentNumberOfPlayer(); nb++){
+						tmp.add("Joueur "+nb);
+					}
+					choices_player13.setItems(tmp);
+					choices_player13.setPromptText("Choix du joueur");
+					choices_player13.setVisibleRowCount(4);
+					choices_player13.setDisable(true);
+					choices_player13.getStyleClass().add("question_box");
+					b.setOnAction((event)->{
+						choices_player13.setDisable(false);
+					});
+					button.getChildren().addAll(b,choices_player13);
+				}
 				
 				if(index%2==0 && index!=0)
 					i++;
@@ -1254,8 +1340,14 @@ public class GameView extends View{
 				String intitule ="";
 				if(q.getId()==8)
 					intitule = q.getContent().split("[...]")[0]+"..."+choices_role.getValue();
-				else 
+				if(q.getId()==16) 
 					intitule = q.getContent().split("[...]")[0]+"..."+choices_tokenHidden.getValue();
+				if(q.getId()==11) 
+					intitule = q.getContent()+choices_player11.getValue();
+				if(q.getId()==12) 
+					intitule = q.getContent()+choices_player12.getValue();
+				if(q.getId()==13) 
+					intitule = q.getContent()+choices_player13.getValue();
 				q.setContent(intitule);
 				App.gameController.askTo(q);
 			}

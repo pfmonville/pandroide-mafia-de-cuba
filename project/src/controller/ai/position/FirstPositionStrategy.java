@@ -37,7 +37,12 @@ public class FirstPositionStrategy implements IPositionStrategy{
 			//with 6 players: take all diamonds and move aside the only LoyalHenchman. there will be two street urchins on this player side
 			if(rand < 0.3 && App.rules.getCurrentNumberOfPlayer() == 6){
 				diamondsTaken = box.getDiamonds();
-				hiddenToken = App.rules.getNameLoyalHenchman();
+				if(tokens.contains(App.rules.getNameLoyalHenchman())){
+					hiddenToken = App.rules.getNameLoyalHenchman();
+				} else {
+					hiddenToken = App.rules.getNameCleaner();
+				}
+				
 				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//with 6 or 7 players: taken at least half of diamonds + 1  and move aside a LoyalHenchman or an Agent
@@ -45,9 +50,13 @@ public class FirstPositionStrategy implements IPositionStrategy{
 				diamondsTaken = r.nextInt(box.getDiamonds()/2) + box.getDiamonds()/2 + 1;
 				rand = r.nextFloat();
 				if(rand < 0.5){
-					return new SecretID(App.rules.getNameThief(), diamondsTaken, agent, hiddenToken);
+					return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, agent);
 				}
-				hiddenToken = App.rules.getNameLoyalHenchman();
+				if(tokens.contains(App.rules.getNameLoyalHenchman())){
+					hiddenToken = App.rules.getNameLoyalHenchman();
+				} else {
+					hiddenToken = App.rules.getNameCleaner();
+				}
 				return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken, hiddenToken);
 			}
 			//if there is more than 10 diamonds: leave 10 and move aside a LoyalHenchman or an Agent 
@@ -56,7 +65,11 @@ public class FirstPositionStrategy implements IPositionStrategy{
 				rand = r.nextFloat();
 				//move aside one LoyalHenchman
 				if(rand < 0.75){
-					hiddenToken = App.rules.getNameLoyalHenchman();
+					if(tokens.contains(App.rules.getNameLoyalHenchman())){
+						hiddenToken = App.rules.getNameLoyalHenchman();
+					} else {
+						hiddenToken = App.rules.getNameCleaner();
+					}
 				}
 				else{
 					hiddenToken = agent;
@@ -75,10 +88,14 @@ public class FirstPositionStrategy implements IPositionStrategy{
 			return new SecretID(tokenTaken, diamondsTaken, tokenTaken, hiddenToken);
 		
 		// LoyalHenchman/Cleaner's strategy
-		}if(alea < 0.75){
+		}
+		if(alea < 0.75){
 			//choose LoyalHenchman
-			tokenTaken = App.rules.getNameLoyalHenchman();
-			
+			if(tokens.contains(App.rules.getNameLoyalHenchman())){
+				tokenTaken = App.rules.getNameLoyalHenchman();
+			} else{
+				tokenTaken = App.rules.getNameCleaner();
+			}
 			if(tokens.contains(App.rules.getNameCleaner())){
 				rand = r.nextFloat();
 				//choose Cleaner
@@ -97,6 +114,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 		
 		// Agent's strategy
 		}else{
+		
 			tokenTaken = agent;
 			
 			rand = r.nextFloat();

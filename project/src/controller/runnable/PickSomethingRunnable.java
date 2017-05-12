@@ -25,14 +25,17 @@ public class PickSomethingRunnable implements Runnable{
 		// the AI creates all the possible worlds for the players before him, based on the box content
 		((AIController)playerController).createWorldsBeforeVision(this.box);
 		
+		System.out.println("boite avant pickSomething: "+box.toString());
+		
+		
 		SecretID choice = ((AISuspectController)playerController).pickSomething(position, box);
 		int diamondsPicked = choice.getDiamondsTaken();
 		String tokenPicked = choice.getTokenTaken();
 		String tokenHidden = choice.getHiddenToken();
+		System.out.println("Joueur "+position+" a pris : "+tokenPicked+" et a ecarte :"+tokenHidden);
 		try {
 			App.gameController.endTurn(position, diamondsPicked, tokenPicked, tokenHidden);
 		} catch (PickingStrategyError e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
