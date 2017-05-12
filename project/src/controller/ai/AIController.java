@@ -26,6 +26,7 @@ public class AIController implements PlayerController {
 	private ArrayList<Integer> rolesNumberReceived;
 	protected ArrayList<World> worldsBefore;
 	protected ArrayList<World> worldsAfter;
+	private HashMap<Integer, Double> fiability; 
 	private ArrayList<Integer> notLoyalHenchman;
 	private double trustCoeff = 1.5;
 	private double contradictionCoeff = 0.5;
