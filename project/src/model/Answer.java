@@ -11,6 +11,7 @@ public class Answer extends Phrase{
 	private int nbTokensAnswer;
 	private String roleAnswer;
 	private String tokenMovedAside;
+	private ArrayList<Integer> targets ;
 	
 	public Answer(int id, String content, ArrayList<Integer> questionsIDs) {
 		super(id, content);
@@ -85,6 +86,14 @@ public class Answer extends Phrase{
 				cpt++;
 		}
 		return cpt ;
+	}
+
+	public ArrayList<Integer> getTargets() {
+		return targets;
+	}
+
+	public void setTargets(ArrayList<Integer> targets) {
+		this.targets = targets;
 	}
 	
 }

@@ -120,11 +120,11 @@ public class GameView extends View{
 		rules = new Button();
 		
 		replay.setGraphic(new ImageView(new Image(Theme.pathReplayIcon)));
-		replay.setTooltip(super.createStandardTooltip("Replay"));
+		replay.setTooltip(super.createStandardTooltip("Rejouer"));
 		inspect.setGraphic(new ImageView(new Image(Theme.pathInspectIcon)));
 		inspect.setTooltip(super.createStandardTooltip("Inspect"));
 		rules.setGraphic(new ImageView(new Image(Theme.pathRulesIcon)));
-		rules.setTooltip(super.createStandardTooltip("Rules"));
+		rules.setTooltip(super.createStandardTooltip("Règles"));
 		
 		replay.setOnAction((event)->{
 			//ask for confirmation
@@ -707,9 +707,9 @@ public class GameView extends View{
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
 		diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
 		jokers.setGraphic(new ImageView(Theme.pathJoker));
-		diamondsBack.setTooltip(super.createStandardTooltip("Diamonds back"));
-		diamondsAway.setTooltip(super.createStandardTooltip("Diamonds removed"));
-		jokers.setTooltip(super.createStandardTooltip("Jokers left"));
+		diamondsBack.setTooltip(super.createStandardTooltip("Diamants récupérés"));
+		diamondsAway.setTooltip(super.createStandardTooltip("Diamants écartés"));
+		jokers.setTooltip(super.createStandardTooltip("Jokers restants"));
 				
 		jokers.setStyle("-fx-text-fill:white;");
 		diamondsBack.setStyle("-fx-text-fill:white;");
@@ -857,7 +857,7 @@ public class GameView extends View{
 		if(App.rules.getHumanPosition()==1){
 			diamondsAway = new Label(App.gameController.getDiamondsHidden()+""); // nb diams hidden by godfather 
 			diamondsAway.setGraphic(new ImageView(Theme.pathDiamond));
-			diamondsAway.setTooltip(super.createStandardTooltip("Diamonds removed"));
+			diamondsAway.setTooltip(super.createStandardTooltip("Diamants écartés"));
 			diamondsAway.setStyle("-fx-text-fill:white;");
 			
 			announcement = new ComboBox<>(FXCollections.observableArrayList("Ce que vous avez reçu","Ce que vous avez donné"));
@@ -868,8 +868,8 @@ public class GameView extends View{
 		jokers = new Label(App.rules.getNumberOfJokers()+"");
 		diamondsBack.setGraphic(new ImageView(Theme.pathDiamond));
 		jokers.setGraphic(new ImageView(Theme.pathJoker));
-		diamondsBack.setTooltip(super.createStandardTooltip("Diamonds back"));
-		jokers.setTooltip(super.createStandardTooltip("Jokers left"));
+		diamondsBack.setTooltip(super.createStandardTooltip("Diamants récupérés"));
+		jokers.setTooltip(super.createStandardTooltip("Jokers restants"));
 		
 		jokers.setStyle("-fx-text-fill:white;");
 		diamondsBack.setStyle("-fx-text-fill:white;");
@@ -1318,7 +1318,7 @@ public class GameView extends View{
 		emptyPocket = new Button(); 
 		emptyPocket.setPrefSize(super.getWidth()/10, super.getHeight()/10);
 		emptyPocket.setGraphic(new ImageView( new Image(Theme.pathEmptyPocket)));
-		emptyPocket.setTooltip(super.createStandardTooltip("Empty your pockets !"));
+		emptyPocket.setTooltip(super.createStandardTooltip("Vide tes poches !"));
 		
 		emptyPocket.setOnAction((event)->{
 			App.gameController.emptyPocketsTo(target);
@@ -1381,10 +1381,10 @@ public class GameView extends View{
 		//**********************************
 		//button "Answer"
 		//**********************************
-		answerTo = new Button("Answer"); 
+		answerTo = new Button("Réponse"); 
 		answerTo.setPrefSize(super.getWidth()/10, super.getHeight()/10);
 		//answerTo.setGraphic(new ImageView( new Image(Theme.pathEmptyPocket)));
-		answerTo.setTooltip(super.createStandardTooltip("Answer to GodFather's question"));
+		answerTo.setTooltip(super.createStandardTooltip("Répondre au Parrain"));
 		answerTo.setOnAction((event)->{
 			//TODO récupérer la question et la réponse
 			//App.gameController.getAnswerToQuestion(question, answer);
@@ -1567,6 +1567,21 @@ public class GameView extends View{
 		answerPicture.getChildren().clear();
 		announcement.setVisible(false);
 		makeAnnouncement.setVisible(false);
+		
+		
+		//button main menu
+		Button mainMenu = new Button("Menu principal") ;
+		mainMenu.setPrefSize(super.getWidth()/10, super.getHeight()/10);
+		mainMenu.setOnAction((event)->{
+			try {
+				cleanGameView();
+				App.changePanel(super.getPanel(), App.sv.getPanel());
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+		pocket.getChildren().add(mainMenu);
+		pocket.setAlignment(Pos.CENTER);
 		
 		//whether the human player has won or not
 		Label whoWon = new Label();
