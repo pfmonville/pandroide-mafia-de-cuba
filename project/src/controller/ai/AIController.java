@@ -238,7 +238,6 @@ public class AIController implements PlayerController {
 						while(tmpUpperBound.size() > 1){
 							tmpUpperBound.remove(0);
 							streetUrchinsList.add(App.rules.getNumberStreetUrchin());
-							
 							//add permutations for each possible hidden token 
 							ArrayList<World> subset = new ArrayList<World>();
 							for(Integer roleNumber : typesOfTokensBefore){
@@ -1075,6 +1074,14 @@ public class AIController implements PlayerController {
 		for(int position:App.gameController.getAllPlayersPosition()){
 			if(position != player.getPosition() && position != 1){
 				playersAssumedRoles.put(position, new HashMap<>());
+				
+				//on initialise les probas des roles à zéro
+				playersAssumedRoles.get(position).put(App.rules.getNameLoyalHenchman(), 0D);
+				playersAssumedRoles.get(position).put(App.rules.getNameCleaner(), 0D);
+				playersAssumedRoles.get(position).put(App.rules.getNameAgentLambda(), 0D);
+				playersAssumedRoles.get(position).put(App.rules.getNameStreetUrchin(), 0D);
+				playersAssumedRoles.get(position).put(App.rules.getNameThief(), 0D);
+				playersAssumedRoles.get(position).put(App.rules.getNameDriver(), 0D);	
 			}
 		}
 		

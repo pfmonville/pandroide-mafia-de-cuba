@@ -16,6 +16,13 @@ public class Inspect {
 	
 	public Inspect(int id) {
 		this.id = id;
+		for(int position:App.gameController.getAllPlayersPosition()){
+			if(position != id && position != 1){
+				inspects.put(position, new InspectView(new SimpleStringProperty(String.valueOf(id)), new SimpleStringProperty(), 
+						new SimpleStringProperty(), new SimpleStringProperty(), 
+						new SimpleStringProperty(), new SimpleStringProperty(), new SimpleStringProperty()));
+			}
+		}
 	}
 	
 	
@@ -74,7 +81,7 @@ public class Inspect {
 	
 	
 	public class InspectView{
-		private final SimpleStringProperty id;
+		private final SimpleStringProperty player;
 		private final SimpleStringProperty loyalHenchman;
 		private final SimpleStringProperty cleaner;
 		private final SimpleStringProperty agent;
@@ -86,7 +93,7 @@ public class Inspect {
 				SimpleStringProperty agent, SimpleStringProperty thief, SimpleStringProperty streetUrchin,
 				SimpleStringProperty driver) {
 			super();
-			this.id = id;
+			this.player = id;
 			this.loyalHenchman = loyalHenchman;
 			this.cleaner = cleaner;
 			this.agent = agent;
@@ -96,7 +103,7 @@ public class Inspect {
 		}
 
 		public SimpleStringProperty getId() {
-			return id;
+			return player;
 		}
 
 		public SimpleStringProperty getLoyalHenchman() {
@@ -124,7 +131,7 @@ public class Inspect {
 		}
 		
 		public void setId(Double value){
-			this.id.set(String.valueOf(value));
+			this.player.set(String.valueOf(value));
 		}
 		
 		public void setLoyalHenchman(Double value){

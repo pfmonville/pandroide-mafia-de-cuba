@@ -262,15 +262,7 @@ public class AISuspectController extends AIController{
 	
 	
 	public SecretID pickSomething(int position, Box box){
-		Box myBox = box.clone();
-		SecretID secret = posStrategy.chooseWhatToTake(position, box);
-		myBox.removeToken(secret.getTokenTaken());
-		myBox.removeToken(secret.getHiddenToken());
-		myBox.removeDiamonds(secret.getDiamondsTaken());
-		
-		createWorldsAfterVision(myBox);
-		super.updateInspect();
-		return secret;
+		return posStrategy.chooseWhatToTake(position, box);
 		
 		//Anciennement pour avoir un choix aléatoire
 //		String roleName = "";

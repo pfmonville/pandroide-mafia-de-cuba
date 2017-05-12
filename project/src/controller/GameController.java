@@ -294,7 +294,6 @@ public class GameController {
 	 * @throws PickingStrategyError 
 	 */
 	public void endTurn(int position, int diamondsPicked, String tokenPicked, String tokenHidden) throws PickingStrategyError{
-
 		try {
 			reachTimer();
 		} catch (InterruptedException e1) {
@@ -338,6 +337,13 @@ public class GameController {
 			}else{
 				throw new PickingStrategyError("either you're not the first player or the token name is not valid");
 			}
+		}
+		
+		//if the current player is an AI
+		if(!this.isCurrentPlayerHuman()){
+			//the AI creates all the possible worlds for the players after him based on the box content
+			((AIController) playerControllers.get(this.currentPlayer)).createWorldsAfterVision(this.box);
+			((AIController) playerControllers.get(this.currentPlayer)).updateInspect();
 		}
 		
 		//if this is the last player then start the second half
@@ -923,9 +929,12 @@ public class GameController {
 		if(hasTimerStarted){
 			long interval = System.currentTimeMillis() - startTimer;
 			if(interval < duration){
-				Thread.sleep(interval);
+				Thread.sleep(duration - interval);
 			}
 			hasTimerStarted = false;
+		}
+		else{
+			System.out.println("Mauvais appel de reachTimer");
 		}
 	}
 	

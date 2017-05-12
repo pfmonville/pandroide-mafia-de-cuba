@@ -2,6 +2,7 @@ package view;
 
 import java.util.ArrayList;
 
+import controller.App;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -45,25 +46,25 @@ public class InspectView extends View {
 		
 		TableColumn<Inspect.InspectView, String> playerColumn =  new TableColumn<>("Joueurs/Roles");
 		playerColumn.setCellValueFactory(
-				new PropertyValueFactory<>("id"));
-		TableColumn<Inspect.InspectView, String> loyalHenchmanColumn = new TableColumn<>("Fidèle");
+				new PropertyValueFactory<>("player"));
+		TableColumn<Inspect.InspectView, String> loyalHenchmanColumn = new TableColumn<>(App.rules.getNameLoyalHenchman());
 		loyalHenchmanColumn.setCellValueFactory(
-				new PropertyValueFactory<>("loyalHenchman"));
-		TableColumn<Inspect.InspectView, String> cleanerColumn = new TableColumn<>("Nettoyeur");
+				new PropertyValueFactory<>(App.rules.getNameLoyalHenchman()));
+		TableColumn<Inspect.InspectView, String> cleanerColumn = new TableColumn<>(App.rules.getNameCleaner());
 		cleanerColumn.setCellValueFactory(
-				new PropertyValueFactory<>("cleaner"));
-		TableColumn<Inspect.InspectView, String> agentColumn = new TableColumn<>("Agent");
+				new PropertyValueFactory<>(App.rules.getNameCleaner()));
+		TableColumn<Inspect.InspectView, String> agentColumn = new TableColumn<>(App.rules.getNameAgentLambda());
 		agentColumn.setCellValueFactory(
-				new PropertyValueFactory<>("agent"));
-		TableColumn<Inspect.InspectView, String> thiefColumn = new TableColumn<>("Voleur");
+				new PropertyValueFactory<>(App.rules.getNameAgentLambda()));
+		TableColumn<Inspect.InspectView, String> thiefColumn = new TableColumn<>(App.rules.getNameThief());
 		thiefColumn.setCellValueFactory(
-				new PropertyValueFactory<>("thief"));
-		TableColumn<Inspect.InspectView, String> streetUrchinColumn = new TableColumn<>("Enfant des rues");
+				new PropertyValueFactory<>(App.rules.getNameThief()));
+		TableColumn<Inspect.InspectView, String> streetUrchinColumn = new TableColumn<>(App.rules.getNameStreetUrchin());
 		streetUrchinColumn.setCellValueFactory(
-				new PropertyValueFactory<>("streetUrchin"));
-		TableColumn<Inspect.InspectView, String> driverColumn = new TableColumn<>("Chauffeur");
+				new PropertyValueFactory<>(App.rules.getNameStreetUrchin()));
+		TableColumn<Inspect.InspectView, String> driverColumn = new TableColumn<>(App.rules.getNameDriver());
 		driverColumn.setCellValueFactory(
-				new PropertyValueFactory<>("driver"));
+				new PropertyValueFactory<>(App.rules.getNameDriver()));
 		
 		table.getColumns().add(playerColumn);
 		table.getColumns().add(loyalHenchmanColumn);
