@@ -76,7 +76,6 @@ public class MainTestAIController {
 	            appender = " ";
 	        }
 	        System.out.println("\t role ecarte : "+ App.rules.convertNumberIntoRoleName(al.getTokenMovedAside()));
-	        System.out.println("truthValue: "+al.getTruthValue());
 	    }
 		System.out.println("nb configBefore: "+aic.getWorldsBefore().size() );
 		System.out.println("temps d'execution [ms] : "+endConfigBefore);
@@ -116,21 +115,24 @@ public class MainTestAIController {
 //		}
 		
 		//Tests de checkLiar
-		Question q = new Question(9, "", new ArrayList<Integer>(), 0);
-		q.setTargetPlayer(5);
+		Question q = new Question(2, "", new ArrayList<Integer>(), 0);
+		q.setTargetPlayer(3);
 		//pour question 8
-		//q.setContent("Est-tu un... Chauffeur?");
+		//q.setContent("Est-tu un... Agent?");
+		
+		//question 16
+		//q = new Question(16, "As-tu écarté un jeton... Agent?", new ArrayList<Integer>(), 0);
 		
 		Answer a = new Answer(q.getId(), "Non",  new ArrayList<Integer>());
 		//question 15
 		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
 		
-//		a.setNbDiamondsAnswer(9);
+		a.setNbDiamondsAnswer(15);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.add(App.rules.getNameLoyalHenchman());
 //		list.add(App.rules.getNameAgentFBI());
 //		a.setTokensAnswer(list);
-		a.setRoleAnswer("Chauffeur");
+//		a.setRoleAnswer("Chauffeur");
 		
 		Talk t = new Talk(q, a);
 		//aic.checkLiar(t);

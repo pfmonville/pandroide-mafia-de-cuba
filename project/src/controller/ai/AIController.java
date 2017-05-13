@@ -566,6 +566,7 @@ public class AIController implements PlayerController {
 			HashMap<Integer, Integer> truthValue; 
 			ArrayList<World> worldsList;
 			int indexPlayer;
+			World w;
 			
 			//update of worldsBefore if the TargetPlayer is before this player
 			if(targetPlayer < player.getPosition()){
@@ -576,10 +577,10 @@ public class AIController implements PlayerController {
 				indexPlayer = targetPlayer - player.getPosition() - 1;
 			}
 			ArrayList<World> worldsListCopy = new ArrayList<World>();
-			for (World w : worldsList){
-				worldsListCopy.add(w.clone());
+			for (World wd : worldsList){
+				worldsListCopy.add(wd.clone());
 			}
-
+			
 //	        for (int i=0; i<worldsListCopy.size(); i++) {
 //	            System.err.println("list "+worldsList.get(i).getRolesDistribution());
 //	            System.err.println("copy "+worldsListCopy.get(i).getRolesDistribution());
@@ -589,13 +590,46 @@ public class AIController implements PlayerController {
 //	        }
 			
 			switch(questionId){
+			
+				case 2://2 Combien de diamants contenait la boite quand tu l'as recu?
+					int nbDiamonds = answer.getNbDiamondsAnswer();
+
+					//if no diamonds stolen when TargetPlayer received the box
+					if(targetPlayer < player.getPosition() && nbDiamonds == App.rules.getNumberOfDiamonds()){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j=0; j < targetPlayer - 2 ; j++){
+								//there can't be thieves before the TargetPlayer
+								if(distribution.get(j).equals(App.rules.getNumberThief())){
+									truthValue.put(targetPlayer, -1);
+								}
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}					
+						
+					}
+					else if(nbDiamonds < App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
+						//TODO
+					}
+					else if(nbDiamonds == 0){
+						//TODO
+					}
+					
+					
+					break;
+				
+				case 3://3 Combien de diamants qd tu l'as passe?
+					nbDiamonds = answer.getNbDiamondsAnswer();
+					break;
 				
 				case 8: // Es tu un ...
 
 					String[] s = talk.getQuestion().getContent().split("[...]");
 					String roleAsked = s[s.length-1].replace('?', ' ').trim();
 					Integer roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
-					World w;
 					
 					if(answer.getContent().equals("Oui")){
 						for(int i=0; i<worldsListCopy.size(); i++){
@@ -620,36 +654,122 @@ public class AIController implements PlayerController {
 							if(w.getRolesDistribution().get(indexPlayer).equals(roleNumber)){
 								truthValue.put(targetPlayer, -1);
 							}
-							else{
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}
+					break;
+				
+				case 9: //Quel personnage es tu ? 
+					roleNumber = App.rules.convertRoleNameIntoNumber(answer.getRoleAnswer());
+					
+					for(int i=0; i<worldsListCopy.size(); i++){
+						w = worldsListCopy.get(i).clone();
+		
+						truthValue = w.getTruthValue();
+						if(w.getRolesDistribution().get(indexPlayer).equals(roleNumber)){
+							truthValue.put(targetPlayer, 1);
+						}
+						else{
+							truthValue.put(targetPlayer, -1);
+						}
+						w.setTruthValue(truthValue);
+						worldsList.set(i, w);
+					}
+					break;
+				
+				case 14: //As-tu écarté un jeton?
+					if(answer.getContent().equals("Oui")){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().intValue() != -1){
 								truthValue.put(targetPlayer, 1);
+							}
+							else{
+								truthValue.put(targetPlayer, -1);
 							}
 							w.setTruthValue(truthValue);
 							worldsList.set(i, w);
 						}
 					}
-				break;
+					else if(answer.getContent().equals("Non")){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().intValue() != -1){
+								truthValue.put(targetPlayer, -1);
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+						
+					}
+					break;
 				
-			case 9: //Quel personnage es tu ? 
-				roleNumber = App.rules.convertRoleNameIntoNumber(answer.getRoleAnswer());
-				
-				for(int i=0; i<worldsListCopy.size(); i++){
-					w = worldsListCopy.get(i).clone();
+				case 15: //Quel jeton as-tu écarté ?
+					String movedAside = answer.getTokenMovedAside();
 
-					truthValue = w.getTruthValue();
-					if(w.getRolesDistribution().get(indexPlayer).equals(roleNumber)){
-						truthValue.put(targetPlayer, 1);
+					if(movedAside != null){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().equals(App.rules.convertRoleNameIntoNumber(movedAside))){
+								truthValue.put(targetPlayer, 1);
+							}
+							else{
+								truthValue.put(targetPlayer, -1);
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}							
 					}
-					else{
-						truthValue.put(targetPlayer, -1);
+					else{ //repond "Je n'ai écarté aucun jeton."
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().intValue() != -1){
+								truthValue.put(targetPlayer, -1);
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}	
 					}
-					w.setTruthValue(truthValue);
-					worldsList.set(i, w);
-				}
+					
+					break;
+				case 16://As-tu écarté un jeton ... ?
+					s = talk.getQuestion().getContent().split("[...]");
+					roleAsked = s[s.length-1].replace('?', ' ').trim();
+					roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
+					
+					if(answer.getContent().equals("Oui")){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().equals(roleNumber)){
+								truthValue.put(targetPlayer, 1);
+							}
+							else{
+								truthValue.put(targetPlayer, -1);
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}				
+					}
+					else if(answer.getContent().equals("Non")){ //first player says he didn't move aside that token
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							if(w.getTokenMovedAside().equals(roleNumber)){
+								truthValue.put(targetPlayer, -1);
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}
 			}
-				
-		}
 
-		
+		}
 		
 		// TODO màj de la liste diamondsAnnoncedbyOtherPlayers
 	}
@@ -1099,6 +1219,12 @@ public class AIController implements PlayerController {
 	 * (to be used after an accusation)
 	 */
 	public void keepWorldsWhere(int playerPosition, Integer roleNumber){
+		
+		//Fiability's update if the player accused was a LoyalHenchman
+		if(roleNumber.equals(App.rules.getNumberLoyalHenchman())){
+			fiability.put(playerPosition, 1.0);
+		}
+		
 		ArrayList<World> worldsList = new ArrayList<World>();
 		ArrayList<World> worldsListCopy;		
 		int index;
@@ -1193,6 +1319,7 @@ public class AIController implements PlayerController {
 				int player = entry.getKey();
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
+				System.err.println("playerRoles:"+playerRoles);
 				playerRoles.put(role, weight + playerRoles.get(role));
 			}
 		}

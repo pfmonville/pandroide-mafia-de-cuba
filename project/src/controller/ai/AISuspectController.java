@@ -125,7 +125,7 @@ public class AISuspectController extends AIController {
 				if (substract) {
 					response.getTokensAnswer().remove(lie.getFalseRoleName());
 				} else {
-					response.setTokensAnswer((ArrayList<String>) Arrays.asList(lie.getFalseRoleName()));
+					response.setRoleAnswer(lie.getFalseRoleName());
 				}
 			}
 		} else {
