@@ -9,6 +9,8 @@ import java.util.Set;
 
 import controller.App;
 import controller.ai.position.IPositionStrategy;
+import controller.ai.strategy.CleanerStrategy;
+import controller.ai.strategy.ISuspectStrategy;
 import error.CoeherenceException;
 import error.StrategyError;
 import model.Answer;

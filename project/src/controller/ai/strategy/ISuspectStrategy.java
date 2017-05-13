@@ -1,9 +1,10 @@
-package controller.ai;
+package controller.ai.strategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import controller.ai.Strategy;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;

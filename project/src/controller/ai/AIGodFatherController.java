@@ -2,6 +2,8 @@ package controller.ai;
 
 import java.util.ArrayList;
 
+import controller.ai.strategy.GodFatherStrategy;
+import controller.ai.strategy.IGodFatherStrategy;
 import model.Box;
 import model.Player;
 import model.Question;

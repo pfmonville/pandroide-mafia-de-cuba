@@ -1,7 +1,8 @@
-package controller.ai;
+package controller.ai.strategy;
 
 import java.util.ArrayList;
 
+import controller.ai.Strategy;
 import model.Box;
 import model.Question;
 

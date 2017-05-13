@@ -1,4 +1,4 @@
-package controller.ai;
+package controller.ai.strategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,18 +9,7 @@ import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
-public class CleanerStrategy implements ISuspectStrategy{	
-	
-	/**
-	 * calcule si le joueur doit tirer sur la cible ou non
-	 * le joueur veut tirer s'il pense que la cible est un agent
-	 * @param target(int) : la cible de l'accusation du parrain
-	 * @return vrai si le joueur tire faux sinon
-	 */
-	public boolean chooseToShoot(int target){
-		//TODO
-		return false;
-	}
+public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
@@ -38,7 +27,7 @@ public class CleanerStrategy implements ISuspectStrategy{
 	@Override
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
 			Lie lie) {
-		// TODO Auto-generated method stub
+		//TODO
 		return null;
 	}
 
@@ -53,4 +42,6 @@ public class CleanerStrategy implements ISuspectStrategy{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+
 }

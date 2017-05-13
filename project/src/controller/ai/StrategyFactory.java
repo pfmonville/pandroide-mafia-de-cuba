@@ -11,6 +11,14 @@ import controller.ai.position.FirstPositionStrategy;
 import controller.ai.position.LastPositionStrategy;
 import controller.ai.position.MiddlePositionStrategy;
 import controller.ai.position.SecondPositionStrategy;
+import controller.ai.strategy.AgentStrategy;
+import controller.ai.strategy.CleanerStrategy;
+import controller.ai.strategy.DriverStrategy;
+import controller.ai.strategy.GodFatherStrategy;
+import controller.ai.strategy.ISuspectStrategy;
+import controller.ai.strategy.LoyalHenchmanStrategy;
+import controller.ai.strategy.StreetUrchinStrategy;
+import controller.ai.strategy.ThiefStrategy;
 
 public class StrategyFactory {
 	//maccros

@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.Set;
 
 
+
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.util.Duration;
@@ -28,6 +29,7 @@ import model.Talk;
 import javax.naming.directory.AttributeInUseException;
 
 
+
 import org.controlsfx.control.Notifications;
 
 import sun.audio.AudioPlayer;
@@ -36,18 +38,18 @@ import view.InspectView;
 import controller.ai.AIController;
 import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
-import controller.ai.AgentStrategy;
-import controller.ai.GodFatherStrategy;
-import controller.ai.IGodFatherStrategy;
-import controller.ai.ISuspectStrategy;
-import controller.ai.LoyalHenchmanStrategy;
 import controller.ai.StrategyFactory;
-import controller.ai.ThiefStrategy;
 import controller.ai.position.FirstPositionStrategy;
 import controller.ai.position.IPositionStrategy;
 import controller.ai.position.LastPositionStrategy;
 import controller.ai.position.MiddlePositionStrategy;
 import controller.ai.position.SecondPositionStrategy;
+import controller.ai.strategy.AgentStrategy;
+import controller.ai.strategy.GodFatherStrategy;
+import controller.ai.strategy.IGodFatherStrategy;
+import controller.ai.strategy.ISuspectStrategy;
+import controller.ai.strategy.LoyalHenchmanStrategy;
+import controller.ai.strategy.ThiefStrategy;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;

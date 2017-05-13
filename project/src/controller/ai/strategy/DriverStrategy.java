@@ -1,4 +1,4 @@
-package controller.ai;
+package controller.ai.strategy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
-public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
+public class DriverStrategy implements ISuspectStrategy{
 
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
@@ -27,7 +27,7 @@ public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 	@Override
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
 			Lie lie) {
-		//TODO
+		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -42,6 +42,5 @@ public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
 
 }
