@@ -348,12 +348,6 @@ public class GameController {
 		
 		//if this is the last player then start the second half
 		if(players.get(this.currentPlayer).isLastPlayer()){
-			//Forcing pause (only for testing)
-			try {
-				Thread.sleep(300);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			Platform.runLater(() ->App.gv.displayBoxAnimation());
 			this.players.get(1).setBox(box.clone());
 			this.currentPlayer = 1;

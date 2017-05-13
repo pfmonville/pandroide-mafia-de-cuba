@@ -46,7 +46,7 @@ public class Lie {
 	public ArrayList<String> getfalseNotHiddenToken(){
 		return this.falseNotHiddenToken;
 	}
-	public int getFalseDiamondsStolen(){
+	public Integer getFalseDiamondsStolen(){
 		return falseDiamondsStolen;
 	}
 	public void addFalseRoleName(String role) throws AttributeInUseException, CoeherenceException{
@@ -175,7 +175,8 @@ public class Lie {
 	}
 	
 	public boolean isDiamondsInBoxSet(){
-		if(this.falseBox.getDiamonds() != null){
+		if(this.falseBox.getDiamonds() != null && this.falseDiamondsStolen != null){
+			System.out.println("daimants dans la boite " +falseBox.getDiamonds() + "diamants volés "+getFalseDiamondsStolen());
 			return true;
 		}
 		return false;
@@ -221,12 +222,15 @@ public class Lie {
 		}
 	}
 	
-	public void updateDiamondsInBox(DiamondsCouple diamonds){
+	public void updateDiamondsInBox(DiamondsCouple diamonds) throws CoeherenceException{
 		this.addFalseDiamondsToBox(diamonds.getDiamondsReceived());
 		try {
 			this.addFalseDiamondsStolen(diamonds.getDiamondsReceived() - diamonds.getDiamondsGiven());
 		} catch (AttributeInUseException e) {
 			e.printStackTrace();
+		}
+		if(!hasShownDiamondsStolen() || !isDiamondsInBoxSet()){
+			throw new CoeherenceException("Gros problème on ne met pas à jour comme il faut la fausse boite");
 		}
 	}
 	

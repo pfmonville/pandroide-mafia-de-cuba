@@ -1,11 +1,6 @@
 package view;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import org.controlsfx.control.Notifications;
 
 import controller.App;
 import javafx.event.EventHandler;
