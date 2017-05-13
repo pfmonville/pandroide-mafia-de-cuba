@@ -103,6 +103,8 @@ public class ThiefStrategy implements ISuspectStrategy {
 		int dNb = 0;
 		int aNb = 0;
 		
+		boolean isCleanerHere = false;
+		
 		/*
 		 * If I already set a false list of tokens
 		 * I randomly choose a role in this list
@@ -114,6 +116,10 @@ public class ThiefStrategy implements ISuspectStrategy {
 			aNb = lie.getFalseBox().getCount(App.rules.getNameAgentCIA()) 
 					+ lie.getFalseBox().getCount(App.rules.getNameAgentFBI())
 					+ lie.getFalseBox().getCount(App.rules.getNameAgentLambda());
+			
+			if(lie.getFalseBox().getTokens().contains(App.rules.getNumberOfCleaners())){
+				isCleanerHere = true;
+			}
 		}
 		else{
 			/*
@@ -129,6 +135,9 @@ public class ThiefStrategy implements ISuspectStrategy {
 						+ player.getBox().getCount(App.rules.getNameAgentFBI())
 						+ player.getBox().getCount(App.rules.getNameAgentLambda()));
 				
+				if(!player.getBox().getTokens().contains(App.rules.getNameCleaner())){
+					isCleanerHere = true;
+				}
 			}
 			/*
 			 * More tokens in the box than taken before me
@@ -142,10 +151,13 @@ public class ThiefStrategy implements ISuspectStrategy {
 						+ player.getBox().getCount(App.rules.getNameAgentFBI())
 						+ player.getBox().getCount(App.rules.getNameAgentLambda());
 				
+				if(player.getBox().getTokens().contains(App.rules.getNameCleaner())){
+					isCleanerHere = true;
+				}
 			}
 		}
 		
-		tokenProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba);
+		tokenProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba, isCleanerHere);
 		
 		// If I'm last player I can pretend to be a street urchin
 		if(player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
@@ -230,14 +242,24 @@ public class ThiefStrategy implements ISuspectStrategy {
 	public HashMap<String, Double> chooseHiddenTokenToShow (Player player, Lie lie){
 		HashMap<String, Double> hiddenTokenProbabilitiesResponse = new HashMap<String, Double>();
 		
-		if(player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman())){
-			double hidAgentProba = 0.4;
-			double hidDriverProba = 0.3;
-			double hidNothingProba = 1 - hidAgentProba - hidDriverProba;
+		double hidLHProba = 0.0;
+		double hidAgentProba = 0.0;
+		double hidDriverProba = 0.0;
+		double hidNothingProba = 0.0;
+		
+		
+		if(player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())
+				|| player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman()) 
+				|| player.getRole().getHiddenToken().equals(App.rules.getNameCleaner())
+				|| player.getRole().getHiddenToken().equals(App.rules.getNameDriver())){
+			hidAgentProba = 0.7;
+			hidDriverProba = 0.3;
+			
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
-			hiddenTokenProbabilitiesResponse.put(App.rules.getNameNoRemovedToken(), hidNothingProba);
 		}
+		
+		
 		// TODO
 		return null;
 	}
@@ -252,12 +274,17 @@ public class ThiefStrategy implements ISuspectStrategy {
 		return null;
 	}
 	
-	private HashMap<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhProba, double dProba, double aProba){
+	private HashMap<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhProba, double dProba, double aProba, boolean isCleanerHere){
 		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		int totalNb = lhNb + dNb + aNb;
 		
 		if(lhNb == totalNb){
-			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
+			if(isCleanerHere){
+				tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), (lhNb - 1) * 100.0 / lhNb);
+				tokenResponseProbabilities.put(App.rules.getNameCleaner(), 100.0 / lhNb);
+			}else{
+				tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
+			}
 			return tokenResponseProbabilities;
 		}else if(dNb == totalNb){
 			tokenResponseProbabilities.put(App.rules.getNameDriver(), 1.0);
@@ -285,17 +312,22 @@ public class ThiefStrategy implements ISuspectStrategy {
 		}
 		
 		double totalSum = lhNb * lhProba + dNb * dProba + aNb * aProba;
-		tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhProba * lhNb / totalSum);
+		if(isCleanerHere){
+			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), (lhNb - 1) * lhProba * lhNb / ( lhNb * totalSum) );
+			tokenResponseProbabilities.put(App.rules.getNameCleaner(), lhProba * lhNb / (lhNb * totalSum));
+		}else{
+			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhProba * lhNb / totalSum);
+		}
 		tokenResponseProbabilities.put(App.rules.getNameDriver(), dProba * dNb / totalSum);
 		if(App.rules.getNumberAgent() == 1){
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / totalSum);
 		}else if(App.rules.getNumberAgent() == 2){
-			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (2 *totalSum));
-			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (2 *totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (2 * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (2 * totalSum));
 		}else{
-			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (App.rules.getNumberAgent() * totalSum));
-			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb /  (App.rules.getNumberAgent() * totalSum));
-			tokenResponseProbabilities.put(App.rules.getNameAgentLambda(), (App.rules.getNumberAgent() -2 ) * aProba * aNb / (App.rules.getNumberAgent() *totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (aNb * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb /  (aNb * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentLambda(), (aNb -2 ) * aProba * aNb / (aNb *totalSum));
 		}
 		return tokenResponseProbabilities;
 	}
