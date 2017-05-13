@@ -165,8 +165,9 @@ public class Rules {
 			tokens.add(nameCleaner);
 		}
 		for(int i = 0; i < this.numberOfAgents; i++){
-			if(this.numberAgent > 2){
+			if(this.numberOfAgents > 2){
 				tokens.add(nameAgentLambda);
+
 			}else if(i ==0){
 				tokens.add(nameAgentFBI);
 			}else if(i == 1){
@@ -176,6 +177,8 @@ public class Rules {
 		for(int i = 0; i < this.numberOfDrivers; i++){
 			tokens.add(nameDriver);
 		}
+		System.out.println(tokens.toString());
+
 		return tokens;
 	}
 	
