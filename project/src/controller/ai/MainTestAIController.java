@@ -1,7 +1,6 @@
 package controller.ai;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import controller.App;
 import model.Answer;

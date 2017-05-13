@@ -26,7 +26,7 @@ public class Lie {
 		falseBox = new Box(null, null);
 		falseDiamondsStolen = null;
 		falseAssumedRole = null;
-		falseNotAssumedRoles = new ArrayList();
+		falseNotAssumedRoles = new ArrayList<>();
 		hideToken = null;
 		falseHiddenToken = null;
 		falseNotHiddenToken = new ArrayList<>();
@@ -282,6 +282,12 @@ public class Lie {
 		}
 		return result;
 	}
+
+	public Integer getMyself() {
+		return myself;
+	}
+	
+	
 
 	
 }

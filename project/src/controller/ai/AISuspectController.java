@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.Set;
 
 import controller.App;
@@ -16,7 +13,6 @@ import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
-import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.Question;
@@ -46,6 +42,7 @@ public class AISuspectController extends AIController {
 		getDiamondsInBox(response, before);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getTokensInBox(Answer response, boolean before, boolean substract) {
 		if (lie.isTokensInBoxSet()) {
 			response.setTokensAnswer((ArrayList<String>)lie.getFalseBox().getTokens().clone());

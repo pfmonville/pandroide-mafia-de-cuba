@@ -3,14 +3,10 @@ package controller.ai;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import model.Answer;
-import model.Box;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
-import model.Question;
 import model.RoleProbaCouple;
-import model.World;
 
 public class AgentStrategy implements ISuspectStrategy {
 

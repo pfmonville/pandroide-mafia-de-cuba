@@ -77,7 +77,7 @@ public class InspectView extends View {
 		table.setItems(obs);
 		
 		combo.valueProperty().addListener(new ChangeListener<Integer>() {
-	        @Override public void changed(ObservableValue ov, Integer t, Integer t1) {
+	        @Override public void changed(@SuppressWarnings("rawtypes") ObservableValue ov, Integer t, Integer t1) {
 	        	try {
 					changeInspect(t1);
 				} catch (Exception e) {

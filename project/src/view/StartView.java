@@ -1,6 +1,11 @@
 package view;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.controlsfx.control.Notifications;
 
 import controller.App;
 import javafx.event.EventHandler;
@@ -24,8 +29,8 @@ public class StartView extends View{
 	private Image logo ;
 	private ImageView vLogo ;
 	
-	private boolean rulesViewOpen = false;
-	private Stage rulesStage;
+	//private boolean rulesViewOpen = false;
+	//private Stage rulesStage;
 	private boolean settingsViewOpen = false;
 	private Stage settingsStage;
 	private boolean aboutViewOpen = false;
@@ -77,7 +82,7 @@ public class StartView extends View{
 				aboutStage.setTitle("A Propos");
 				Pane layout = new Pane();
 				//TODO
-//				layout.getChildren().add(av.getPanel());
+				layout.getChildren().add(App.av.getPanel());
 				Scene scene = new Scene(layout);
 				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
 				App.loadCSS("css/app.css", scene);

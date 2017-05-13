@@ -10,20 +10,16 @@ import java.util.Random;
 
 import org.controlsfx.control.Notifications;
 
-import com.sun.media.jfxmediaimpl.platform.Platform;
-
 import controller.App;
 import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Bounds;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -33,7 +29,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
@@ -44,8 +39,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -54,7 +47,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import model.Answer;
@@ -420,10 +412,10 @@ public class GameView extends View{
 		playerRight.setSpacing(10);
 		
 		// position
-		imgAtCenter.setMargin(playerTop, new Insets(super.getHeight()/30,0,0,super.getWidth()/6));
-		imgAtCenter.setMargin(playerBot, new Insets(0,0,super.getHeight()/30,super.getWidth()/6));
-		imgAtCenter.setMargin(playerLeft, new Insets(super.getHeight()/10,0,0,10));
-		imgAtCenter.setMargin(playerRight, new Insets(super.getHeight()/25,10,0,10));
+		BorderPane.setMargin(playerTop, new Insets(super.getHeight()/30,0,0,super.getWidth()/6));
+		BorderPane.setMargin(playerBot, new Insets(0,0,super.getHeight()/30,super.getWidth()/6));
+		BorderPane.setMargin(playerLeft, new Insets(super.getHeight()/10,0,0,10));
+		BorderPane.setMargin(playerRight, new Insets(super.getHeight()/25,10,0,10));
 		
 		imgAtCenter.setTop(playerTop);		
 		imgAtCenter.setBottom(playerBot);
@@ -518,7 +510,7 @@ public class GameView extends View{
 				if(index%2==0 && index!=0)
 					i++;
 				answers.add(b, index%nbCol, i);
-				answers.setMargin(b, new Insets(5,0,0,5));
+				GridPane.setMargin(b, new Insets(5,0,0,5));
 			}
 		}
 		int i =0;
@@ -533,7 +525,7 @@ public class GameView extends View{
 			if(index%2==0 && index!=0)
 				i++;
 			questionsBox.add(b, index%nbCol, i );
-			questionsBox.setMargin(b, new Insets(5,0,0,5));		
+			GridPane.setMargin(b, new Insets(5,0,0,5));		
 		}
 		i =0;
 		for (Question q : players){
@@ -548,7 +540,7 @@ public class GameView extends View{
 				if(index%2==0 && index!=0)
 					i++;
 				questionsPlayers.add(b, index%nbCol,i);
-				questionsPlayers.setMargin(b, new Insets(5,0,0,5));
+				GridPane.setMargin(b, new Insets(5,0,0,5));
 			}else{
 				//une question à choix multiple
 
@@ -630,7 +622,7 @@ public class GameView extends View{
 				if(index%2==0 && index!=0)
 					i++;
 				questionsPlayers.add(button, index%nbCol, i );
-				questionsPlayers.setMargin(button, new Insets(5,0,0,5));
+				GridPane.setMargin(button, new Insets(5,0,0,5));
 			}
 		}
 		i =0;
@@ -646,7 +638,7 @@ public class GameView extends View{
 				if(index%2==0 && index!=0)
 					i++;
 				questionsFirstPlayer.add(b, index%nbCol,i);
-				questionsFirstPlayer.setMargin(b, new Insets(5,0,0,5));
+				GridPane.setMargin(b, new Insets(5,0,0,5));
 			}else{
 				//une question à choix multiple
 				HBox button = new HBox() ;
@@ -672,7 +664,7 @@ public class GameView extends View{
 				if(index%2==0 && index!=0)
 					i++;
 				questionsFirstPlayer.add(button, index%nbCol, i );
-				questionsFirstPlayer.setMargin(button, new Insets(5,0,0,5));
+				GridPane.setMargin(button, new Insets(5,0,0,5));
 			}
 		}
 	}
@@ -1250,7 +1242,7 @@ public class GameView extends View{
 			
 			questionsArea.getChildren().add(mainVBox);
 			questionsArea.setAlignment(Pos.TOP_CENTER);
-			questionsArea.setMargin(mainVBox, new Insets(10,0,0,0));
+			FlowPane.setMargin(mainVBox, new Insets(10,0,0,0));
 			pocket.getChildren().add(valider);
 			pocket.setAlignment(Pos.CENTER);
 
@@ -1291,9 +1283,9 @@ public class GameView extends View{
 		firstPlayer.setPrefSize(super.getWidth()/12, super.getHeight()/12);
 		
 		themeButtons.getChildren().addAll(box, player,firstPlayer);
-		themeButtons.setMargin(box,new Insets(0,0,0,5));
-		themeButtons.setMargin(player,new Insets(0,0,0,5));
-		themeButtons.setMargin(firstPlayer,new Insets(0,0,0,5));
+		TilePane.setMargin(box,new Insets(0,0,0,5));
+		TilePane.setMargin(player,new Insets(0,0,0,5));
+		TilePane.setMargin(firstPlayer,new Insets(0,0,0,5));
 		
 		//questions area
 		questionsBox = new GridPane();
@@ -1354,8 +1346,8 @@ public class GameView extends View{
 		});
 		
 		pocket.getChildren().addAll( askQuestion,emptyPocket);
-		pocket.setMargin(emptyPocket, new Insets(10,0,0,3));
-		pocket.setMargin(askQuestion, new Insets(0,0,0,3));
+		VBox.setMargin(emptyPocket, new Insets(10,0,0,3));
+		VBox.setMargin(askQuestion, new Insets(0,0,0,3));
 		pocket.setAlignment(Pos.TOP_CENTER);
 		
 		createInfoBoxHumanPlayer();
@@ -1391,7 +1383,7 @@ public class GameView extends View{
 		});
 		
 		pocket.getChildren().add(answerTo);
-		pocket.setMargin(answerTo, new Insets(0,0,0,5));
+		VBox.setMargin(answerTo, new Insets(0,0,0,5));
 	}
 	
 	
@@ -1433,7 +1425,7 @@ public class GameView extends View{
 			boxOnTable = new ImageView(new Image(Theme.pathBox));
 			VBox boxAndGod = new VBox();
 			boxAndGod.setSpacing(10);
-			imgAtCenter.setMargin(boxAndGod, new Insets(super.getHeight()/10,0,0,10));
+			BorderPane.setMargin(boxAndGod, new Insets(super.getHeight()/10,0,0,10));
 			Node n = imgAtCenter.getLeft();
 			boxAndGod.getChildren().addAll(n,boxOnTable);
 			imgAtCenter.setLeft(boxAndGod);

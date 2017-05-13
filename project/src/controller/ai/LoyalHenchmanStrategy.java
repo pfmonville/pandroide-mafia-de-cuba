@@ -2,20 +2,12 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import controller.App;
-import model.Answer;
-import model.Box;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
-import model.Question;
 import model.RoleProbaCouple;
-import model.World;
 
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	

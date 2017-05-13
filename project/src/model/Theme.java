@@ -72,4 +72,8 @@ public class Theme {
 	//Resolution
 	public static int windowWidth = 1366;
 	public static int windowHeight = 768;
+	
+	//backgrounds
+	public static String pathLoyalHenchmanBackground = "image/fidele.jpg";
+	public static String pathPostalCardBackground = "image/postal-card.jpg";
 }

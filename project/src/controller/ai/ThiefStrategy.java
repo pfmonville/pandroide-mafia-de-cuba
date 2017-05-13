@@ -5,12 +5,11 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import jdk.nashorn.internal.parser.TokenStream;
+import controller.App;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
-import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	

@@ -1071,9 +1071,9 @@ public class AIController implements PlayerController {
 	public void updateInspect(){
 		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
 		//instancier la hashmap
-		System.out.println("affichage vision des autres *********** pour joueur " + player.getPosition());
+		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
 		for(int position:App.gameController.getAllPlayersPosition()){
-			if(position != player.getPosition() && position != 1){
+			if(position != this.player.getPosition() && position != 1){
 				playersAssumedRoles.put(position, new HashMap<>());
 				
 				//on initialise les probas des roles à zéro
@@ -1093,6 +1093,10 @@ public class AIController implements PlayerController {
 			Double weight = world.getWeight(fiability);
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
 				int player = entry.getKey();
+				if(player == 1 || player == this.player.getPosition()){
+					System.out.println("Il vient de là le probleme");
+					continue;
+				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
 				playerRoles.put(role, weight + playerRoles.get(role));
