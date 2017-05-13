@@ -39,6 +39,20 @@ public class RulesView extends View{
 		rules.setPrefHeight(3*y/4);
 		rules.setMaxWidth(3*x/5);
 		
+		rules.setStyle("-fx-opacity:1; -fx-border-width:3px; -fx-text-fill: rgb(200, 180, 250);");
+
+		rules.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
+		rules.setWrapText(true);
+
+		rules.setText("LE PARRAIN : il a sacrifié beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !\n\nLe Parrain gagne s'il retrouve tous les diamants volés. Il arbitre les débats, veille à ce que chacun"
++" s'exprime, et exige un respect obséquieux de la part de ses hommes !\n\n"
++"Attention, le Parrain doit accuser uniquement les Voleurs pour éviter de perdre ses Jokers et"
++" être éliminé.\n"
++ "\n"
++ "Le détail des règles est accessible durant la partie en cliquant sur le bouton 'règle' situé en haut à droite de la fenêtre du jeu");
+
+
+		
 		mainBox.getChildren().add(title);
 		VBox.setMargin(title, new Insets(50,0,0,y/4));
 		
@@ -47,20 +61,4 @@ public class RulesView extends View{
 		pane.getChildren().add(mainBox);
 		    
 	}
-	
-	public void displayRules(){
-		rules.setStyle("-fx-opacity:1; -fx-border-width:3px; -fx-text-fill: rgb(200, 180, 250)");
-
-		rules.setFont(Font.font("Verdana", FontWeight.BOLD, 15));
-		rules.setWrapText(true);
-
-		rules.setText("LE PARRAIN : il a sacrifié beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !\n\nLe Parrain gagne s'il retrouve tous les diamants volés. Il arbitre les débats, veille à ce que chacun"
-+" s'exprime, et exige un respect obséquieux de la part de ses hommes !\n\n"
-+"Attention, le Parrain doit accuser uniquement les Voleurs pour éviter de perdre ses Jokers et"
-+" être éliminé.");
-
-
-
-	}
-
 }

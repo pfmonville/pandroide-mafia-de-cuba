@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import model.Box;
 import model.Question;
 
-public interface IGodFatherStrategy{
+public interface IGodFatherStrategy extends Strategy{
 	
 	public int chooseAction();
 	

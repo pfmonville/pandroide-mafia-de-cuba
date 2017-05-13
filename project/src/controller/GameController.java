@@ -1,6 +1,8 @@
 package controller;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -8,15 +10,21 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javax.naming.directory.AttributeInUseException;
+
 import org.controlsfx.control.Notifications;
 
 import controller.ai.AIController;
 import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
 import controller.ai.GodFatherStrategy;
+import controller.ai.IGodFatherStrategy;
+import controller.ai.ISuspectStrategy;
 import controller.ai.LoyalHenchmanStrategy;
+import controller.ai.StrategyFactory;
 import controller.ai.ThiefStrategy;
 import controller.ai.position.FirstPositionStrategy;
+import controller.ai.position.IPositionStrategy;
 import controller.ai.position.LastPositionStrategy;
 import controller.ai.position.MiddlePositionStrategy;
 import controller.ai.position.SecondPositionStrategy;
@@ -411,10 +419,10 @@ public class GameController {
 			e.printStackTrace();
 		}
 		if(questionToAsk.getTargetPlayer()==0) {
-			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
+			App.createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
 			return;
 		}
-		createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
+		App.createPopUp("Le Parrain pose au joueur " + questionToAsk.getTargetPlayer() + " la question suivante :\n" + questionToAsk.getContent(), "Action en cours", 3);
 		questionToAsk.setNumber(currentTurn);
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
@@ -452,7 +460,7 @@ public class GameController {
 	public void makeAnnouncement(String announceType){
 		
 		if(announceType == null){
-			createPopUp("Sélectionnez le type d'annonce à faire.", "Attention", 3);
+			App.createPopUp("Sélectionnez le type d'annonce à faire.", "Attention", 3);
 			return;
 		}
 		
@@ -462,7 +470,7 @@ public class GameController {
 		
 		if(announceType.equals("Ce que vous avez donné")){
 			int nbDiams =App.rules.getNumberOfDiamonds()-((GodFather)getHumanPlayer().getRole()).getNbDiamondsHidden(); 
-			createPopUp("J'ai donné "+nbDiams+" diamants.", "Annonce du Parrain", 5);
+			App.createPopUp("J'ai donné "+nbDiams+" diamants.", "Annonce du Parrain", 5);
 			// ID = -1 for announcements
 			Answer a = new Answer(-1,"J'ai donné "+nbDiams+" diamants." , new ArrayList<>());
 			a.setNbDiamondsAnswer(nbDiams);
@@ -476,7 +484,7 @@ public class GameController {
 				content += box.getCount(role)+" "+role+", ";
 			}
 			content+=box.getDiamonds()+" diamants.";
-			createPopUp(content, "Annonce du Parrain", 5);
+			App.createPopUp(content, "Annonce du Parrain", 5);
 			Answer a = new Answer(-2,content , new ArrayList<>());
 			a.setTokensAnswer(box.getTokens());
 			a.setNbDiamondsAnswer(box.getDiamonds());
@@ -497,11 +505,11 @@ public class GameController {
 			e1.printStackTrace();
 		}
 		if(targetPlayer==0) {
-			createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
+			App.createPopUp("Vous devez sélectionner un joueur.", "Attention", 3);
 			return;
 		}
 		//display pop up
-		createPopUp("Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.\n", "Accusation", 4);
+		App.createPopUp("Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.\n", "Accusation", 4);
 		//question and answer for the Talk object
 		Question q = new Question(0, "Le Parrain demande au joueur " + targetPlayer + " de vider ses poches.", new ArrayList<>(), -1);
 		q.setTargetPlayer(targetPlayer);
@@ -535,7 +543,7 @@ public class GameController {
 		if(secret.getRole().equals(App.rules.getNameAgentCIA()) || secret.getRole().equals(App.rules.getNameAgentFBI() )|| secret.getRole().equals(App.rules.getNameAgentLambda())){
 			//if a cleaner hasn't shot, the agent wins alone
 			if(cleanerWhoShot == null){
-				createPopUp("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu... \n", "", 4);	
+				App.createPopUp("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu... \n", "", 4);	
 				a.setContent("Le joueur ciblé est un "+ secret.getRole()+" ! Vous avez perdu...");
 				playersInfo.addWinner(this.players.get(targetPlayer));
 				if(secret.getRole().equals(App.rules.getNameAgentCIA())){
@@ -547,7 +555,7 @@ public class GameController {
 				}
 			//else the cleaner wins alone
 			}else{
-				createPopUp("Le nettoyeur a tué un agent ! Vous avez perdu... \n", "", 4);
+				App.createPopUp("Le nettoyeur a tué un agent ! Vous avez perdu... \n", "", 4);
 				a.setContent("Le nettoyeur a tué un agent ! Vous avez perdu...");
 				playersInfo.addWinner(cleanerWhoShot);
 				playersInfo.setWinningSide(PlayersInfo.CLEANER);
@@ -567,7 +575,7 @@ public class GameController {
 		if(secret.getRole().equals(App.rules.getNameThief())){
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
-			createPopUp("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.\n", "", 4);
+			App.createPopUp("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.\n", "", 4);
 			a.setContent("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.");
 			//update the number of diamonds taken back in display
 			App.gv.displayUpdatedInfo(this.getDiamondsTakenBack(),-1) ;
@@ -591,7 +599,7 @@ public class GameController {
 			if(((GodFather)players.get(1).getRole()).consumeJoker()){
 				//display one less joker and everyone knows who is the target
 				App.gv.displayUpdatedInfo(-1, ((GodFather)players.get(1).getRole()).getJokersLeft());
-				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.\n", "", 4);
+				App.createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.\n", "", 4);
 				for(PlayerController pc: playerControllers.values()){
 					if(pc instanceof AIController){
 					((AIController)pc).updateWorldsVision(secret);
@@ -604,7 +612,7 @@ public class GameController {
 				this.currentTurn += 1;
 				SelectingGodFathersAction();
 			}else{
-				createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...\n", "", 4);
+				App.createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...\n", "", 4);
 				a.setContent("Le joueur accusé est un "+secret.getRole()+" ! Vous avez perdu...");
 				//find the best thief
 				Player bestThief = playersInfo.getThieves().get(0);
@@ -634,7 +642,7 @@ public class GameController {
 			e.printStackTrace();
 		}
 		Platform.runLater(()->
-			createPopUp("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent(), "Action en cours", 5));
+		App.createPopUp("Le joueur " + question.getTargetPlayer() + " répond :\n" + answer.getContent(), "Action en cours", 5));
 		Talk talk = new Talk(question, answer);
 		this.gameHistory.add(talk);
 		Platform.runLater(() -> App.gv.displayGameHistory());
@@ -709,8 +717,13 @@ public class GameController {
 	
 	/**
 	 * create all the controllers for players
+	 * @throws AttributeInUseException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
+	 * @throws MalformedURLException 
 	 */
-	private void getControllers(){
+	private void getControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException{
 		
 		for(Map.Entry<Integer, Player> entry : players.entrySet()){
 			Player player = entry.getValue();
@@ -725,16 +738,16 @@ public class GameController {
 					playerControllers.put(position, new AISuspectController(player));
 					//set position strategy
 					if(position==2){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy(new FirstPositionStrategy());
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.FIRSTPOSITIONSTRATEGY));
 					}
 					else if(position == 3){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy(new SecondPositionStrategy());
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.SECONDPOSITIONSTRATEGY));
 					} 
 					else if(position== App.rules.getCurrentNumberOfPlayer()){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy(new LastPositionStrategy());
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LASTPOSITIONSTRATEGY));
 					}
 					else {
-						((AISuspectController)playerControllers.get(position)).setPosStrategy(new MiddlePositionStrategy());
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.MIDDLEPOSITIONSTRATEGY));
 					}
 				}
 			}
@@ -745,8 +758,13 @@ public class GameController {
 	/**
 	 * update all controllers to add the strategy
 	 * call this method after the first part of the game
+	 * @throws AttributeInUseException 
+	 * @throws IllegalAccessException 
+	 * @throws InstantiationException 
+	 * @throws ClassNotFoundException 
+	 * @throws MalformedURLException 
 	 */
-	private void updateControllers(){
+	private void updateControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException{
 		for(Map.Entry<Integer, Player> entry : players.entrySet()){
 			Player player = entry.getValue();
 			int position = entry.getKey();
@@ -756,26 +774,26 @@ public class GameController {
 				System.out.println( " roleName = " + player.getRole().getName());
 
 				if(player.getRole().getName().equals(App.rules.getNameGodFather())){
-					((AIGodFatherController) playerControllers.get(position)).addStrategy(new GodFatherStrategy());
+					((AIGodFatherController) playerControllers.get(position)).addStrategy((IGodFatherStrategy) StrategyFactory.getStrategyFor(StrategyFactory.GODFATHERSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameCleaner())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new ThiefStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.THIEFSTRATEGY));
 					//TODO choisir le degré de stratégie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 			}
 		}
@@ -800,15 +818,26 @@ public class GameController {
 	    }
 	}
 	
+	public Thread getMainThread(){
+		return this.mainThread;
+	}
+	
 	/**
 	 * to start a game
 	 */
 	public void beginFirstHalf(){
 		this.getRules();
 		this.getPlayers();
-		this.getControllers();
+		try {
+			this.getControllers();
+		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
+				| AttributeInUseException e) {
+			App.fatalError("Un problème avec les stratégies personnalisées pour la prise dans la boite est arrivé", App.sv.getPanel());
+			e.printStackTrace();
+		}
 		this.startGame();
 	}
+	
 	
 	
 	/**
@@ -820,7 +849,14 @@ public class GameController {
 		} catch (RoleError e) {
 			e.printStackTrace();
 		}
-		this.updateControllers();
+		
+		try {
+			this.updateControllers();
+		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
+				| AttributeInUseException e) {
+			App.fatalError("Un problème avec les stratégies personnalisées pour les rôles est arrivé", App.sv.getPanel());
+			e.printStackTrace();
+		}
 		//dégriser le bouton inspect et récupérer tous les inspect des controlleurs IA
 		App.gv.enableInspectView();
 		ArrayList<Inspect> inspects = new ArrayList<>();
@@ -939,22 +975,5 @@ public class GameController {
 	 */
 	public boolean isGameStandard(){
 		return App.rules.isGameStandard();
-	}
-	
-	
-	/**
-	 * create a pop up 
-	 * @param text : pop up text
-	 * @param title : pop up title
-	 * @param time : time the pop up is shown
-	 */
-	public void createPopUp(String text, String title, int time){
-		Notifications.create()
-    	.title(title)
-    	.text(text)
-    	.position(Pos.CENTER)
-    	.owner(App.mainStage)
-    	.hideAfter(Duration.seconds(time))
-    	.showInformation();
 	}
 }

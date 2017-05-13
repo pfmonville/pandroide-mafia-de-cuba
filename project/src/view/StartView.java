@@ -24,8 +24,8 @@ public class StartView extends View{
 	private Image logo ;
 	private ImageView vLogo ;
 	
-	//private boolean rulesViewOpen = false;
-	//private Stage rulesStage;
+	private boolean rulesViewOpen = false;
+	private Stage rulesStage;
 	private boolean settingsViewOpen = false;
 	private Stage settingsStage;
 	private boolean aboutViewOpen = false;
@@ -76,7 +76,6 @@ public class StartView extends View{
 			    });   
 				aboutStage.setTitle("A Propos");
 				Pane layout = new Pane();
-				//TODO
 				layout.getChildren().add(App.av.getPanel());
 				Scene scene = new Scene(layout);
 				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
@@ -92,12 +91,26 @@ public class StartView extends View{
 		});
 		
 		btnRules.setOnAction((event)->{
-			//TODO il reste des problèmes avec cette vue, claire je te laisse tenter encore qqu, sinon on passe à la même vue que dans gameView
-			try {
-				App.rv.displayRules();
-				App.changePanel(super.getPanel(), App.rv.getPanel());
-			} catch (Exception e) {
-				e.printStackTrace();
+			if(!rulesViewOpen){
+				rulesViewOpen = true;
+				rulesStage = new Stage();
+				rulesStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			          public void handle(WindowEvent we) {
+			              rulesViewOpen = false;
+			          }
+			    });   
+				rulesStage.setTitle("Règles");
+				Pane layout = new Pane();
+				layout.getChildren().add(App.rv.getPanel());
+				Scene scene = new Scene(layout);
+				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
+				App.loadCSS("css/app.css", scene);
+				rulesStage.setScene(scene);
+				rulesStage.getIcons().add(new Image(Theme.pathMainLogo1));
+				rulesStage.setResizable(false);
+				rulesStage.show();
+			}else{
+				rulesStage.requestFocus();
 			}
 		});
 		
@@ -113,8 +126,7 @@ public class StartView extends View{
 			    });   
 				settingsStage.setTitle("Réglages");
 				Pane layout = new Pane();
-				//TODO
-//				layout.getChildren().add(setv.getPanel());
+				layout.getChildren().add(App.setv.getPanel());
 				Scene scene = new Scene(layout);
 				scene.addEventFilter(KeyEvent.ANY, KeyEvent::consume);
 				App.loadCSS("css/app.css", scene);

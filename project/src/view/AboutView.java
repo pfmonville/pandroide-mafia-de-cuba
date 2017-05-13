@@ -47,7 +47,7 @@ public class AboutView extends View{
 		+ "\n"
 		+ "Cette application a été réalisée dans le cadre d'un projet de Master 1 à l'Université Paris VI Sorbonne Université\n"
 		+ "Le but de cette application est d'observer le comportement d'un agent rationnel lors d'un jeu non coopératif à annonces publiques mensongères\n"
-		+ "Il s'agit de programmer le comportement de ces agents afin de traiter au mieux la notion de mensonge et vérité afin d'avoir une vision du monde cohérente.\n"
+		+ "Il s'agit de programmer le comportement de ces agents afin de traiter au mieux la notion de mensonge et vérité afin d'avoir une vision du monde cohérente, de deviner la véritable identité des autres et d'imposer la vision qui nous fera gagner.\n"
 		+ "\n"
 		+ "L'équipe responsable de la création de cette application est composée de quatre membres:\n"
 		+ "\t- Pierre-François MONVILLE\n"
