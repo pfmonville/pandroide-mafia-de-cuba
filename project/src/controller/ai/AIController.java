@@ -75,6 +75,10 @@ public class AIController implements PlayerController {
 		this.nbPlayers = nbPlayers;
 		this.debugMode = true;
 		notLoyalHenchman = new ArrayList<Integer>();
+		diamondsAnnoncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
+		for(int i = 1 ; i <= App.rules.getCurrentNumberOfPlayer() ; i++){
+			diamondsAnnoncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
+		}
 	}
 	
 	public void createWorldsBeforeVision(Box box){
@@ -560,6 +564,15 @@ public class AIController implements PlayerController {
 			
 		Answer answer = talk.getAnswer();		
 		boolean liar = checkLiar(talk); //update of fiability
+		
+		for(Integer id: diamondsAnnoncedByOtherPlayers.keySet()){
+			System.err.println("ID: "+id);
+			System.err.println("avant: "+diamondsAnnoncedByOtherPlayers.get(id).getDiamondsReceived());
+			System.err.println("apres: "+diamondsAnnoncedByOtherPlayers.get(id).getDiamondsGiven());
+
+		}
+		
+		
 		if(!liar){
 			int questionId = talk.getAnswer().getId();
 			HashMap<Integer, Integer> truthValue; 
@@ -860,9 +873,19 @@ public class AIController implements PlayerController {
 		//2 Combien de diamants contenait la boite quand tu l'as recu?
 		//3 Combien de diamants qd tu l'as passe?
 		
-		//TODO: update de diamondsAnnoncedbyOtherPlayers
 		if(questionId == 0 || questionId == 1 || questionId == 2 || questionId == 3){
 			int nbDiamonds = answer.getNbDiamondsAnswer();
+			
+			//update diamondsAnnoncedbyOtherPlayers
+			if(questionId == 2){//diamonds received
+				DiamondsCouple diamonds = diamondsAnnoncedByOtherPlayers.get(otherPlayerPosition);
+				diamonds.setDiamondsReceived(nbDiamonds);
+			}
+			else if(questionId == 3){//diamonds given
+				DiamondsCouple diamonds = diamondsAnnoncedByOtherPlayers.get(otherPlayerPosition);
+				diamonds.setDiamondsGiven(nbDiamonds);
+			}
+			
 			//player just before me
 			if((questionId == 1 || questionId == 3) && otherPlayerPosition == player.getPosition()-1){
 				if(nbDiamonds != player.getBox().getDiamonds()){

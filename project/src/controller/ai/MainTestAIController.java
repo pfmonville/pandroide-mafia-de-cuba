@@ -23,7 +23,7 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgentCIA());
 //		stringList.add(App.rules.getNameAgentFBI());
-//		stringList.add(App.rules.getNameDriver());
+		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
 		int nombreDeDiamantsDansBoite = 0;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
@@ -114,6 +114,7 @@ public class MainTestAIController {
 //			System.out.println(hp);
 //		}
 		
+	
 		//Tests de checkLiar
 		Question q = new Question(2, "", new ArrayList<Integer>(), 0);
 		q.setTargetPlayer(3);
