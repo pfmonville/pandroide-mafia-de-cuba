@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import javax.naming.directory.AttributeInUseException;
+
 import jdk.nashorn.internal.parser.TokenStream;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 import controller.App;
+import error.CoeherenceException;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
@@ -106,7 +109,22 @@ public class ThiefStrategy implements ISuspectStrategy {
 		boolean isCleanerHere = false;
 		
 		/*
-		 * If I already set a false list of tokens
+		 * Special case for the "first player",
+		 * if I have removed something, I show this token
+		 * else, I have removed nothing, the case is treated later (more token in the box than before)
+		 */
+		if(player.isFirstPlayer() && !player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())){
+			tokenProbabilitiesResponse.put(player.getRole().getHiddenToken(), 1.0);
+			try {
+				lie.addFalseNotHiddenToken(player.getRole().getHiddenToken());
+			} catch (AttributeInUseException | CoeherenceException e) {
+				e.printStackTrace();
+			}
+			return tokenProbabilitiesResponse;
+		}	
+		
+		/*
+		 * If I already set a false list of tokens that I received
 		 * I randomly choose a role in this list
 		 */
 		if(lie.isTokensInBoxSet()){
@@ -141,7 +159,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			}
 			/*
 			 * More tokens in the box than taken before me
-			 * I choose to show a token which is in the box
+			 * I choose to randomly show a token which is in the box
 			 */
 			else{
 				lhNb = player.getBox().getCount(App.rules.getNameLoyalHenchman())
@@ -242,26 +260,27 @@ public class ThiefStrategy implements ISuspectStrategy {
 	public HashMap<String, Double> chooseHiddenTokenToShow (Player player, Lie lie){
 		HashMap<String, Double> hiddenTokenProbabilitiesResponse = new HashMap<String, Double>();
 		
-		double hidLHProba = 0.0;
 		double hidAgentProba = 0.0;
 		double hidDriverProba = 0.0;
 		double hidNothingProba = 0.0;
 		
-		
-		if(player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())
-				|| player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman()) 
-				|| player.getRole().getHiddenToken().equals(App.rules.getNameCleaner())
-				|| player.getRole().getHiddenToken().equals(App.rules.getNameDriver())){
-			hidAgentProba = 0.7;
-			hidDriverProba = 0.3;
+		if(player.isFirstPlayer() && !player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())){
+			if(lie.hasShownRole() && lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())){
+				hidNothingProba = 0.8;
+				hidAgentProba = 0.15;
+				hidDriverProba = 0.05;
+			}else{
+				hidNothingProba = 1.0;
+			}
 			
-			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
-			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
+		}else{
+			hidNothingProba = 1.0;
 		}
 		
-		
-		// TODO
-		return null;
+		hiddenTokenProbabilitiesResponse.put(App.rules.getNameNoRemovedToken(), hidNothingProba);
+		hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
+		hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
+		return hiddenTokenProbabilitiesResponse;
 	}
 	
 	/*
