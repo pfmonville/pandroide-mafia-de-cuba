@@ -26,8 +26,8 @@ public class StartView extends View{
 	
 	private boolean rulesViewOpen = false;
 	private Stage rulesStage;
-	private boolean settingsViewOpen = false;
-	private Stage settingsStage;
+	public boolean settingsViewOpen = false;
+	public Stage settingsStage;
 	private boolean aboutViewOpen = false;
 	private Stage aboutStage;
 	

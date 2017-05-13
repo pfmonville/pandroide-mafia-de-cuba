@@ -1,6 +1,5 @@
 package controller;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -10,11 +9,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
-
-
 import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
+
+import javax.naming.directory.AttributeInUseException;
+
 import model.Answer;
 import model.Box;
 import model.Driver;
@@ -25,13 +23,6 @@ import model.PlayersInfo;
 import model.Question;
 import model.SecretID;
 import model.Talk;
-
-import javax.naming.directory.AttributeInUseException;
-
-
-
-import org.controlsfx.control.Notifications;
-
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 import view.InspectView;
@@ -39,17 +30,9 @@ import controller.ai.AIController;
 import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
 import controller.ai.StrategyFactory;
-import controller.ai.position.FirstPositionStrategy;
 import controller.ai.position.IPositionStrategy;
-import controller.ai.position.LastPositionStrategy;
-import controller.ai.position.MiddlePositionStrategy;
-import controller.ai.position.SecondPositionStrategy;
-import controller.ai.strategy.AgentStrategy;
-import controller.ai.strategy.GodFatherStrategy;
 import controller.ai.strategy.IGodFatherStrategy;
 import controller.ai.strategy.ISuspectStrategy;
-import controller.ai.strategy.LoyalHenchmanStrategy;
-import controller.ai.strategy.ThiefStrategy;
 import controller.runnable.AnswerQuestionRunnable;
 import controller.runnable.ChooseGodFathersActionRunnable;
 import controller.runnable.ChooseQuestionRunnable;
@@ -394,7 +377,7 @@ public class GameController {
 		if(humanPosition == this.currentPlayer && currentTurn==1){ 
 			Platform.runLater(() -> App.gv.displayGFQuestions());
 		}else if (humanPosition != this.currentPlayer){
-			startTimer(500);
+			startTimer(1500);
 			Thread thread = new Thread(new ChooseGodFathersActionRunnable(playerControllers.get(1)));
 			this.mainThread = thread;
 			thread.start();
@@ -433,7 +416,7 @@ public class GameController {
 		if(humanPosition == questionToAsk.getTargetPlayer()){
 			App.gv.displayPlayerAnswers();
 		}else{
-			startTimer(500);
+			startTimer(1500);
 			Thread thread = new Thread(new AnswerQuestionRunnable(playerControllers.get(questionToAsk.getTargetPlayer()), questionToAsk, answers));
 			this.mainThread = thread;
 			thread.start();
@@ -786,7 +769,7 @@ public class GameController {
 					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameCleaner())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.AGENTSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));

@@ -1384,9 +1384,18 @@ public class AIController implements PlayerController {
 			Double weight = world.getWeight(fiability);
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
 				int player = entry.getKey();
+				if(player == 1 || player == this.player.getPosition()){
+					System.out.println("un World avait un role pour le joueur lui-même, probleme de conception");
+					continue;
+				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
 				System.err.println("playerRoles:"+playerRoles);
+				if(playerRoles == null){
+					//ne devrait pas arriver
+					System.out.println("ne devrait pas arriver: un World n'a pas de role pour "+player);
+					continue;
+				}
 				playerRoles.put(role, weight + playerRoles.get(role));
 			}
 		}
@@ -1396,11 +1405,16 @@ public class AIController implements PlayerController {
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
 				int player = entry.getKey();
 				if(player == 1 || player == this.player.getPosition()){
-					System.out.println("Il vient de là le probleme");
+					System.out.println("un World avait un role pour le joueur lui-même, probleme de conception");
 					continue;
 				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
+				if(playerRoles == null){
+					//ne devrait pas arriver
+					System.out.println("ne devrait pas arriver: un World n'a pas de role pour "+player);
+					continue;
+				}
 				playerRoles.put(role, weight + playerRoles.get(role));
 			}
 		}
