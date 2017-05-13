@@ -8,11 +8,29 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import javafx.application.Platform;
+import javafx.geometry.Pos;
+import javafx.util.Duration;
+import model.Answer;
+import model.Box;
+import model.Driver;
+import model.GodFather;
+import model.Inspect;
+import model.Player;
+import model.PlayersInfo;
+import model.Question;
+import model.SecretID;
+import model.Talk;
+
 import org.controlsfx.control.Notifications;
 
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
+import view.InspectView;
 import controller.ai.AIController;
 import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
+import controller.ai.AgentStrategy;
 import controller.ai.GodFatherStrategy;
 import controller.ai.LoyalHenchmanStrategy;
 import controller.ai.ThiefStrategy;
@@ -31,22 +49,6 @@ import error.PickingStrategyError;
 import error.PrepareBoxStrategyError;
 import error.RoleError;
 import error.StrategyError;
-import javafx.application.Platform;
-import javafx.geometry.Pos;
-import javafx.util.Duration;
-import model.Answer;
-import model.Box;
-import model.Driver;
-import model.GodFather;
-import model.Inspect;
-import model.Player;
-import model.PlayersInfo;
-import model.Question;
-import model.SecretID;
-import model.Talk;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
-import view.InspectView;
 
 
 public class GameController {
@@ -762,7 +764,7 @@ public class GameController {
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
 				if(player.getRole().getName().equals(App.rules.getNameCleaner())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new AgentStrategy());
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());

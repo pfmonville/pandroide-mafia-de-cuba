@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import controller.App;
-import controller.PlayerController;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
@@ -19,6 +17,8 @@ import model.Player;
 import model.SecretID;
 import model.Talk;
 import model.World;
+import controller.App;
+import controller.PlayerController;
 
 public class AIController implements PlayerController {
 
@@ -35,7 +35,7 @@ public class AIController implements PlayerController {
 	private int nbPlayers; // In the application, nbPlayers is equivalent to App.rules.getCurrentNumberOfPlayer();
 	private boolean debugMode = false;
 	private Inspect inspect;
-	protected ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers; // GF included, so beware of the index,
+	protected Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers;
 	
 	
 	
@@ -53,9 +53,9 @@ public class AIController implements PlayerController {
 		}
 		inspect = new Inspect(player.getPosition());
 		notLoyalHenchman = new ArrayList<Integer>();
-		diamondsAnnoncedbyOtherPlayers = new ArrayList<DiamondsCouple>();
-		for(int i = 0 ; i < App.rules.getCurrentNumberOfPlayer() ; i++){
-			diamondsAnnoncedbyOtherPlayers.add(new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
+		diamondsAnnoncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
+		for(int i = 1 ; i <= App.rules.getCurrentNumberOfPlayer() ; i++){
+			diamondsAnnoncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
 		}
 	}
 	
@@ -771,7 +771,7 @@ public class AIController implements PlayerController {
 
 		}
 		
-		// TODO màj de la liste diamondsAnnoncedbyOtherPlayers
+		// TODO màj de la liste diamondsAnnoncedByOtherPlayers
 	}
 	
 	public void updateWorldsVision(SecretID secret){

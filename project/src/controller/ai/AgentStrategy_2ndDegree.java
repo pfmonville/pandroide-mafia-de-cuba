@@ -2,8 +2,8 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
-import controller.App;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
@@ -19,8 +19,7 @@ public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
-			Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
