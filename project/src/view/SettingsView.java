@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import controller.App;
+import controller.ai.StrategyFactory;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -22,6 +23,19 @@ import model.Theme;
 
 public class SettingsView extends View{
 
+	private File fileGodFather = null;
+	private File fileLoyayHenchman = null;
+	private File fileCleaner = null;
+	private File fileAgent = null;
+	private File fileThief = null;
+	private File fileStreetUrchin = null;
+	private File fileDriver = null;
+	private File fileFirst = null;
+	private File fileSecond = null;
+	private File fileLast = null;
+	private File fileMiddle = null;
+	
+	
 	public SettingsView(int x, int y) {
 		super(x, y);
 		
@@ -29,10 +43,9 @@ public class SettingsView extends View{
 		title.setStyle("-fx-text-fill: rgb(200, 80, 10);");
 		title.setId("title");
 		title.setPrefWidth(x);
-		VBox.setMargin(title, new Insets(30,0,0,y/4));
+		VBox.setMargin(title, new Insets(0,0,0,y/4));
 		
 		VBox mainBox = new VBox();
-		VBox.setMargin(mainBox, new Insets(0,0,20,50));
 		mainBox.setPrefSize(x, y);
 		mainBox.setSpacing(30);
 		
@@ -61,14 +74,21 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		godFatherField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                	int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		godFatherField.setText(file.getPath());
+                    		fileGodFather = file;
+                        }else{
+                        	fileGodFather = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
-                }
+                }    
             }
         });
 		firstPane.add(new Text("\t"), 1, 0);
@@ -86,14 +106,22 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		loyalHenchmanField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		loyalHenchmanField.setText(file.getPath());
+                    		fileLoyayHenchman = file;
+                        }else{
+                        	fileLoyayHenchman = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
 		firstPane.add(btnlh, 2, 1);
@@ -109,14 +137,22 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		cleanerField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileCleaner = file;
+                    		cleanerField.setText(file.getPath());
+                        }else{
+                        	fileCleaner = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
 		firstPane.add(btnc, 2, 2);
@@ -132,18 +168,60 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		agentField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileAgent = file;
+                    		agentField.setText(file.getPath());
+                        }else{
+                        	fileAgent = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
 		firstPane.add(btna, 2, 3);
 		firstPane.add(agentField, 4, 3);
+
+		
+		
+		Label thief = new Label("Voleur");
+		thief.setStyle("-fx-text-fill: rgb(200, 180, 250);");
+		thief.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
+		firstPane.add(thief, 0, 4);
+		TextField thiefField = new TextField();
+		Button btnt = new Button("choisir le fichier");
+		btnt.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileThief = file;
+                    		thiefField.setText(file.getPath());
+                        }else{
+                        	file = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
+                    }
+                }
+                
+            }
+        });
+		firstPane.add(btnt, 2, 4);
+		firstPane.add(thiefField, 4, 4);
+		
 		
 		Label streetUrchin = new Label("Enfant des Rues");
 		streetUrchin.setStyle("-fx-text-fill: rgb(200, 180, 250);");
@@ -155,18 +233,26 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		streetUrchinField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileStreetUrchin = file;
+                    		streetUrchinField.setText(file.getPath());
+                        }else{
+                        	file = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
-		firstPane.add(btnsu, 2, 4);
-		firstPane.add(streetUrchinField, 4, 4);
+		firstPane.add(btnsu, 2, 5);
+		firstPane.add(streetUrchinField, 4, 5);
 		
 		Label driver = new Label("Chauffeur");
 		driver.setStyle("-fx-text-fill: rgb(200, 180, 250);");
@@ -178,18 +264,26 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		driverField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileDriver = file;
+                    		driverField.setText(file.getPath());
+                        }else{
+                        	fileDriver = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
-		firstPane.add(btnd, 2, 5);
-		firstPane.add(driverField, 4, 5);
+		firstPane.add(btnd, 2, 6);
+		firstPane.add(driverField, 4, 6);
 		
 		
 		
@@ -212,14 +306,24 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		firstField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
-                    }
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    if(file != null){
+                    	int i = file.getPath().lastIndexOf('.');
+                        if (i > 0) {
+                        	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                        		fileFirst = file;
+                        		firstField.setText(file.getPath());
+                            }else{
+                            	fileFirst = null;
+                            	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                            }
+                        }
+                    } 
                 }
+                
             }
         });
 		secondPane.add(new Text("\t"), 1, 0);
@@ -237,14 +341,22 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		secondField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileSecond = file;
+                    		secondField.setText(file.getPath());
+                        }else{
+                        	fileSecond = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
 		secondPane.add(secondField, 4, 1);
@@ -260,14 +372,22 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                		lastField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileLast = file;
+                    		lastField.setText(file.getPath());
+                        }else{
+                        	fileLast = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
+                
             }
         });
 		secondPane.add(lastField, 4, 2);
@@ -283,15 +403,22 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
                 File file = fc.showOpenDialog(App.sv.settingsStage);
-                int i = file.getPath().lastIndexOf('.');
-                if (i > 0) {
-                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
-                    	middleField.setText(file.getPath());
-                    }else{
-                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                if(file != null){
+                	if(file.getParentFile().isDirectory()){
+                		fc.setInitialDirectory(file.getParentFile());
+                	}
+                    int i = file.getPath().lastIndexOf('.');
+                    if (i > 0) {
+                    	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    		fileMiddle = file;
+                        	middleField.setText(file.getPath());
+                        }else{
+                        	file = null;
+                        	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                        }
                     }
                 }
-                
+ 
             }
         });
 		secondPane.add(middleField, 4, 3);
@@ -319,6 +446,7 @@ public class SettingsView extends View{
 		btnValidate.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
+            	StrategyFactory.update(fileGodFather, fileLoyayHenchman, fileCleaner, fileAgent, fileThief, fileStreetUrchin, fileDriver, fileFirst, fileSecond, fileLast, fileMiddle);
             	App.sv.settingsStage.close();
             	App.sv.settingsViewOpen = false;
             	App.mainStage.requestFocus();
@@ -328,6 +456,7 @@ public class SettingsView extends View{
 		btnCancel.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
+            	StrategyFactory.reset();
                 App.sv.settingsStage.close();
                 App.sv.settingsViewOpen = false;
                 App.setv = new SettingsView(Theme.windowWidth, Theme.windowHeight);

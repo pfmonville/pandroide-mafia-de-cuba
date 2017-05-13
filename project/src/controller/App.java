@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.controlsfx.control.Notifications;
 
+import controller.ai.StrategyFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -141,13 +142,8 @@ public class App extends Application {
 	}
 	
 	public static void fatalError(String message, Pane pane){
-		createPopUp(message + ", le jeu ne peut continuer.\nVous allez être redirigé vers la page principale", "Erreur critique", 1000);
 		Platform.runLater(()->{
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				e1.printStackTrace();
-			}
+			createPopUp(message + ", le jeu ne peut continuer.\nVous allez être redirigé vers la page principale", "Erreur critique", 5);
 		});
 		try {
 			Thread.sleep(1000);
@@ -157,6 +153,8 @@ public class App extends Application {
 		Platform.runLater(()->{
 			try {
 				App.changePanel(pane, App.sv.getPanel());
+				StrategyFactory.reset();
+				App.reset();
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}

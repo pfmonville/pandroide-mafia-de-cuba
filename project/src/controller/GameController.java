@@ -821,7 +821,7 @@ public class GameController {
 			this.getControllers();
 		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
 				| AttributeInUseException e) {
-			App.fatalError("Un problème avec les stratégies personnalisées pour la prise dans la boite est arrivé", App.sv.getPanel());
+			App.fatalError("Un problème avec les stratégies personnalisées pour la prise dans la boite est arrivé", App.gv.getPanel());
 			e.printStackTrace();
 		}
 		this.startGame();
@@ -843,7 +843,7 @@ public class GameController {
 			this.updateControllers();
 		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
 				| AttributeInUseException e) {
-			App.fatalError("Un problème avec les stratégies personnalisées pour les rôles est arrivé", App.sv.getPanel());
+			App.fatalError("Un problème avec les stratégies personnalisées pour les rôles est arrivé", App.gv.getPanel());
 			e.printStackTrace();
 		}
 		//dégriser le bouton inspect et récupérer tous les inspect des controlleurs IA

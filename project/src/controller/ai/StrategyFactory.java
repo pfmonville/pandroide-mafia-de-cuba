@@ -56,7 +56,7 @@ public class StrategyFactory {
 	public static File godFatherStrategy;
 	public static File loyalHenchmanStrategy;
 	public static File cleanerStrategy;
-	public static File agenStrategy;
+	public static File agentStrategy;
 	public static File thiefStrategy;
 	public static File streetUrchinStrategy;
 	public static File driverStrategy;
@@ -91,7 +91,7 @@ public class StrategyFactory {
 			if(standardAgentStrategy){
 				return new AgentStrategy();
 			}
-			file = agenStrategy;
+			file = agentStrategy;
 			
 		}else if(THIEFSTRATEGY.equals(strategy)){
 			if(standardThiefStrategy){
@@ -141,6 +141,69 @@ public class StrategyFactory {
 		
 		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL(file.getParent())});
 		return (ISuspectStrategy) urlClassLoader.loadClass(file.getName()).newInstance();
+		
+	}
+	
+	public static void reset(){
+		standardGodFatherStrategy = true;
+		standardLoyalHenchmanStrategy = true;
+		standardCleanerStrategy = true;
+		standardAgentStrategy = true;
+		standardThiefStrategy = true;
+		standardStreetUrchinStrategy = true;
+		standardDriverStrategy = true;
+		
+		standardFirstPositionStrategy = true;
+		standardSecondPositionStrategy = true;
+		standardLastPositionStrategy = true;
+		standardMiddlePositionStrategy = true;
+	}
+	
+	public static void update(File gf, File lh, File c, File a, File t, File su, File d, File f, File s, File l, File m){
+		if(gf != null){
+			standardGodFatherStrategy = false;
+			godFatherStrategy = gf;
+		}
+		if(lh != null){
+			standardLoyalHenchmanStrategy = false;
+			loyalHenchmanStrategy = lh;
+		}
+		if(c != null){
+			standardCleanerStrategy = false;
+			cleanerStrategy = c;
+		}
+		if(a != null){
+			standardAgentStrategy = false;
+			agentStrategy = a;
+		}
+		if(t != null){
+			standardThiefStrategy = false;
+			thiefStrategy = t;
+		}
+		if(su != null){
+			standardStreetUrchinStrategy = false;
+			streetUrchinStrategy = su;
+		}
+		if(d != null){
+			standardDriverStrategy = false;
+			driverStrategy = d;
+		}
+		if(f != null){
+			standardFirstPositionStrategy = false;
+			firstPositionStrategy = f;
+		}
+		if(s != null){
+			standardSecondPositionStrategy = false;
+			secondPositionStrategy = s;
+		}
+		if(l != null){
+			standardLastPositionStrategy = false;
+			lastPositionStrategy = l;
+		}
+		if(m != null){
+			standardMiddlePositionStrategy = false;
+			middlePositionStrategy = m;
+		}
 		
 	}
 }
