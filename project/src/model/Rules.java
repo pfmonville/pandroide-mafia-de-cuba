@@ -780,25 +780,25 @@ public class Rules {
 	
 	public String convertNumberIntoRoleName(Integer number){
 		
-		if(number == numberAgent){
+		if(number.equals(numberAgent)){
 			return nameAgentLambda;
 		}
-		else if(number == numberCleaner){
+		else if(number.equals(numberCleaner)){
 			return nameCleaner;
 		}
-		else if(number == numberDriver){
+		else if(number.equals(numberDriver)){
 			return nameDriver;
 		}
-		else if(number == numberGodfather){
+		else if(number.equals(numberGodfather)){
 			return nameGodFather;
 		}
-		else if(number == numberLoyalHenchman){
+		else if(number.equals(numberLoyalHenchman)){
 			return nameLoyalHenchman;
 		}
-		else if(number == numberStreetUrchin){
+		else if(number.equals(numberStreetUrchin)){
 			return nameStreetUrchin;
 		}
-		else if(number == numberThief){
+		else if(number.equals(numberThief)){
 			return nameThief;
 		}
 		return null;
