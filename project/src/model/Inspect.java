@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 
 import controller.App;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
 public class Inspect {
 
@@ -28,6 +29,7 @@ public class Inspect {
 	
 	public void addAssumedRoleForPlayer(int id, Double loyalHenchman, Double cleaner, Double agent, Double thief, 
 			Double streetUrchin, Double driver){
+		//probleme là deux fois id à regarder
 		this.inspects.put(id, new InspectView(new SimpleStringProperty(String.valueOf(id)), new SimpleStringProperty(loyalHenchman.toString()), 
 				new SimpleStringProperty(cleaner.toString()), new SimpleStringProperty(agent.toString()),
 				new SimpleStringProperty(thief.toString()), new SimpleStringProperty(streetUrchin.toString()), 
@@ -88,6 +90,15 @@ public class Inspect {
 		private final SimpleStringProperty thief;
 		private final SimpleStringProperty streetUrchin;
 		private final SimpleStringProperty driver;
+		public final StringProperty playerProperty() { return player; }
+		public final StringProperty loyalHenchmanProperty() { return loyalHenchman; }
+		public final StringProperty cleanerProperty() { return cleaner; }
+		public final StringProperty agentProperty() { return agent; }
+		public final StringProperty thiefProperty() { return thief; }
+		public final StringProperty streetUrchinProperty() { return streetUrchin; }
+		public final StringProperty driverProperty() { return driver; }
+		
+		
 
 		public InspectView(SimpleStringProperty id, SimpleStringProperty loyalHenchman, SimpleStringProperty cleaner,
 				SimpleStringProperty agent, SimpleStringProperty thief, SimpleStringProperty streetUrchin,

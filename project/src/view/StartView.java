@@ -1,16 +1,9 @@
 package view;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-
-import org.controlsfx.control.Notifications;
 
 import controller.App;
 import javafx.event.EventHandler;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
