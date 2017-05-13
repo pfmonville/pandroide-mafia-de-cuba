@@ -560,7 +560,6 @@ public class AIController implements PlayerController {
 			
 		Answer answer = talk.getAnswer();		
 		boolean liar = checkLiar(talk); //update of fiability
-
 		if(!liar){
 			int questionId = talk.getAnswer().getId();
 			HashMap<Integer, Integer> truthValue; 
@@ -591,7 +590,10 @@ public class AIController implements PlayerController {
 			
 			switch(questionId){
 			
+				//TODO: traiter plus de cas?
 				case 2://2 Combien de diamants contenait la boite quand tu l'as recu?
+				case 3://3 Combien de diamants qd tu l'as passe?
+					
 					int nbDiamonds = answer.getNbDiamondsAnswer();
 
 					//if no diamonds stolen when TargetPlayer received the box
@@ -604,25 +606,89 @@ public class AIController implements PlayerController {
 								//there can't be thieves before the TargetPlayer
 								if(distribution.get(j).equals(App.rules.getNumberThief())){
 									truthValue.put(targetPlayer, -1);
+									break;
 								}
+							}
+							
+							//if TargetPlayer said that he passed all diamonds
+							if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+								truthValue.put(targetPlayer, -1);
 							}
 							w.setTruthValue(truthValue);
 							worldsList.set(i, w);
 						}					
-						
 					}
-					else if(nbDiamonds < App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
-						//TODO
+					//if some diamonds were stolen when TargetPlayer (before me) received the box
+					else if(targetPlayer < player.getPosition() && nbDiamonds != 0 
+							&& nbDiamonds < App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds()){
+						boolean thieves;
+						for(int i=0; i<worldsListCopy.size(); i++){
+							thieves = false;
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j=0; j < targetPlayer - 2 ; j++){
+								if(distribution.get(j).equals(App.rules.getNumberThief())){
+									thieves = true;
+								}
+							}
+							//there has to be thieves before the TargetPlayer
+							if(!thieves){
+								truthValue.put(targetPlayer, -1);
+								
+								if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+									truthValue.put(targetPlayer, 0);//or the TargetPlayer is a thief
+								}
+							}						
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}	
 					}
-					else if(nbDiamonds == 0){
-						//TODO
+					//if all diamonds stolen when TargetPlayer received the box
+					else if(targetPlayer > player.getPosition() && nbDiamonds == 0){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j= targetPlayer - player.getPosition(); j < distribution.size() ; j++){
+								//there can't be thieves after the TargetPlayer
+								if(distribution.get(j).equals(App.rules.getNumberThief())){
+									truthValue.put(targetPlayer, -1);
+									break;
+								}
+							}
+							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}	
+					}
+					else if(targetPlayer < player.getPosition() && nbDiamonds == 0){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j= indexPlayer+1; j < distribution.size() ; j++){
+								//there can't be thieves after the TargetPlayer
+								if(distribution.get(j).equals(App.rules.getNumberThief())){
+									truthValue.put(targetPlayer, -1);
+									break;
+								}
+							}
+							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
 					}
 					
 					
 					break;
-				
-				case 3://3 Combien de diamants qd tu l'as passe?
-					nbDiamonds = answer.getNbDiamondsAnswer();
+					
+				case 4 : //Combien de jetons contenait la boîte quand tu l'as reçue ?
+				case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
 					break;
 				
 				case 8: // Es tu un ...
@@ -793,9 +859,10 @@ public class AIController implements PlayerController {
 		//1 Que contenait la boîte quand tu l'as passée ?
 		//2 Combien de diamants contenait la boite quand tu l'as recu?
 		//3 Combien de diamants qd tu l'as passe?
+		
+		//TODO: update de diamondsAnnoncedbyOtherPlayers
 		if(questionId == 0 || questionId == 1 || questionId == 2 || questionId == 3){
 			int nbDiamonds = answer.getNbDiamondsAnswer();
-			
 			//player just before me
 			if((questionId == 1 || questionId == 3) && otherPlayerPosition == player.getPosition()-1){
 				if(nbDiamonds != player.getBox().getDiamonds()){
