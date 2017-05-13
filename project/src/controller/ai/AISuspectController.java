@@ -145,7 +145,11 @@ public class AISuspectController extends AIController {
 	}
 
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers) {
-
+		
+		System.out.println("DEBUG : AISuspectController : chooseAnswer");
+		System.out.println("Debut de la fonction chooseAnswer : joueur : "+ player.getPosition() +" : mensonge initial : ");
+		System.out.println(lie.toString());
+		
 		Answer response = new Answer();
 		String content = "";
 		int number = question.getId();
@@ -344,6 +348,10 @@ public class AISuspectController extends AIController {
 
 		response.setId(question.getId());
 		response.setContent(content);
+		
+		System.out.println("Fin de la fonction chooseAnswer : joueur : "+ player.getPosition() +" : mensonge màj : ");
+		System.out.println(lie.toString());
+		
 		return response;
 
 	}

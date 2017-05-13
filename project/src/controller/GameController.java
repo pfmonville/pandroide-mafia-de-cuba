@@ -15,6 +15,7 @@ import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
 import controller.ai.GodFatherStrategy;
 import controller.ai.LoyalHenchmanStrategy;
+import controller.ai.ThiefStrategy;
 import controller.ai.position.FirstPositionStrategy;
 import controller.ai.position.LastPositionStrategy;
 import controller.ai.position.MiddlePositionStrategy;
@@ -773,7 +774,7 @@ public class GameController {
 					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
-					((AISuspectController) playerControllers.get(position)).addStrategy(new LoyalHenchmanStrategy());
+					((AISuspectController) playerControllers.get(position)).addStrategy(new ThiefStrategy());
 					//TODO choisir le degré de stratégie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){

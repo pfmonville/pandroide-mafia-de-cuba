@@ -67,7 +67,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 		diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived), lieOnGivenProba);
 		
 		// If I lie about being a LH, I can't follow a bluff said by someone before
-		if(lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())){
+		if(lie.getFalseRoleName() != null && lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())){
 			return diamondProbabilitiesResponse;
 		}
 		// Add the possibility to follow a bluff from a previous player
@@ -200,6 +200,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 		/*
 		 * Less tokens in the box than taken before me
 		 */
+		System.out.println("DEBUG : ThiefStrategy : showTokensInBox");
 		if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()){
 			/*
 			 * I have already defined a false role among one of the roles already taken
@@ -241,11 +242,8 @@ public class ThiefStrategy implements ISuspectStrategy {
 	public HashMap<String, Double> chooseHiddenTokenToShow (Player player, Lie lie){
 		HashMap<String, Double> hiddenTokenProbabilitiesResponse = new HashMap<String, Double>();
 		
-		double hidLHProba = 0.0;
 		double hidAgentProba = 0.0;
-		double hidDriverProba = 0.0;
-		double hidNothingProba = 0.0;
-		
+		double hidDriverProba = 0.0;		
 		
 		if(player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())
 				|| player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman()) 
@@ -257,9 +255,6 @@ public class ThiefStrategy implements ISuspectStrategy {
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
 		}
-		
-		
-		// TODO
 		return null;
 	}
 	

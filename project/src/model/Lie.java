@@ -287,7 +287,17 @@ public class Lie {
 		return myself;
 	}
 	
-	
+	public String toString(){
+		String s = "*** Lie.toString() ***\n";
+		s += falseBox.toString();
+		s += "falseDiamondsStolen : "+ falseDiamondsStolen +"\n";
+		s += "falseAssumedRole : "+ falseAssumedRole +"\n";
+		s += "falseNotAssumedRoles : "+ falseNotAssumedRoles +"\n";
+		s += "falseHiddenToken : "+ falseNotAssumedRoles +"\n";
+		s += "falseNotHiddenToken : "+ falseNotHiddenToken +"\n";
+		s += "hideToken : "+ hideToken +"\n";
+		return s;
+	}
 
 	
 }
