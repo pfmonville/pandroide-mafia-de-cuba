@@ -2,18 +2,13 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
-import model.Answer;
+import controller.App;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
-import model.Question;
 import model.RoleProbaCouple;
-import model.World;
-import controller.App;
 
 public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 	

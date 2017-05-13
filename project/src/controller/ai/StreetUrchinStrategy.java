@@ -2,17 +2,11 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-import model.Answer;
-import model.Box;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
-import model.Question;
 import model.RoleProbaCouple;
-import model.World;
 
 public class StreetUrchinStrategy implements ISuspectStrategy {
 

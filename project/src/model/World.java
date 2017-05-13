@@ -61,12 +61,9 @@ public class World {
 	
 	public World clone(){
 		ArrayList<Integer> clonedRolesDistribution = new ArrayList<Integer>();
-		HashMap<Integer, Integer> clonedTruthValue = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> clonedTruthValue = new HashMap<Integer, Integer>(truthValue);
 		for (Integer i : rolesDistribution){
 			clonedRolesDistribution.add(new Integer(i.intValue()));
-		}
-		for(Integer id: clonedTruthValue.keySet()){
-			clonedTruthValue.put(id, truthValue.get(id));
 		}
 		return new World(tokenMovedAside, clonedRolesDistribution, clonedTruthValue);
 	}

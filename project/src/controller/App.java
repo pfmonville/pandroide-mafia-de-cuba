@@ -11,10 +11,12 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.Rules;
 import model.Theme;
+import view.AboutView;
 import view.GameView;
 import view.InspectView;
 import view.OptionView;
 import view.RulesView;
+import view.SettingsView;
 import view.StartView;
 
 public class App extends Application {
@@ -27,6 +29,8 @@ public class App extends Application {
 	public static GameView gv;
 	public static RulesView rv ;
 	public static InspectView iv;
+	public static AboutView av;
+	public static SettingsView setv;
 	
 	public static Scene scene;
 	public static Cursor oldCursor;
@@ -50,6 +54,8 @@ public class App extends Application {
 		gv = new GameView(Theme.windowWidth, Theme.windowHeight);
 		sv = new StartView(Theme.windowWidth, Theme.windowHeight);
 		rv = new RulesView(Theme.windowWidth, Theme.windowHeight);
+		av = new AboutView(Theme.windowWidth, Theme.windowHeight);
+		setv = new SettingsView(Theme.windowWidth, Theme.windowHeight);
 
 		mainLayout = new Pane();
 		mainLayout.getChildren().add(sv.getPanel());
@@ -99,4 +105,7 @@ public class App extends Application {
 		scene.getStylesheets().add(path);
 	}
 	
+	public static String getVersion(){
+		return "1.0.0";
+	}
 }

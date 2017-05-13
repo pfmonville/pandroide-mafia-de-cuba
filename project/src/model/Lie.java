@@ -26,7 +26,7 @@ public class Lie {
 		falseBox = new Box(null, null);
 		falseDiamondsStolen = null;
 		falseAssumedRole = null;
-		falseNotAssumedRoles = new ArrayList();
+		falseNotAssumedRoles = new ArrayList<>();
 		hideToken = null;
 		falseHiddenToken = null;
 		falseNotHiddenToken = new ArrayList<>();
@@ -54,6 +54,8 @@ public class Lie {
 			if(this.falseAssumedRole == null){
 				if(!this.falseNotAssumedRoles.contains(role)){
 					this.falseAssumedRole = role;
+					//on ajoute aussi le fait qu'il n'a pas pu prendre de diamants
+					this.addFalseDiamondsToBox(0);
 				}else{
 					throw new CoeherenceException("le joueur a déjà dit qu'il n'était pas: "+role+" il ne peut pas le dire maintenant");
 				}
@@ -66,10 +68,10 @@ public class Lie {
 		}
 	}
 	public void addFalseHiddenToken(String token) throws AttributeInUseException, CoeherenceException{
-		if(this.hideToken != false){
+		if(this.hideToken != null && this.hideToken != false){
 			throw new CoeherenceException("Le joueur avait déjà dit qu'il ne cachait pas de jeton");
 		}
-		if(App.rules.isAValidToken(token)){
+		if(App.rules.isAValidToken(token) || token == App.rules.getNameNoRemovedToken()){
 			if(this.falseHiddenToken == null){
 				if(!this.falseNotHiddenToken.contains(token)){
 					this.falseHiddenToken = token;
@@ -141,10 +143,12 @@ public class Lie {
 	}
 	
 	public void addFalseDiamondsToBox(int diamonds){
-		
+		// TODO faire une meilleure version avec gestion des exceptions
+		falseBox.setDiamonds(diamonds);
 	}
 	public void addFalseTokensToBox(ArrayList<String> tokens){
-		
+		// TODO faire une meilleure version avec gestion des exceptions comme la méthode addFalseNotAssumedRole()
+		falseBox.setTokens(tokens);
 	}
 	
 	
@@ -278,6 +282,12 @@ public class Lie {
 		}
 		return result;
 	}
+
+	public Integer getMyself() {
+		return myself;
+	}
+	
+	
 
 	
 }

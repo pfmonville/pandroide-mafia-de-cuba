@@ -856,7 +856,7 @@ public class GameController {
 		playerControllers = new HashMap<>();
 		players = new HashMap<>();
 		//Stop le thread qui serait en plein calcul
-		if(this.mainThread.isAlive()){
+		if(this.mainThread != null && this.mainThread.isAlive()){
 			this.mainThread.interrupt();
 		}
 		//App.pv.resetCursor();

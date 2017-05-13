@@ -40,7 +40,7 @@ public class InspectView extends View {
 		combo.getItems().addAll(players);
 		
 		combo.setValue(combo.getItems().get(0));
-		obs = FXCollections.observableArrayList(inspects.get(combo.getItems().get(0)).getAllInspectViews());
+		obs = FXCollections.observableArrayList(inspects.get(0).getAllInspectViews());
 		
 		table.setEditable(false);
 		
@@ -49,22 +49,22 @@ public class InspectView extends View {
 				new PropertyValueFactory<>("player"));
 		TableColumn<Inspect.InspectView, String> loyalHenchmanColumn = new TableColumn<>(App.rules.getNameLoyalHenchman());
 		loyalHenchmanColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameLoyalHenchman()));
+				new PropertyValueFactory<>("loyalHenchman"));
 		TableColumn<Inspect.InspectView, String> cleanerColumn = new TableColumn<>(App.rules.getNameCleaner());
 		cleanerColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameCleaner()));
+				new PropertyValueFactory<>("cleaner"));
 		TableColumn<Inspect.InspectView, String> agentColumn = new TableColumn<>(App.rules.getNameAgentLambda());
 		agentColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameAgentLambda()));
+				new PropertyValueFactory<>("agent"));
 		TableColumn<Inspect.InspectView, String> thiefColumn = new TableColumn<>(App.rules.getNameThief());
 		thiefColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameThief()));
+				new PropertyValueFactory<>("thief"));
 		TableColumn<Inspect.InspectView, String> streetUrchinColumn = new TableColumn<>(App.rules.getNameStreetUrchin());
 		streetUrchinColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameStreetUrchin()));
+				new PropertyValueFactory<>("streetUrchin"));
 		TableColumn<Inspect.InspectView, String> driverColumn = new TableColumn<>(App.rules.getNameDriver());
 		driverColumn.setCellValueFactory(
-				new PropertyValueFactory<>(App.rules.getNameDriver()));
+				new PropertyValueFactory<>("driver"));
 		
 		table.getColumns().add(playerColumn);
 		table.getColumns().add(loyalHenchmanColumn);
@@ -77,7 +77,7 @@ public class InspectView extends View {
 		table.setItems(obs);
 		
 		combo.valueProperty().addListener(new ChangeListener<Integer>() {
-	        @Override public void changed(ObservableValue ov, Integer t, Integer t1) {
+	        @Override public void changed(@SuppressWarnings("rawtypes") ObservableValue ov, Integer t, Integer t1) {
 	        	try {
 					changeInspect(t1);
 				} catch (Exception e) {
