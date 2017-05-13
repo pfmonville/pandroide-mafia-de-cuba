@@ -2,13 +2,18 @@ package controller;
 
 import java.io.IOException;
 
+import org.controlsfx.control.Notifications;
+
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import model.Rules;
 import model.Theme;
 import view.AboutView;
@@ -107,5 +112,45 @@ public class App extends Application {
 	
 	public static String getVersion(){
 		return "1.0.0";
+	}
+	
+	/**
+	 * create a pop up 
+	 * @param text : pop up text
+	 * @param title : pop up title
+	 * @param time : time the pop up is shown
+	 */
+	public static void createPopUp(String text, String title, int time){
+		Notifications.create()
+    	.title(title)
+    	.text(text)
+    	.position(Pos.CENTER)
+    	.owner(App.mainStage)
+    	.hideAfter(Duration.seconds(time))
+    	.showInformation();
+	}
+	
+	public static void fatalError(String message, Pane pane){
+		createPopUp(message + ", le jeu ne peut continuer.\nVous allez être redirigé vers la page principale", "Erreur critique", 1000);
+		Platform.runLater(()->{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		});
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		Platform.runLater(()->{
+			try {
+				App.changePanel(pane, App.sv.getPanel());
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			App.gameController.getMainThread().interrupt();
+		});
 	}
 }

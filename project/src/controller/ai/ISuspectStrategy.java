@@ -9,7 +9,7 @@ import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
-public interface ISuspectStrategy{
+public interface ISuspectStrategy extends Strategy{
 	
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player, Lie lie);
 	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers);
