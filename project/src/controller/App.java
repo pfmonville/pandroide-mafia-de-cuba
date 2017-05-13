@@ -84,7 +84,7 @@ public class App extends Application {
 	public static void reset(){
 		ov = new OptionView(Theme.windowWidth, Theme.windowHeight);
 		gv = new GameView(Theme.windowWidth, Theme.windowHeight);
-		sv = new StartView(Theme.windowWidth, Theme.windowHeight);
+		setv = new SettingsView(Theme.windowWidth, Theme.windowHeight);
 		gameController.finish();
 	}
 	
@@ -126,6 +126,16 @@ public class App extends Application {
     	.text(text)
     	.position(Pos.CENTER)
     	.owner(App.mainStage)
+    	.hideAfter(Duration.seconds(time))
+    	.showInformation();
+	}
+	
+	public static void createPopUp(String text, String title, int time, Stage stage){
+		Notifications.create()
+    	.title(title)
+    	.text(text)
+    	.position(Pos.CENTER)
+    	.owner(stage)
     	.hideAfter(Duration.seconds(time))
     	.showInformation();
 	}

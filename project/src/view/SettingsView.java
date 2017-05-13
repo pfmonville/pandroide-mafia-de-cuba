@@ -1,7 +1,11 @@
 package view;
 
+import java.io.File;
 import java.util.Arrays;
 
+import controller.App;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,6 +17,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import model.Theme;
 
 public class SettingsView extends View{
 
@@ -20,25 +26,27 @@ public class SettingsView extends View{
 		super(x, y);
 		
 		Label title = new Label("Réglages");
+		title.setStyle("-fx-text-fill: rgb(200, 80, 10);");
 		title.setId("title");
 		title.setPrefWidth(x);
-		VBox.setMargin(title, new Insets(50,0,0,y/4));
+		VBox.setMargin(title, new Insets(30,0,0,y/4));
 		
 		VBox mainBox = new VBox();
+		VBox.setMargin(mainBox, new Insets(0,0,20,50));
 		mainBox.setPrefSize(x, y);
 		mainBox.setSpacing(30);
-		
-		
-		Label pathTitle = new Label("Section pour personnaliser les stratégies. (indiquer le chemin vers le fichier class)");
-		pathTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
-		pathTitle.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		
 		
 		Label firstLabel = new Label("Pour les stratégies concernant les rôles:");
 		firstLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
 		firstLabel.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		
-		
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Choisir le fichier class");
+		fc.setTitle("View Pictures");
+        fc.setInitialDirectory(
+            new File(System.getProperty("user.home"))
+        ); 
 		
 		GridPane firstPane = new GridPane();
 		
@@ -47,49 +55,141 @@ public class SettingsView extends View{
 		godFather.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(godFather, 0, 0);
 		TextField godFatherField = new TextField();
-		godFather.setDisable(false);
+		godFatherField.setMinWidth(500);
+		Button btngf = new Button("choisir le fichier");
+		btngf.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		godFatherField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
 		firstPane.add(new Text("\t"), 1, 0);
-		firstPane.add(godFatherField, 2, 0);
+		firstPane.add(btngf, 2, 0);
+		firstPane.add(new Text("\t"), 3, 0);
+		firstPane.add(godFatherField, 4, 0);
 		
 		Label loyalHenchman = new Label("Fidèle");
 		loyalHenchman.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		loyalHenchman.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(loyalHenchman, 0, 1);
 		TextField loyalHenchmanField = new TextField();
-		firstPane.add(new Text("\t"), 1, 1);
-		firstPane.add(loyalHenchmanField, 2, 1);
+		Button btnlh = new Button("choisir le fichier");
+		btnlh.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		loyalHenchmanField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		firstPane.add(btnlh, 2, 1);
+		firstPane.add(loyalHenchmanField, 4, 1);
 		
 		Label cleaner = new Label("Nettoyeur");
 		cleaner.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		cleaner.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(cleaner, 0, 2);
 		TextField cleanerField = new TextField();
-		firstPane.add(new Text("\t"), 1, 2);
-		firstPane.add(cleanerField, 2, 2);
+		Button btnc = new Button("choisir le fichier");
+		btnc.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		cleanerField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		firstPane.add(btnc, 2, 2);
+		firstPane.add(cleanerField, 4, 2);
 		
 		Label agent = new Label("Agent");
 		agent.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		agent.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(agent, 0, 3);
 		TextField agentField = new TextField();
-		firstPane.add(new Text("\t"), 1, 3);
-		firstPane.add(agentField, 2, 3);
+		Button btna = new Button("choisir le fichier");
+		btna.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		agentField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		firstPane.add(btna, 2, 3);
+		firstPane.add(agentField, 4, 3);
 		
 		Label streetUrchin = new Label("Enfant des Rues");
 		streetUrchin.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		streetUrchin.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(streetUrchin, 0, 4);
 		TextField streetUrchinField = new TextField();
-		firstPane.add(new Text("\t"), 1, 4);
-		firstPane.add(streetUrchinField, 2, 4);
+		Button btnsu = new Button("choisir le fichier");
+		btnsu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		streetUrchinField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		firstPane.add(btnsu, 2, 4);
+		firstPane.add(streetUrchinField, 4, 4);
 		
 		Label driver = new Label("Chauffeur");
 		driver.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		driver.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(driver, 0, 5);
 		TextField driverField = new TextField();
-		firstPane.add(new Text("\t"), 1, 5);
-		firstPane.add(driverField, 2, 5);
+		Button btnd = new Button("choisir le fichier");
+		btnd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		driverField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		firstPane.add(btnd, 2, 5);
+		firstPane.add(driverField, 4, 5);
 		
 		
 		
@@ -107,38 +207,101 @@ public class SettingsView extends View{
 		first.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(first, 0, 0);
 		TextField firstField = new TextField();
-		firstPane.add(new Text("\t"), 1, 0);
-		secondPane.add(firstField, 2, 0);
+		Button btnf = new Button("choisir le fichier");
+		btnf.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		firstField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		secondPane.add(new Text("\t"), 1, 0);
+		secondPane.add(firstField, 4, 0);
+		secondPane.add(new Text("\t"), 3, 0);
+		secondPane.add(btnf, 2, 0);
 		
 		Label second = new Label("Second");
 		second.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		second.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(second, 0, 1);
 		TextField secondField = new TextField();
-		secondPane.add(new Text("\t"), 1, 1);
-		secondPane.add(secondField, 2, 1);
+		Button btns = new Button("choisir le fichier");
+		btns.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		secondField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		secondPane.add(secondField, 4, 1);
+		secondPane.add(btns, 2, 1);
 		
 		Label last = new Label("Dernier");
 		last.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		last.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(last, 0, 2);
 		TextField lastField = new TextField();
-		secondPane.add(new Text("\t"), 1, 2);
-		secondPane.add(lastField, 2, 2);
+		Button btnl = new Button("choisir le fichier");
+		btnl.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                		lastField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+            }
+        });
+		secondPane.add(lastField, 4, 2);
+		secondPane.add(btnl, 2, 2);
 		
 		Label middle = new Label("Millieu");
 		middle.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		middle.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(middle, 0, 3);
 		TextField middleField = new TextField();
-		secondPane.add(new Text("\t"), 1, 3);
-		secondPane.add(middleField, 2, 3);
+		Button btnm = new Button("choisir le fichier");
+		btnm.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                File file = fc.showOpenDialog(App.sv.settingsStage);
+                int i = file.getPath().lastIndexOf('.');
+                if (i > 0) {
+                	if (file != null && "class".equals(file.getPath().substring(i+1))) {
+                    	middleField.setText(file.getPath());
+                    }else{
+                    	App.createPopUp("Fichier non reconnu ou l'extension n'était pas '.class'", "Erreur lors de la lecture du fichier", 1, App.sv.settingsStage);
+                    }
+                }
+                
+            }
+        });
+		secondPane.add(middleField, 4, 3);
+		secondPane.add(btnm, 2, 3);
 		
 		
 
 		
 		Label behaviourTitle = new Label("Section pour personnaliser le comportement des agents");
-		behaviourTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 20));
+		behaviourTitle.setFont(Font.font("Verdana", FontWeight.BOLD, 16));
 		behaviourTitle.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		
 		GridPane thirdPane = new GridPane();
@@ -153,11 +316,28 @@ public class SettingsView extends View{
 		HBox buttonBox = new HBox();
 		buttonBox.setCenterShape(true);
 		Button btnValidate = new Button("Valider");
-		Button btnMenu = new Button("Menu Principal");
-		buttonBox.getChildren().addAll(btnValidate, new Text("\t"), btnMenu);
+		btnValidate.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+            	App.sv.settingsStage.close();
+            	App.sv.settingsViewOpen = false;
+            	App.mainStage.requestFocus();
+            }
+        });
+		Button btnCancel = new Button("Annuler");
+		btnCancel.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent e) {
+                App.sv.settingsStage.close();
+                App.sv.settingsViewOpen = false;
+                App.setv = new SettingsView(Theme.windowWidth, Theme.windowHeight);
+            }
+        });
+		buttonBox.setTranslateX(300);
+		buttonBox.getChildren().addAll(btnValidate, new Text("\t"), btnCancel);
 		
-		mainBox.getChildren().addAll(Arrays.asList(title, pathTitle, firstLabel, firstPane, secondLabel, secondPane, behaviourTitle, thirdPane, buttonBox));
-		
+		mainBox.getChildren().addAll(Arrays.asList(title, firstLabel, firstPane, secondLabel, secondPane, behaviourTitle, thirdPane, buttonBox));
+		mainBox.setTranslateX(250);
 		super.getPanel().getChildren().add(mainBox);
 	}
 
