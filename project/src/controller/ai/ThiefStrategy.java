@@ -2,19 +2,20 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
-import controller.App;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
+import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		double lieOnReceivedProba;
 		double lieOnGivenProba;
@@ -72,7 +73,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 		}
 		// Add the possibility to follow a bluff from a previous player
 		else{
-			double proba = 0.2;
+			double proba = 0.25;
 			double decrease = proba / (player.getPosition() - 1);
 			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
 				// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list

@@ -2,15 +2,15 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 
-import controller.App;
-import model.Answer;
-import model.Box;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
+import controller.App;
 
 public class AgentStrategy implements ISuspectStrategy {
 
@@ -34,8 +34,7 @@ public class AgentStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
-			Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		
 		int realDiamsReceived = player.getBox().getDiamonds() ;
@@ -56,6 +55,21 @@ public class AgentStrategy implements ISuspectStrategy {
 			//-> received what you received and gave less
 			int minus = new Random().nextInt(realDiamsReceived)+1;
 			diamondProbabilitiesResponse.put(new DiamondsCouple(realDiamsReceived, realDiamsReceived-minus), 1.0);
+		}
+		
+		// Add the possibility to follow a bluff from a previous player
+		double proba = 0.25;
+		double decrease = proba / (player.getPosition() - 1);
+		for(int i = player.getPosition() - 1 ; i > 1 ; i--){
+			// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
+			int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i - 1).getDiamondsGiven();
+			if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
+				for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
+					diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
+				}	
+				diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther), proba);
+			}
+			proba -= decrease; 
 		}
 		return diamondProbabilitiesResponse;
 	}

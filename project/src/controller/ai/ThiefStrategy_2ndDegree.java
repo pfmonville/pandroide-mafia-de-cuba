@@ -2,18 +2,19 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
-import controller.App;
 import model.DiamondsCouple;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
+import controller.App;
 
 public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 	
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers){
 		HashMap<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
 		double truthProba = 0.6;
 		double randomProba = 1 - truthProba;

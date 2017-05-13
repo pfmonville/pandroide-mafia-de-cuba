@@ -23,16 +23,16 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgentCIA());
 //		stringList.add(App.rules.getNameAgentFBI());
-		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 10;
+//		stringList.add(App.rules.getNameDriver());
+		int nombreDeDiamantsDansBoite = 0;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Nombre de joueurs dans la partie
 		int nbPlayers = 6;
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 4; // inclus dans [2 ; n], le parrain est le joueur 1
+		int positionDuJoueur = 5; // inclus dans [2 ; n], le parrain est le joueur 1
 		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		p.setBox(testBox);
 		
@@ -123,11 +123,11 @@ public class MainTestAIController {
 		//question 16
 		//q = new Question(16, "As-tu écarté un jeton... Agent?", new ArrayList<Integer>(), 0);
 		
-		Answer a = new Answer(q.getId(), "Non",  new ArrayList<Integer>());
+		Answer a = new Answer(q.getId(), "",  new ArrayList<Integer>());
 		//question 15
 		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
 		
-		a.setNbDiamondsAnswer(15);
+		a.setNbDiamondsAnswer(0);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.add(App.rules.getNameLoyalHenchman());
 //		list.add(App.rules.getNameAgentFBI());

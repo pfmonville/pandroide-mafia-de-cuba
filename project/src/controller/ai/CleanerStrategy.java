@@ -2,6 +2,7 @@ package controller.ai;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import model.DiamondsCouple;
 import model.Lie;
@@ -29,8 +30,7 @@ public class CleanerStrategy implements ISuspectStrategy{
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
-			Lie lie, ArrayList<DiamondsCouple> diamondsAnnoncedbyOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
