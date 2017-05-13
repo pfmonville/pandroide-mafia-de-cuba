@@ -40,7 +40,7 @@ public class InspectView extends View {
 		combo.getItems().addAll(players);
 		
 		combo.setValue(combo.getItems().get(0));
-		obs = FXCollections.observableArrayList(inspects.get(combo.getItems().get(0)).getAllInspectViews());
+		obs = FXCollections.observableArrayList(inspects.get(0).getAllInspectViews());
 		
 		table.setEditable(false);
 		

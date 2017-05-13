@@ -54,6 +54,8 @@ public class Lie {
 			if(this.falseAssumedRole == null){
 				if(!this.falseNotAssumedRoles.contains(role)){
 					this.falseAssumedRole = role;
+					//on ajoute aussi le fait qu'il n'a pas pu prendre de diamants
+					this.addFalseDiamondsToBox(0);
 				}else{
 					throw new CoeherenceException("le joueur a déjà dit qu'il n'était pas: "+role+" il ne peut pas le dire maintenant");
 				}

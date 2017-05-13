@@ -19,7 +19,7 @@ public class Inspect {
 		this.id = id;
 		for(int position:App.gameController.getAllPlayersPosition()){
 			if(position != id && position != 1){
-				inspects.put(position, new InspectView(new SimpleStringProperty(String.valueOf(id)), new SimpleStringProperty(), 
+				inspects.put(position, new InspectView(new SimpleStringProperty(String.valueOf(position)), new SimpleStringProperty(), 
 						new SimpleStringProperty(), new SimpleStringProperty(), 
 						new SimpleStringProperty(), new SimpleStringProperty(), new SimpleStringProperty()));
 			}
@@ -237,6 +237,10 @@ public class Inspect {
 			return App.rules.getNameDriver();
 
 			
+		}
+		
+		public String toString(){
+			return playerProperty() +" "+loyalHenchmanProperty() +" "+ cleanerProperty() +" "+agentProperty() +" " +thiefProperty()+" "+ streetUrchinProperty()+" "+ driverProperty();
 		}
 		
 		

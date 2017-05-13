@@ -1071,6 +1071,7 @@ public class AIController implements PlayerController {
 	public void updateInspect(){
 		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
 		//instancier la hashmap
+		System.out.println("affichage vision des autres *********** pour joueur " + player.getPosition());
 		for(int position:App.gameController.getAllPlayersPosition()){
 			if(position != player.getPosition() && position != 1){
 				playersAssumedRoles.put(position, new HashMap<>());
@@ -1113,7 +1114,6 @@ public class AIController implements PlayerController {
 		for(Entry<Integer, HashMap<String, Double>> entry: playersAssumedRoles.entrySet()){
 			int id = entry.getKey();
 			HashMap<String, Double> roles = entry.getValue();
-			
 			//normalize
 			Double maxValue = 0D;
 			for(Double value: roles.values()){
@@ -1122,7 +1122,7 @@ public class AIController implements PlayerController {
 			for(String key: roles.keySet()){
 				roles.put(key, roles.get(key)/maxValue);
 			}
-			
+			System.out.println("affichage des résultats: |"+id+"|"+roles.get(App.rules.getNameLoyalHenchman())+"|"+roles.get(App.rules.getNameCleaner())+"|"+roles.get(App.rules.getNameAgentLambda())+"|"+roles.get(App.rules.getNameThief())+"|"+roles.get(App.rules.getNameStreetUrchin())+"|"+roles.get(App.rules.getNameDriver())+"|");
 			//update inspect
 			inspect.updateAssumedRoleForPlayer(id, roles.get(App.rules.getNameLoyalHenchman()), 
 					roles.get(App.rules.getNameCleaner()), roles.get(App.rules.getNameAgentLambda()), 
@@ -1130,6 +1130,7 @@ public class AIController implements PlayerController {
 					roles.get(App.rules.getNameDriver()));
 
 		}
+		System.out.println("*********************************************");
 	}
 	
 	
