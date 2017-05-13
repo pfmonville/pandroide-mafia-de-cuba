@@ -779,10 +779,10 @@ public class GameController {
 					//TODO choisir le degré de stratégie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.STREETURCHINSTRATEGY));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.AGENTSTRATEGY));
 				}
 			}
 		}
