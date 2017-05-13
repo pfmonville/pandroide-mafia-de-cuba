@@ -14,16 +14,24 @@ import model.RoleProbaCouple;
 
 public class AgentStrategy implements ISuspectStrategy {
 
+	
+	
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
 			Lie lie) {
 		
 		HashMap<ArrayList<String>, Double> tokenListProbabilitiesResponse = new HashMap<ArrayList<String>, Double>();
-		// TODO
 		// as the agent wanna make believe he is a thief, tokens in box is what he really received
+		ArrayList<String> tokens = player.getBox().getTokens();
+		tokenListProbabilitiesResponse.put(tokens, 1.0);
 		
-		return null;
+		return tokenListProbabilitiesResponse;
 	}
+	
+	
+	
+	
+	
 
 	@Override
 	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player,
@@ -52,6 +60,12 @@ public class AgentStrategy implements ISuspectStrategy {
 		return diamondProbabilitiesResponse;
 	}
 
+	
+	
+	
+	
+	
+	
 	@Override
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
 			Lie lie) {
@@ -105,16 +119,33 @@ public class AgentStrategy implements ISuspectStrategy {
 		}
 		return hiddenTokenProbabilitiesResponse;
 	}
+	
+	
+	
+	
+	
+	
+	
 
 	@Override
 	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
-		// TODO Auto-generated method stub
-		return null;
+		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
+		
+		//behave like a thief so show thief role
+		tokenProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
+		
+		return tokenProbabilitiesResponse;
 	}
 
+	
+	
+	
+	
+	
+	
 	@Override
 	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
-		// TODO Auto-generated method stub
+		// TODO
 		return null;
 	}
 	

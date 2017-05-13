@@ -50,14 +50,14 @@ public class AboutView extends View{
 		+ "Il s'agit de programmer le comportement de ces agents afin de traiter au mieux la notion de mensonge et vérité afin d'avoir une vision du monde cohérente.\n"
 		+ "\n"
 		+ "L'équipe responsable de la création de cette application est composée de quatre membres:\n"
-		+ "- Pierre-François MONVILLE\n"
-		+ "- Gilles NOUVEAU\n"
-		+ "- Beatriz ROJAS\n"
-		+ "- Claire SALOME\n"
+		+ "\t- Pierre-François MONVILLE\n"
+		+ "\t- Gilles NOUVEAU\n"
+		+ "\t- Beatriz ROJAS\n"
+		+ "\t- Claire SALOME\n"
 		+ "et disposait d'un délai d'un semestre universitaire afin de réaliser l'application\n"
 		+ "Avec pour responsables:\n"
-		+ "- Bénédicte LEGASTELOIS\n"
-		+ "- Nicolas MAUDET\n"
+		+ "\t- Bénédicte LEGASTELOIS\n"
+		+ "\t- Nicolas MAUDET\n"
 		+ "\n"
 		+ "Vous trouverez plus d'informations concernant les règles du jeu dans la section règles du menu principal ou en cliquant sur le bouton 'règle' dans la fenêtre de jeu.\n"
 		+ "\n"
@@ -70,6 +70,7 @@ public class AboutView extends View{
 		VBox.setMargin(title, new Insets(50,0,0,y/4));
 		
 		mainBox.getChildren().add(about);
+		mainBox.setMargin(about, new Insets(0,0,0,10));
 		
 		pane.getChildren().add(mainBox);
 		

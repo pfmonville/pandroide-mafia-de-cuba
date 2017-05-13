@@ -55,9 +55,9 @@ public class RulesView extends View{
 		rules.setWrapText(true);
 
 		rules.setText("LE PARRAIN : il a sacrifié beaucoup pour devenir le dirigeant de cette famille. Et il entend bien le rester !\n\nLe Parrain gagne s'il retrouve tous les diamants volés. Il arbitre les débats, veille à ce que chacun"
-+"s'exprime, et exige un respect obséquieux de la part de ses hommes !\n\n"
++" s'exprime, et exige un respect obséquieux de la part de ses hommes !\n\n"
 +"Attention, le Parrain doit accuser uniquement les Voleurs pour éviter de perdre ses Jokers et"
-+"être éliminé.");
++" être éliminé.");
 
 
 
