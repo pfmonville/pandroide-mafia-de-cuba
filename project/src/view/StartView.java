@@ -3,6 +3,7 @@ package view;
 import java.util.ArrayList;
 
 import controller.App;
+import controller.ai.StrategyFactory;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -121,6 +122,7 @@ public class StartView extends View{
 				settingsStage = new Stage();
 				settingsStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			          public void handle(WindowEvent we) {
+			        	  App.setv.getToPreviousState();
 			              settingsViewOpen = false;
 			          }
 			    });   

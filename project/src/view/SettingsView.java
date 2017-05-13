@@ -36,6 +36,22 @@ public class SettingsView extends View{
 	private File fileMiddle = null;
 	
 	
+	TextField godFatherField;
+	TextField loyalHenchmanField;
+	TextField cleanerField;
+	TextField agentField;
+	TextField thiefField;
+	TextField streetUrchinField;
+	TextField driverField;
+	
+	TextField firstField;
+	TextField secondField;
+	TextField lastField;
+	TextField middleField;
+	
+	Slider slider;
+	
+	
 	public SettingsView(int x, int y) {
 		super(x, y);
 		
@@ -67,7 +83,7 @@ public class SettingsView extends View{
 		godFather.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		godFather.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(godFather, 0, 0);
-		TextField godFatherField = new TextField();
+		godFatherField = new TextField();
 		godFatherField.setMinWidth(500);
 		Button btngf = new Button("choisir le fichier");
 		btngf.setOnAction(new EventHandler<ActionEvent>() {
@@ -100,7 +116,7 @@ public class SettingsView extends View{
 		loyalHenchman.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		loyalHenchman.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(loyalHenchman, 0, 1);
-		TextField loyalHenchmanField = new TextField();
+		loyalHenchmanField = new TextField();
 		Button btnlh = new Button("choisir le fichier");
 		btnlh.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -131,7 +147,7 @@ public class SettingsView extends View{
 		cleaner.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		cleaner.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(cleaner, 0, 2);
-		TextField cleanerField = new TextField();
+		cleanerField = new TextField();
 		Button btnc = new Button("choisir le fichier");
 		btnc.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -162,7 +178,7 @@ public class SettingsView extends View{
 		agent.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		agent.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(agent, 0, 3);
-		TextField agentField = new TextField();
+		agentField = new TextField();
 		Button btna = new Button("choisir le fichier");
 		btna.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -195,7 +211,7 @@ public class SettingsView extends View{
 		thief.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		thief.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		firstPane.add(thief, 0, 4);
-		TextField thiefField = new TextField();
+		thiefField = new TextField();
 		Button btnt = new Button("choisir le fichier");
 		btnt.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -226,8 +242,8 @@ public class SettingsView extends View{
 		Label streetUrchin = new Label("Enfant des Rues");
 		streetUrchin.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		streetUrchin.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-		firstPane.add(streetUrchin, 0, 4);
-		TextField streetUrchinField = new TextField();
+		firstPane.add(streetUrchin, 0, 5);
+		streetUrchinField = new TextField();
 		Button btnsu = new Button("choisir le fichier");
 		btnsu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -257,8 +273,8 @@ public class SettingsView extends View{
 		Label driver = new Label("Chauffeur");
 		driver.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		driver.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
-		firstPane.add(driver, 0, 5);
-		TextField driverField = new TextField();
+		firstPane.add(driver, 0, 6);
+		driverField = new TextField();
 		Button btnd = new Button("choisir le fichier");
 		btnd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -300,7 +316,7 @@ public class SettingsView extends View{
 		first.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		first.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(first, 0, 0);
-		TextField firstField = new TextField();
+		firstField = new TextField();
 		Button btnf = new Button("choisir le fichier");
 		btnf.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -335,7 +351,7 @@ public class SettingsView extends View{
 		second.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		second.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(second, 0, 1);
-		TextField secondField = new TextField();
+		secondField = new TextField();
 		Button btns = new Button("choisir le fichier");
 		btns.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -366,7 +382,7 @@ public class SettingsView extends View{
 		last.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		last.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(last, 0, 2);
-		TextField lastField = new TextField();
+		lastField = new TextField();
 		Button btnl = new Button("choisir le fichier");
 		btnl.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -397,7 +413,7 @@ public class SettingsView extends View{
 		middle.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		middle.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		secondPane.add(middle, 0, 3);
-		TextField middleField = new TextField();
+		middleField = new TextField();
 		Button btnm = new Button("choisir le fichier");
 		btnm.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -436,7 +452,7 @@ public class SettingsView extends View{
 		honesty.setStyle("-fx-text-fill: rgb(200, 180, 250);");
 		honesty.setFont(Font.font("Verdana", FontWeight.BOLD, 12));
 		thirdPane.add(honesty,0,0);
-		Slider slider = new Slider(0, 100, 50);
+		slider = new Slider(0, 100, 50);
 		thirdPane.add(new Text("\t"), 1, 0);
 		thirdPane.add(slider, 2, 0);
 		
@@ -447,6 +463,7 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
             	StrategyFactory.update(fileGodFather, fileLoyayHenchman, fileCleaner, fileAgent, fileThief, fileStreetUrchin, fileDriver, fileFirst, fileSecond, fileLast, fileMiddle);
+            	App.honesty = slider.getValue();
             	App.sv.settingsStage.close();
             	App.sv.settingsViewOpen = false;
             	App.mainStage.requestFocus();
@@ -457,6 +474,7 @@ public class SettingsView extends View{
             @Override
             public void handle(final ActionEvent e) {
             	StrategyFactory.reset();
+            	App.honesty = 50D;
                 App.sv.settingsStage.close();
                 App.sv.settingsViewOpen = false;
                 App.setv = new SettingsView(Theme.windowWidth, Theme.windowHeight);
@@ -468,6 +486,23 @@ public class SettingsView extends View{
 		mainBox.getChildren().addAll(Arrays.asList(title, firstLabel, firstPane, secondLabel, secondPane, behaviourTitle, thirdPane, buttonBox));
 		mainBox.setTranslateX(250);
 		super.getPanel().getChildren().add(mainBox);
+	}
+	
+	public void getToPreviousState(){
+		godFatherField.setText(StrategyFactory.getGodFatherStrategyPath());
+		loyalHenchmanField.setText(StrategyFactory.getLoyalHenchmanStrategyPath());
+		cleanerField.setText(StrategyFactory.getCleanerStrategyPath());
+		agentField.setText(StrategyFactory.getAgentStrategyPath());
+		thiefField.setText(StrategyFactory.getThiefStrategyPath());
+		streetUrchinField.setText(StrategyFactory.getStreetUrchinStrategyPath());
+		driverField.setText(StrategyFactory.getDriverStrategyPath());
+		
+		firstField.setText(StrategyFactory.getFisrtPositionStrategyPath());
+		secondField.setText(StrategyFactory.getSecondPositionStrategyPath());
+		lastField.setText(StrategyFactory.getLastPositionStrategyPath());
+		middleField.setText(StrategyFactory.getMiddlePositionStrategyPath());
+		
+		slider.setValue(App.honesty);
 	}
 
 }

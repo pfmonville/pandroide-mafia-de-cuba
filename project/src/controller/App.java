@@ -47,6 +47,7 @@ public class App extends Application {
 	//instanciate the rules
 	public static Rules rules = new Rules();
 	
+	public static double honesty = 50;
 	
 	public static void main(String[] args) {
 		launch(args);
