@@ -1,18 +1,11 @@
 package controller.ai;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import controller.App;
-import controller.ai.position.IPositionStrategy;
-import controller.ai.strategy.CleanerStrategy;
-import controller.ai.strategy.ISuspectStrategy;
-import error.CoeherenceException;
-import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
@@ -21,6 +14,12 @@ import model.Player;
 import model.Question;
 import model.RoleProbaCouple;
 import model.SecretID;
+import controller.App;
+import controller.ai.position.IPositionStrategy;
+import controller.ai.strategy.CleanerStrategy;
+import controller.ai.strategy.ISuspectStrategy;
+import error.CoeherenceException;
+import error.StrategyError;
 
 public class AISuspectController extends AIController {
 	private ISuspectStrategy strategy;
@@ -156,6 +155,7 @@ public class AISuspectController extends AIController {
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers) {
 		
 		System.out.println("DEBUG : AISuspectController : chooseAnswer");
+		System.out.println("Id de la question : "+ question.getId());
 		System.out.println("Debut de la fonction chooseAnswer : joueur : "+ player.getPosition() +" : mensonge initial : ");
 		System.out.println(lie.toString());
 		

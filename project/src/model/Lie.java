@@ -50,7 +50,7 @@ public class Lie {
 		return falseDiamondsStolen;
 	}
 	public void addFalseRoleName(String role) throws AttributeInUseException, CoeherenceException{
-		if(App.rules.isAValidToken(role)){
+		if(App.rules.isAValidRole(role)){
 			if(this.falseAssumedRole == null){
 				if(!this.falseNotAssumedRoles.contains(role)){
 					this.falseAssumedRole = role;
@@ -61,10 +61,10 @@ public class Lie {
 				}
 				
 			}else{
-				throw new AttributeInUseException("le joueur a déjà choisi de montrer un role: "+this.falseAssumedRole+", le role, "+role+ " n'a pas pu être ajouté");
+				throw new AttributeInUseException("le joueur a déjà choisi de montrer un rôle: "+this.falseAssumedRole+", le rôle, "+role+ " n'a pas pu être ajouté");
 			}
 		}else{
-			throw new AttributeInUseException("Le rôle que vous souhaitez donner n'est pas valide, " + role+ ", parmi la liste de roles: " + App.rules.getRolesList().toString());
+			throw new AttributeInUseException("Le rôle que vous souhaitez donner n'est pas valide, " + role+ ", parmi la liste de rôles: " + App.rules.getRolesList().toString());
 		}
 	}
 	public void addFalseHiddenToken(String token) throws AttributeInUseException, CoeherenceException{
@@ -91,7 +91,7 @@ public class Lie {
 		this.hideToken = false;
 	}
 	public void addFalseDiamondsStolen(int diamonds) throws AttributeInUseException{
-		if(this.falseDiamondsStolen == null){
+		if(this.falseDiamondsStolen == null || this.falseDiamondsStolen == 0){
 			this.falseDiamondsStolen = diamonds;
 		}else{
 			throw new AttributeInUseException("le joueur a déjà choisi de montrer combien de diamants il y avait: "+this.falseDiamondsStolen+", le nombre de diamants, "+diamonds+ " n'a pas pu être ajouté");
@@ -126,14 +126,14 @@ public class Lie {
 		if(this.falseAssumedRole != null){
 			throw new CoeherenceException("le joueur a déjà décidé de dire quel role il a, il ne sert à rien de remplir falseNotAssumedRole");
 		}
-		if(App.rules.isAValidToken(role)){
+		if(App.rules.isAValidRole(role)){
 			if(!this.falseNotAssumedRoles.contains(role)){
 				this.falseNotAssumedRoles.add(role);
 			}else{
-				throw new AttributeInUseException("le joueur a déjà choisi de dire qu'il n'a pas caché ce jeton: "+this.falseHiddenToken+", le jeton, "+role+ " n'a pas pu être ajouté");
+				throw new AttributeInUseException("le joueur a déjà choisi de dire qu'il n'est pas ce rôle : "+this.falseHiddenToken+", le rôle, "+role+ " n'a pas pu être ajouté");
 			}
 		}else{
-			throw new AttributeInUseException("Le jeton que vous souhaitez donner n'est pas valide, " + role+ ", parmi la liste de roles: " + App.rules.getRolesList().toString());
+			throw new AttributeInUseException("Le rôle que vous souhaitez donner n'est pas valide, " + role+ ", parmi la liste de rôles: " + App.rules.getRolesList().toString());
 		}
 	}
 	public void addFalseNotAssumedRoles(ArrayList<String> roles) throws AttributeInUseException, CoeherenceException{
@@ -297,7 +297,7 @@ public class Lie {
 		s += "falseDiamondsStolen : "+ falseDiamondsStolen +"\n";
 		s += "falseAssumedRole : "+ falseAssumedRole +"\n";
 		s += "falseNotAssumedRoles : "+ falseNotAssumedRoles +"\n";
-		s += "falseHiddenToken : "+ falseNotAssumedRoles +"\n";
+		s += "falseHiddenToken : "+ falseHiddenToken +"\n";
 		s += "falseNotHiddenToken : "+ falseNotHiddenToken +"\n";
 		s += "hideToken : "+ hideToken +"\n";
 		s += "**********************\n";
