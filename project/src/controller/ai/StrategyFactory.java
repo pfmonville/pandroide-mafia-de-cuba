@@ -139,8 +139,9 @@ public class StrategyFactory {
 			throw new AttributeInUseException("Bad strategy name");
 		}
 		
-		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL(file.getParent())});
-		return (ISuspectStrategy) urlClassLoader.loadClass(file.getName()).newInstance();
+		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+		String[] result = file.getName().split("\\.");
+		return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 		
 	}
 	
