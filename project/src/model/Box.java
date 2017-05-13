@@ -42,9 +42,15 @@ public class Box {
 		String str = "";
 		str += "Box content:\n";
 		str += "\t number of diamonds: "+ diamonds +"\n";
-		str += "\t list of tokens: ";
-		for(String tok : tokens){
-			str += tok+" ";
+		if(tokens == null){
+			str += "\t list of tokens: null";
+		}else if(tokens.isEmpty()){
+			str += "\t list of tokens: empty";
+		}else{
+			str += "\t list of tokens: ";
+			for(String tok : tokens){
+				str += tok+" ";
+			}
 		}
 		return str + "\n";
 	}
