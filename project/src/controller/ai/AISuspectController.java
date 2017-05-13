@@ -9,6 +9,7 @@ import java.util.Set;
 
 import controller.App;
 import controller.ai.position.IPositionStrategy;
+import error.CoeherenceException;
 import error.StrategyError;
 import model.Answer;
 import model.Box;
@@ -68,23 +69,35 @@ public class AISuspectController extends AIController {
 
 	private void getDiamondsInBox(Answer response, boolean before) {
 		if (lie.isDiamondsInBoxSet()) {
+			System.out.println("On est passé par isDiamondsInBoxSet");
 			response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
 		} else {
+			System.out.println("c'était pas set donc on le set");
 			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie,diamondsAnnoncedbyOtherPlayers);
 			// roll dice
 			DiamondsCouple diamonds = Lie.rollDice(diamondsConfigurations);
 			// update response
 			response.setNbDiamondsAnswer(diamonds.getDiamondsReceived());
-			// update lie
-			lie.updateDiamondsInBox(diamonds);
+			// update lie (diamants dans la boite ET les diamants pris)
+			try {
+				System.out.println("On va update");
+				lie.updateDiamondsInBox(diamonds);
+				System.out.println("c'est bien update");
+			} catch (CoeherenceException e) {
+				e.printStackTrace();
+			}
 		}
 		if (!before) {
+			System.out.println("maintenant on retire les diamants");
 			// traitement spécial pour la question "quand tu l'as passée" on
 			// retire les diamants que le joueur décide de prendre
+			if(!lie.hasShownDiamondsStolen()){
+				System.out.println("En fait les diamants volés ne sont pas initialisé");
+			}
 			response.substractDiamondsToAnswer(lie.getFalseDiamondsStolen());
 		}
 	}
-
+	
 	private void getHiddenToken(Answer response, boolean substract,boolean update) {
 		// on demande s'il a caché un jeton
 		if (lie.hasShownHiddenToken()) {

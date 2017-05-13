@@ -12,9 +12,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import model.Theme;
 
 public class AboutView extends View{

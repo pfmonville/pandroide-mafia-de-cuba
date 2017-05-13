@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.sound.midi.SysexMessage;
-
 import controller.App;
 import controller.PlayerController;
 import model.Answer;
@@ -1193,10 +1191,6 @@ public class AIController implements PlayerController {
 			Double weight = world.getWeight(fiability);
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
 				int player = entry.getKey();
-				if(player == 1 || player == this.player.getPosition()){
-					System.out.println("Il vient de là le probleme");
-					continue;
-				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
 				playerRoles.put(role, weight + playerRoles.get(role));
@@ -1207,6 +1201,10 @@ public class AIController implements PlayerController {
 			Double weight = world.getWeight(fiability);
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
 				int player = entry.getKey();
+				if(player == 1 || player == this.player.getPosition()){
+					System.out.println("Il vient de là le probleme");
+					continue;
+				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
 				playerRoles.put(role, weight + playerRoles.get(role));

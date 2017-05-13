@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Box {
 	
-	private Integer diamonds;
-	private ArrayList<String> tokens;
+	private Integer diamonds = null;
+	private ArrayList<String> tokens = null;
 	
 	public Box(Integer diamonds, ArrayList<String> tokens){
 		this.diamonds = diamonds ;
