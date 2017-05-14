@@ -51,7 +51,7 @@ public class AgentStrategy implements ISuspectStrategy {
 			//-> received more and gave what you gave
 			//-> received more and gave less
 			int sup = new Random().nextInt(App.rules.getNumberOfDiamonds() - App.rules.getMaxHiddenDiamonds() - realDiamsReceived)+1;
-			int minus = new Random().nextInt(realDiamsReceived)+1;
+			int minus = new Random().nextInt(realDiamsReceived+sup)+1;
 			if(!player.isLastPlayer()){
 				diamondProbabilitiesResponse.put(new DiamondsCouple(realDiamsReceived+sup, realDiamsReceived), 0.5);
 				diamondProbabilitiesResponse.put(new DiamondsCouple(realDiamsReceived+sup, realDiamsReceived-minus), 0.5);
