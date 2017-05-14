@@ -98,7 +98,7 @@ public class AgentStrategy implements ISuspectStrategy {
 		 * if I hid a token :
 		 * ( have to check that the liar hasn't choosen the role he has moved aside )
 		 */
-		if( hiddenToken != null){
+		if( ! hiddenToken.equals(App.rules.getNameNoRemovedToken())){
 			/* 		-> if hidden token is an agent : say that I've moved aside an agent (or something else)
 			 * (there would be missing 2 agents in the box...)
 			 * 1st degree : wanna act like a thief : so moved aside agent = lh > driver */
