@@ -111,11 +111,11 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 	@Override
 	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		
-		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
+		HashMap<String, Double> roleProbabilitiesResponse = new HashMap<String, Double>();
 		// Street Urchin 1st degree -> behave like a thief
-		tokenProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
+		roleProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
 		
-		return tokenProbabilitiesResponse;
+		return roleProbabilitiesResponse;
 	}
 	
 	

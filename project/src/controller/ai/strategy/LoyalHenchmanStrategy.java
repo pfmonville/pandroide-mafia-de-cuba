@@ -13,9 +13,9 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	
 	@Override
 	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie){
-		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
-		tokenResponseProbabilities.put(player.getRole().getName(), 1.0);
-		return tokenResponseProbabilities;
+		HashMap<String, Double> roleResponseProbabilities = new HashMap<String, Double>();
+		roleResponseProbabilities.put(player.getRole().getName(), 1.0);
+		return roleResponseProbabilities;
 	}
 
 	@Override
@@ -36,9 +36,6 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	@Override
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player, Lie lie) {
 		HashMap<String, Double> hiddenTokenResponseProbabilities = new HashMap<String, Double>();
-		if(player.getRole().getHiddenToken() == null){
-			
-		}
 		hiddenTokenResponseProbabilities.put(player.getRole().getHiddenToken(), 1.0);
 		return hiddenTokenResponseProbabilities;
 	}

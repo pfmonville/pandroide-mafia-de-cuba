@@ -92,7 +92,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 	// First degree
 	@Override
 	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie){
-		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
+		HashMap<String, Double> roleProbabilitiesResponse = new HashMap<String, Double>();
 		
 		double lhProba = 0.65;
 		double dProba = 0.25;
@@ -156,15 +156,15 @@ public class ThiefStrategy implements ISuspectStrategy {
 			}
 		}
 		
-		tokenProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba, isCleanerHere);
+		roleProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba, isCleanerHere);
 		
 		// If I'm last player I can pretend to be a street urchin
 		if(player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
 			double suProba = 0.3;
-			for(Entry<String, Double> entry : tokenProbabilitiesResponse.entrySet()){
-				tokenProbabilitiesResponse.put(entry.getKey(), entry.getValue() - suProba * entry.getValue());
+			for(Entry<String, Double> entry : roleProbabilitiesResponse.entrySet()){
+				roleProbabilitiesResponse.put(entry.getKey(), entry.getValue() - suProba * entry.getValue());
 			}
-			tokenProbabilitiesResponse.put(App.rules.getNameStreetUrchin(), suProba);	
+			roleProbabilitiesResponse.put(App.rules.getNameStreetUrchin(), suProba);	
 		}
 		
 		/*
@@ -190,7 +190,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 //			tokenProbabilitiesResponse.put(App.rules.getNameThief(), tProba);
 //		}
 		
-		return tokenProbabilitiesResponse;
+		return roleProbabilitiesResponse;
 	}	
 	
 	@Override
