@@ -251,7 +251,7 @@ public class OptionView extends View{
 		checkBox1.selectedProperty().set(false);
 		
 		Label persLabel = new Label();
-		persLabel.setText("Personalization");
+		persLabel.setText("Personnalisation");
 		persLabel.setFont(new Font("Tahoma", 20));
 		
 		
