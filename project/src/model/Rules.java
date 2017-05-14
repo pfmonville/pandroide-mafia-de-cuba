@@ -184,7 +184,6 @@ public class Rules {
 		for(int i = 0; i < this.numberOfDrivers; i++){
 			tokens.add(nameDriver);
 		}
-		System.out.println(tokens.toString());
 
 		return tokens;
 	}

@@ -122,7 +122,7 @@ public class AISuspectController extends AIController {
 
 	private void getRole(Answer response, boolean substract, boolean update) {
 		if (lie.hasShownRole()) {
-			if (App.rules.isAValidToken(lie.getFalseRoleName())) {
+			if (App.rules.isAValidRole(lie.getFalseRoleName())) {
 				if (substract) {
 					response.getTokensAnswer().remove(lie.getFalseRoleName());
 				} else {
@@ -206,14 +206,19 @@ public class AISuspectController extends AIController {
 			if (number == 6 || number == 7) {
 				Set<String> rolesTypes = new HashSet<String>(
 						response.getTokensAnswer());
-				for (String role : rolesTypes) {
-					int nb = response.getCount(role);
-					if (nb > 0) {
-						content += ", " + nb + " " + role;
+				
+				if(rolesTypes.isEmpty()){
+					content = "La boite ne contenait aucun jeton.";
+				}else{
+					for (String role : rolesTypes) {
+						int nb = response.getCount(role);
+						if (nb > 0) {
+							content += ", " + nb + " " + role;
+						}
 					}
+					content += ".";
+					content.replaceFirst("[,]", " ");
 				}
-				content += ".";
-				content.replaceFirst("[,]", " ");
 			} else {
 				content += (response.getTokensAnswer().size())
 						+ " jetons personnage.";
