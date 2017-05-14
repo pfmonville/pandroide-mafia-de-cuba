@@ -1,6 +1,7 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import controller.App;
 import model.Answer;
@@ -22,17 +23,17 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgentCIA());
-//		stringList.add(App.rules.getNameAgentFBI());
+		stringList.add(App.rules.getNameAgentFBI());
 		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 0;
+		int nombreDeDiamantsDansBoite = 9;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Nombre de joueurs dans la partie
 		int nbPlayers = 6;
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 5; // inclus dans [2 ; n], le parrain est le joueur 1
+		int positionDuJoueur = 2; // inclus dans [2 ; n], le parrain est le joueur 1
 		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		p.setBox(testBox);
 		
@@ -109,14 +110,13 @@ public class MainTestAIController {
 		//Tests getHashMap
 //		HashMap<Integer, Integer> hp;
 //		for(World w : aic.getWorldsAfter()){
-//			System.out.println(w.getRolesDistribution());
 //			hp = aic.getHashMapDistributionForWorldAfter(w);
 //			System.out.println(hp);
 //		}
 		
 	
 		//Tests de checkLiar
-		Question q = new Question(2, "", new ArrayList<Integer>(), 0);
+		Question q = new Question(5, "", new ArrayList<Integer>(), 0);
 		q.setTargetPlayer(3);
 		//pour question 8
 		//q.setContent("Est-tu un... Agent?");
@@ -127,8 +127,8 @@ public class MainTestAIController {
 		Answer a = new Answer(q.getId(), "",  new ArrayList<Integer>());
 		//question 15
 		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
-		
-		a.setNbDiamondsAnswer(0);
+		a.setNbTokensAnswer(1);
+		//a.setNbDiamondsAnswer(0);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.add(App.rules.getNameLoyalHenchman());
 //		list.add(App.rules.getNameAgentFBI());
