@@ -5,12 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
 public class CleanerStrategy implements ISuspectStrategy{	
 	
+	private Inspect inspect;
+	
+	
+	public CleanerStrategy(Inspect inspect) {
+		super();
+		this.inspect = inspect;
+	}
+
 	/**
 	 * calcule si le joueur doit tirer sur la cible ou non
 	 * le joueur veut tirer s'il pense que la cible est un agent

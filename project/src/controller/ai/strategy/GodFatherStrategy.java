@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import model.Box;
+import model.Inspect;
 import model.Question;
 
 public class GodFatherStrategy implements IGodFatherStrategy {
 
-
+	private Inspect inspect;
+	
+	public GodFatherStrategy(Inspect inspect) {
+		this.inspect = inspect;
+	}
+	
 	@Override
 	public int chooseWhoIsTheThief() {
 		// TODO Auto-generated method stub

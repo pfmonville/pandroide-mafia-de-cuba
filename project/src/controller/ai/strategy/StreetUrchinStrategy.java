@@ -8,11 +8,27 @@ import java.util.Random;
 
 import controller.App;
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
 public class StreetUrchinStrategy implements ISuspectStrategy {
+
+	
+	private Inspect inspect;
+	
+	
+	public StreetUrchinStrategy(Inspect inspect) {
+		super();
+		this.inspect = inspect;
+	}
+
+
+
+
+
+
 
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player, Lie lie) {

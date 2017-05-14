@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
@@ -14,8 +15,15 @@ import controller.App;
 
 public class AgentStrategy implements ISuspectStrategy {
 
+	private Inspect inspect;
 	
-	
+	public AgentStrategy(Inspect inspect) {
+		super();
+		this.inspect = inspect;
+	}
+
+
+
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,
 			Lie lie) {

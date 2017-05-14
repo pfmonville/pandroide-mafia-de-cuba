@@ -5,11 +5,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
+	
+	private Inspect inspect;
+	
+	public LoyalHenchmanStrategy(Inspect inspect) {
+		this.inspect = inspect;
+	}
 	
 	@Override
 	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie){

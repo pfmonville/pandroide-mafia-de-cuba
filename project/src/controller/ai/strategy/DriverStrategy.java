@@ -5,11 +5,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
 
 public class DriverStrategy implements ISuspectStrategy{
+
+	private Inspect inspect;
+	
+	
+	public DriverStrategy(Inspect inspect) {
+		super();
+		this.inspect = inspect;
+	}
 
 	@Override
 	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player,

@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -711,8 +712,11 @@ public class GameController {
 	 * @throws InstantiationException 
 	 * @throws ClassNotFoundException 
 	 * @throws MalformedURLException 
+	 * @throws SecurityException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	private void getControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException{
+	private void getControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException, IllegalArgumentException, InvocationTargetException, SecurityException{
 		
 		for(Map.Entry<Integer, Player> entry : players.entrySet()){
 			Player player = entry.getValue();
@@ -727,16 +731,16 @@ public class GameController {
 					playerControllers.put(position, new AISuspectController(player));
 					//set position strategy
 					if(position==2){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.FIRSTPOSITIONSTRATEGY));
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.FIRSTPOSITIONSTRATEGY, null));
 					}
 					else if(position == 3){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.SECONDPOSITIONSTRATEGY));
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.SECONDPOSITIONSTRATEGY, null));
 					} 
 					else if(position== App.rules.getCurrentNumberOfPlayer()){
-						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LASTPOSITIONSTRATEGY));
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LASTPOSITIONSTRATEGY,null));
 					}
 					else {
-						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.MIDDLEPOSITIONSTRATEGY));
+						((AISuspectController)playerControllers.get(position)).setPosStrategy((IPositionStrategy) StrategyFactory.getStrategyFor(StrategyFactory.MIDDLEPOSITIONSTRATEGY,null));
 					}
 				}
 			}
@@ -752,8 +756,11 @@ public class GameController {
 	 * @throws InstantiationException 
 	 * @throws ClassNotFoundException 
 	 * @throws MalformedURLException 
+	 * @throws SecurityException 
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	private void updateControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException{
+	private void updateControllers() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException, IllegalArgumentException, InvocationTargetException, SecurityException{
 		for(Map.Entry<Integer, Player> entry : players.entrySet()){
 			Player player = entry.getValue();
 			int position = entry.getKey();
@@ -763,26 +770,26 @@ public class GameController {
 				System.out.println( " roleName = " + player.getRole().getName());
 
 				if(player.getRole().getName().equals(App.rules.getNameGodFather())){
-					((AIGodFatherController) playerControllers.get(position)).addStrategy((IGodFatherStrategy) StrategyFactory.getStrategyFor(StrategyFactory.GODFATHERSTRATEGY));
+					((AIGodFatherController) playerControllers.get(position)).addStrategy((IGodFatherStrategy) StrategyFactory.getStrategyFor(StrategyFactory.GODFATHERSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameCleaner())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.THIEFSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.THIEFSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 					//TODO choisir le degré de stratégie
 				}
 				if(player.getRole().getName().equals(App.rules.getNameStreetUrchin())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.STREETURCHINSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.STREETURCHINSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameAgentCIA()) | player.getRole().getName().equals(App.rules.getNameAgentFBI()) | player.getRole().getName().equals(App.rules.getNameAgentLambda())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.AGENTSTRATEGY));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.AGENTSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 			}
 		}
@@ -820,7 +827,7 @@ public class GameController {
 		try {
 			this.getControllers();
 		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
-				| AttributeInUseException e) {
+				| AttributeInUseException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
 			App.fatalError("Un problème avec les stratégies personnalisées pour la prise dans la boite est arrivé", App.gv.getPanel());
 			e.printStackTrace();
 		}
@@ -842,7 +849,7 @@ public class GameController {
 		try {
 			this.updateControllers();
 		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
-				| AttributeInUseException e) {
+				| AttributeInUseException | IllegalArgumentException | InvocationTargetException | SecurityException e) {
 			App.fatalError("Un problème avec les stratégies personnalisées pour les rôles est arrivé", App.gv.getPanel());
 			e.printStackTrace();
 		}

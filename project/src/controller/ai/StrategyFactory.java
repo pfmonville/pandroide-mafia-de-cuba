@@ -1,6 +1,7 @@
 package controller.ai;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -19,6 +20,7 @@ import controller.ai.strategy.ISuspectStrategy;
 import controller.ai.strategy.LoyalHenchmanStrategy;
 import controller.ai.strategy.StreetUrchinStrategy;
 import controller.ai.strategy.ThiefStrategy;
+import model.Inspect;
 
 public class StrategyFactory {
 	//maccros
@@ -67,47 +69,47 @@ public class StrategyFactory {
 	public static File middlePositionStrategy;
 	
 	
-	public static Strategy getStrategyFor(String strategy) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException{
+	public static Strategy getStrategyFor(String strategy, Inspect inspect) throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, AttributeInUseException, IllegalArgumentException, InvocationTargetException, SecurityException{
 		File file = null;
 		
 		if(GODFATHERSTRATEGY.equals(strategy)){
 			if(standardGodFatherStrategy){
-				return new GodFatherStrategy();
+				return new GodFatherStrategy(inspect);
 			}
 			file = godFatherStrategy;
 		}else if(LOYALHENCHMANSTRATEGY.equals(strategy)){
 			if(standardLoyalHenchmanStrategy){
-				return new LoyalHenchmanStrategy();
+				return new LoyalHenchmanStrategy(inspect);
 			}
 			file = loyalHenchmanStrategy;
 			
 		}else if(CLEANERSTRATEGY.equals(strategy)){
 			if(standardCleanerStrategy){
-				return new CleanerStrategy();
+				return new CleanerStrategy(inspect);
 			}
 			file = cleanerStrategy;
 			
 		}else if(AGENTSTRATEGY.equals(strategy)){
 			if(standardAgentStrategy){
-				return new AgentStrategy();
+				return new AgentStrategy(inspect);
 			}
 			file = agentStrategy;
 			
 		}else if(THIEFSTRATEGY.equals(strategy)){
 			if(standardThiefStrategy){
-				return new ThiefStrategy();
+				return new ThiefStrategy(inspect);
 			}
 			file = thiefStrategy;
 			
 		}else if(STREETURCHINSTRATEGY.equals(strategy)){
 			if(standardStreetUrchinStrategy){
-				return new StreetUrchinStrategy();
+				return new StreetUrchinStrategy(inspect);
 			}
 			file = streetUrchinStrategy;
 			
 		}else if(DRIVERSTRATEGY.equals(strategy)){
 			if(standardDriverStrategy){
-				return new DriverStrategy();
+				return new DriverStrategy(inspect);
 			}
 			file = driverStrategy;
 			
@@ -116,24 +118,36 @@ public class StrategyFactory {
 				return new FirstPositionStrategy();
 			}
 			file = firstPositionStrategy;
+			URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+			String[] result = file.getName().split("\\.");
+			return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 			
 		}else if(SECONDPOSITIONSTRATEGY.equals(strategy)){
 			if(standardSecondPositionStrategy){
 				return new SecondPositionStrategy();
 			}
 			file = secondPositionStrategy;
+			URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+			String[] result = file.getName().split("\\.");
+			return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 			
 		}else if(LASTPOSITIONSTRATEGY.equals(strategy)){
 			if(standardLastPositionStrategy){
 				return new LastPositionStrategy();
 			}
 			file = lastPositionStrategy;
+			URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+			String[] result = file.getName().split("\\.");
+			return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 			
 		}else if(MIDDLEPOSITIONSTRATEGY.equals(strategy)){
 			if(standardMiddlePositionStrategy){
 				return new MiddlePositionStrategy();
 			}
 			file = middlePositionStrategy;
+			URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+			String[] result = file.getName().split("\\.");
+			return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 			
 		}else{
 			throw new AttributeInUseException("Bad strategy name");
@@ -141,7 +155,7 @@ public class StrategyFactory {
 		
 		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
 		String[] result = file.getName().split("\\.");
-		return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
+		return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).getConstructors()[0].newInstance(inspect);
 		
 	}
 	

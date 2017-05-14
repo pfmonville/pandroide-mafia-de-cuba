@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Random;
 
 import model.DiamondsCouple;
+import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
@@ -14,6 +15,14 @@ import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
 	
+	private Inspect inspect;
+	
+	
+	public ThiefStrategy(Inspect inspect) {
+		super();
+		this.inspect = inspect;
+	}
+
 	@Override
 	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
