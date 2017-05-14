@@ -100,7 +100,7 @@ public class MainTestAIController {
 //		start = System.currentTimeMillis();
 //		for(World w : aic.getWorldsAfter()){
 //			ArrayList<Integer> list = w.getRolesDistribution();
-//			list.set(4, App.rules.getNumberLoyalHenchman());
+//			list.set(4, App.rules.getCodeNumberLoyalHenchman());
 //			w.setRoleDistribution(list);
 //		}
 //		endConfigAfter = System.currentTimeMillis() - start;

@@ -72,7 +72,7 @@ public class AISuspectController extends AIController {
 		if (lie.isDiamondsInBoxSet()) {
 			response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
 		} else {
-			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie,diamondsAnnoncedByOtherPlayers);
+			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie,diamondsAnnouncedByOtherPlayers);
 			// roll dice
 			DiamondsCouple diamonds = Lie.rollDice(diamondsConfigurations);
 			// update response

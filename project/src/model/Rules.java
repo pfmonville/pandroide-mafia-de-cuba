@@ -42,14 +42,14 @@ public class Rules {
 	private final String nameRolesTab[] = {"Fidèle", "Nettoyeur", "FBI", "CIA", "Agent", "Chauffeur"};
 	
 	// Corresponding value of each role
-	private final Integer numberGodfather = 0;
-	private final Integer numberLoyalHenchman = 1;
-	private final Integer numberCleaner = 6;
-	private final Integer numberAgent = 3;
-	private final Integer numberDriver = 2;
-	private final Integer numberThief = 4;
-	private final Integer numberStreetUrchin = 5;
-	private final Integer numberRolesTab[] = {1, 2, 3, 6}; // numbers representing the tokens
+	private final Integer codeNumberGodfather = 0;
+	private final Integer codeNumberLoyalHenchman = 1;
+	private final Integer codeNumberCleaner = 6;
+	private final Integer codeNumberAgent = 3;
+	private final Integer codeNumberDriver = 2;
+	private final Integer codeNumberThief = 4;
+	private final Integer codeNumberStreetUrchin = 5;
+	private final Integer codeNumberRolesTab[] = {1, 2, 3, 6}; // numbers representing the tokens
 	
 	
 	//Value for the game initialize in the OptionView
@@ -586,38 +586,38 @@ public class Rules {
 		return firstPlayerCanHide ;
 	}
 
-	public Integer getNumberGodfather() {
-		return numberGodfather;
+	public Integer getCodeNumberGodfather() {
+		return codeNumberGodfather;
 	}
 
 
-	public Integer getNumberLoyalHenchman() {
-		return numberLoyalHenchman;
+	public Integer getCodeNumberLoyalHenchman() {
+		return codeNumberLoyalHenchman;
 	}
 
 
-	public Integer getNumberCleaner() {
-		return numberCleaner;
+	public Integer getCodeNumberCleaner() {
+		return codeNumberCleaner;
 	}
 
 
-	public Integer getNumberAgent() {
-		return numberAgent;
+	public Integer getCodeNumberAgent() {
+		return codeNumberAgent;
 	}
 
 
-	public Integer getNumberDriver() {
-		return numberDriver;
+	public Integer getCodeNumberDriver() {
+		return codeNumberDriver;
 	}
 
 
-	public Integer getNumberThief() {
-		return numberThief;
+	public Integer getCodeNumberThief() {
+		return codeNumberThief;
 	}
 
 
-	public Integer getNumberStreetUrchin() {
-		return numberStreetUrchin;
+	public Integer getCodeNumberStreetUrchin() {
+		return codeNumberStreetUrchin;
 	}
 
 	public int getCurrentNumberOfPlayer() {
@@ -760,25 +760,25 @@ public class Rules {
 	public Integer convertRoleNameIntoNumber(String role){
 
 		if(role.equals(nameAgentLambda) || role.equals(nameAgentCIA) || role.equals(nameAgentFBI)){
-			return numberAgent;
+			return codeNumberAgent;
 		}
 		else if(role.equals(nameLoyalHenchman)){
-			return numberLoyalHenchman;
+			return codeNumberLoyalHenchman;
 		}
 		else if(role.equals(nameCleaner)){
-			return numberCleaner;
+			return codeNumberCleaner;
 		}
 		else if(role.equals(nameDriver)){
-			return numberDriver;
+			return codeNumberDriver;
 		}
 		else if(role.equals(nameStreetUrchin)){
-			return numberStreetUrchin;
+			return codeNumberStreetUrchin;
 		}
 		else if(role.equals(nameThief)){
-			return numberThief;
+			return codeNumberThief;
 		}
 		else if(role.equals(nameGodFather)){
-			return numberGodfather;
+			return codeNumberGodfather;
 		}
 		
 		return null;
@@ -786,33 +786,33 @@ public class Rules {
 	
 	public String convertNumberIntoRoleName(Integer number){
 		
-		if(number.equals(numberAgent)){
+		if(number.equals(codeNumberAgent)){
 			return nameAgentLambda;
 		}
-		else if(number.equals(numberCleaner)){
+		else if(number.equals(codeNumberCleaner)){
 			return nameCleaner;
 		}
-		else if(number.equals(numberDriver)){
+		else if(number.equals(codeNumberDriver)){
 			return nameDriver;
 		}
-		else if(number.equals(numberGodfather)){
+		else if(number.equals(codeNumberGodfather)){
 			return nameGodFather;
 		}
-		else if(number.equals(numberLoyalHenchman)){
+		else if(number.equals(codeNumberLoyalHenchman)){
 			return nameLoyalHenchman;
 		}
-		else if(number.equals(numberStreetUrchin)){
+		else if(number.equals(codeNumberStreetUrchin)){
 			return nameStreetUrchin;
 		}
-		else if(number.equals(numberThief)){
+		else if(number.equals(codeNumberThief)){
 			return nameThief;
 		}
 		return null;
 	}
 
 
-	public Integer[] getNumberRolesTab() {
-		return numberRolesTab;
+	public Integer[] getCodeNumberRolesTab() {
+		return codeNumberRolesTab;
 	}
 
 

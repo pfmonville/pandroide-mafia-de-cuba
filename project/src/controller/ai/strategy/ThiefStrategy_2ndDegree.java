@@ -14,7 +14,7 @@ import controller.App;
 public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 	
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers){
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers){
 		HashMap<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
 		double truthProba = 0.6;
 		double randomProba = 1 - truthProba;

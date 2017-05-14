@@ -15,7 +15,7 @@ import controller.App;
 public class ThiefStrategy implements ISuspectStrategy {
 	
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedbyOtherPlayers){
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers){
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		double lieOnReceivedProba;
 		double lieOnGivenProba;
@@ -76,7 +76,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			double proba = 0.25;
 			double decrease = proba / (player.getPosition() - 1);
 			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-				int diamondsGivenByOther = diamondsAnnoncedbyOtherPlayers.get(i).getDiamondsGiven();
+				int diamondsGivenByOther = diamondsAnnouncedByOtherPlayers.get(i).getDiamondsGiven();
 				if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
 					for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
 						diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
@@ -130,7 +130,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 				lhNb = App.rules.getNumberOfLoyalHenchmen() - player.getBox().getCount(App.rules.getNameLoyalHenchman())
 						+ App.rules.getNumberOfCleaners() - player.getBox().getCount(App.rules.getNameCleaner());
 				dNb = App.rules.getNumberOfDrivers() - player.getBox().getCount(App.rules.getNameDriver());
-				aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
+				aNb = App.rules.getCodeNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
 						+ player.getBox().getCount(App.rules.getNameAgentFBI())
 						+ player.getBox().getCount(App.rules.getNameAgentLambda()));
 				
@@ -174,7 +174,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 		
 		// Second degree
 		// Number of agent token taken before me
-//		int aNb = App.rules.getNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
+//		int aNb = App.rules.getCodeNumberAgent() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
 //				+ player.getBox().getCount(App.rules.getNameAgentFBI())
 //				+ player.getBox().getCount(App.rules.getNameAgentLambda()));
 //		
@@ -284,7 +284,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			tokenResponseProbabilities.put(App.rules.getNameDriver(), 1.0);
 			return tokenResponseProbabilities;
 		}else if(aNb == totalNb){
-			if(App.rules.getNumberAgent() == 1){
+			if(App.rules.getCodeNumberAgent() == 1){
 				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 1.0);
 			}else{
 				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 0.5);
@@ -313,9 +313,9 @@ public class ThiefStrategy implements ISuspectStrategy {
 			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhProba * lhNb / totalSum);
 		}
 		tokenResponseProbabilities.put(App.rules.getNameDriver(), dProba * dNb / totalSum);
-		if(App.rules.getNumberAgent() == 1){
+		if(App.rules.getCodeNumberAgent() == 1){
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / totalSum);
-		}else if(App.rules.getNumberAgent() == 2){
+		}else if(App.rules.getCodeNumberAgent() == 2){
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (2 * totalSum));
 			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (2 * totalSum));
 		}else{
