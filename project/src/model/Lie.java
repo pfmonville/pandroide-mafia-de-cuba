@@ -105,7 +105,7 @@ public class Lie {
 			if(!this.falseNotHiddenToken.contains(token)){
 				this.falseNotHiddenToken.add(token);
 			}else{
-				throw new AttributeInUseException("le joueur a déjà choisi de dire qu'il n'a pas caché ce jeton: "+this.falseHiddenToken+", le jeton, "+token+ " n'a pas pu être ajouté");
+				throw new AttributeInUseException("le joueur a déjà choisi de dire qu'il n'a pas caché ce jeton: "+token+", le jeton, "+token+ " n'a pas pu être ajouté");
 			}
 		}else{
 			throw new AttributeInUseException("Le jeton que vous souhaitez donner n'est pas valide, " + token+ ", parmi la liste de roles: " + App.rules.getRolesList().toString());
