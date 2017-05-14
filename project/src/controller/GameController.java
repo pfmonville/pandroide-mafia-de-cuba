@@ -1,4 +1,4 @@
-﻿package controller;
+package controller;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -32,6 +32,7 @@ import controller.ai.AIGodFatherController;
 import controller.ai.AISuspectController;
 import controller.ai.StrategyFactory;
 import controller.ai.position.IPositionStrategy;
+import controller.ai.strategy.GodFatherBaseStrategy;
 import controller.ai.strategy.IGodFatherStrategy;
 import controller.ai.strategy.ISuspectStrategy;
 import controller.runnable.AnswerQuestionRunnable;
@@ -776,7 +777,7 @@ public class GameController {
 				System.out.println( " roleName = " + player.getRole().getName());
 
 				if(player.getRole().getName().equals(App.rules.getNameGodFather())){
-					((AIGodFatherController) playerControllers.get(position)).addStrategy((IGodFatherStrategy) StrategyFactory.getStrategyFor(StrategyFactory.GODFATHERSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
+					((GodFatherBaseStrategy) ((AIGodFatherController) playerControllers.get(position)).getStrategy()).setInspect(((AIController) playerControllers.get(position)).getInspect());
 				}
 				if(player.getRole().getName().equals(App.rules.getNameLoyalHenchman())){
 					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));

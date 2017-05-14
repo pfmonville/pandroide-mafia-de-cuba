@@ -74,9 +74,13 @@ public class StrategyFactory {
 		
 		if(GODFATHERSTRATEGY.equals(strategy)){
 			if(standardGodFatherStrategy){
-				return new GodFatherStrategy(inspect);
+				return new GodFatherStrategy();
 			}
 			file = godFatherStrategy;
+			file = firstPositionStrategy;
+			URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+			String[] result = file.getName().split("\\.");
+			return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 		}else if(LOYALHENCHMANSTRATEGY.equals(strategy)){
 			if(standardLoyalHenchmanStrategy){
 				return new LoyalHenchmanStrategy(inspect);

@@ -1,7 +1,12 @@
 package controller.ai;
 
+import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 
+import javax.naming.directory.AttributeInUseException;
+
+import controller.App;
 import controller.ai.strategy.GodFatherStrategy;
 import controller.ai.strategy.IGodFatherStrategy;
 import model.Box;
@@ -14,11 +19,23 @@ public class AIGodFatherController extends AIController{
 	
 	public AIGodFatherController(Player player){
 		super(player);
-		strategy = new GodFatherStrategy();
+		try {
+			strategy = (IGodFatherStrategy) StrategyFactory.getStrategyFor(StrategyFactory.GODFATHERSTRATEGY, null);
+		} catch (MalformedURLException | ClassNotFoundException | InstantiationException | IllegalAccessException
+				| AttributeInUseException | IllegalArgumentException | InvocationTargetException
+				| SecurityException e) {
+			e.printStackTrace();
+			App.createPopUp("Problème dans la création de la stratégie du parrain, la stratégie par défaut a été générée", "Problème création stratégie", 5);
+			strategy = new GodFatherStrategy();
+		}
 	}
 	
 	public void addStrategy(IGodFatherStrategy strategy){
 		this.strategy = strategy;
+	}
+	
+	public IGodFatherStrategy getStrategy(){
+		return this.strategy;
 	}
 	
 	public Question chooseQuestion(ArrayList<Question> questions){

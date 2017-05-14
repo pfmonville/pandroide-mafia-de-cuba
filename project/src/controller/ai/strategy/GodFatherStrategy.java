@@ -7,13 +7,7 @@ import model.Box;
 import model.Inspect;
 import model.Question;
 
-public class GodFatherStrategy implements IGodFatherStrategy {
-
-	private Inspect inspect;
-	
-	public GodFatherStrategy(Inspect inspect) {
-		this.inspect = inspect;
-	}
+public class GodFatherStrategy extends GodFatherBaseStrategy implements IGodFatherStrategy {
 	
 	@Override
 	public int chooseWhoIsTheThief() {
