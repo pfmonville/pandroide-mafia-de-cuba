@@ -327,8 +327,10 @@ public class GameController {
 			throw new PickingStrategyError("you have to choose either to pick diamond(s) or a token");
 		}
 		
-		if(tokenHidden != null){
-			if(players.get(this.currentPlayer).isFirstPlayer() && App.rules.isFirstPlayerCanHide() && App.rules.isAValidToken(tokenHidden)){
+		if(!tokenHidden.equals(App.rules.getNameNoRemovedToken())){
+			if(players.get(this.currentPlayer).isFirstPlayer() 
+					&& App.rules.isFirstPlayerCanHide() 
+					&& App.rules.isAValidToken(tokenHidden)){
 				this.setTokenHidden(tokenHidden);
 				this.box.removeToken(tokenHidden);
 				System.out.println("numero du joueur " + this.getCurrentPlayer().getPosition());
