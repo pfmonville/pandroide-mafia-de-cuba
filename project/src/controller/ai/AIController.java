@@ -919,6 +919,9 @@ public class AIController implements PlayerController {
 	}
 	
 	public void updateWorldsVision(int playerPosition, SecretID secret){
+		if(playerPosition == player.getPosition())
+			return; 
+					
 		keepWorldsWhere(playerPosition, App.rules.convertRoleNameIntoNumber(secret.getRole()), 
 				App.rules.convertRoleNameIntoNumber(secret.getHiddenToken()));
 		//thief
@@ -1455,7 +1458,7 @@ public class AIController implements PlayerController {
 	}
 	
 	/**
-	 * retourne une liste de liste représentant pour chaque joueur la probabilité 
+	 * retourne une liste de listes représentant pour chaque joueur la probabilité 
 	 * d'appartenance à chaque role. le joueur 1 est à ArrayList<>.get(1)
 	 */
 	public ArrayList<Inspect> getAssumedRolesForAllPlayers(){
