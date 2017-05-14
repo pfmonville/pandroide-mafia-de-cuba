@@ -13,7 +13,7 @@ public class LastPositionStrategy implements IPositionStrategy{
 	public SecretID chooseWhatToTake(Integer position, Box box) {
 		int diamondsTaken = 0;
 		String tokenTaken = null;
-		String hiddenToken = null;
+		String hiddenToken = App.rules.getNameNoRemovedToken();
 		String agent;
 		Random r = new Random();
 		float alea = r.nextFloat();

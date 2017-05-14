@@ -857,7 +857,7 @@ public class AIController implements PlayerController {
 				case 15: //Quel jeton as-tu écarté ?
 					String movedAside = answer.getTokenMovedAside();
 
-					if(movedAside != null){
+					if(movedAside != App.rules.getNameNoRemovedToken()){
 						for(int i=0; i<worldsListCopy.size(); i++){
 							w = worldsListCopy.get(i).clone();
 							truthValue = w.getTruthValue();
@@ -919,16 +919,15 @@ public class AIController implements PlayerController {
 	}
 	
 	public void updateWorldsVision(int playerPosition, SecretID secret){
-		//TODO
 		keepWorldsWhere(playerPosition, App.rules.convertRoleNameIntoNumber(secret.getRole()), 
 				App.rules.convertRoleNameIntoNumber(secret.getHiddenToken()));
 		//thief
 		if(secret.getRole().equals(App.rules.getNameThief())){
 			fiability.put(playerPosition, 0.0);
-		} //loyalHenchman
+		} //Fiability's update if the player accused was a LoyalHenchman
 		else if(secret.getRole().equals(App.rules.getNameLoyalHenchman())){
 			fiability.put(playerPosition, 1.0);
-		} // godfather's driver
+		} // or if he was the godfather's driver
 		else if(playerPosition == 2 && secret.getRole().equals(App.rules.getNameDriver())){
 			fiability.put(playerPosition, 1.0);
 		}
@@ -1283,7 +1282,7 @@ public class AIController implements PlayerController {
 			case 15://Quel jeton as-tu écarté ?  
 				String movedAside = answer.getTokenMovedAside();
 				liarDetected = true;
-				if(movedAside != null){
+				if(movedAside != App.rules.getNameNoRemovedToken()){
 					for(World w: worldsBefore){
 						// s'il existe un monde ou le 1er joueur a écarté ce jeton 
 						if(w.getTokenMovedAside().equals(App.rules.convertRoleNameIntoNumber(movedAside))){
@@ -1388,11 +1387,6 @@ public class AIController implements PlayerController {
 	 * (to be used after an accusation)
 	 */
 	public void keepWorldsWhere(int playerPosition, Integer roleNumber, Integer hiddenToken){
-		
-		//Fiability's update if the player accused was a LoyalHenchman
-		if(roleNumber.equals(App.rules.getCodeNumberLoyalHenchman())){
-			fiability.put(playerPosition, 1.0);
-		}
 		
 		ArrayList<World> worldsList = new ArrayList<World>();
 		ArrayList<World> worldsListCopy;		

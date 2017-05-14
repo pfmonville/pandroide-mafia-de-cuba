@@ -13,7 +13,7 @@ public class FirstPositionStrategy implements IPositionStrategy{
 		String roleName = "";
 		int diamondsTaken = 0;
 		String tokenTaken = null;
-		String hiddenToken = null;
+		String hiddenToken = App.rules.getNameNoRemovedToken();
 		Random r = new Random();
 		float alea = r.nextFloat();
 		float rand;
