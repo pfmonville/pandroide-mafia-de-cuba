@@ -87,8 +87,6 @@ public class AISuspectController extends AIController {
 		if (!before) {
 			// traitement spécial pour la question "quand tu l'as passée" on
 			// retire les diamants que le joueur décide de prendre
-			if(!lie.hasShownDiamondsStolen()){
-			}
 			response.substractDiamondsToAnswer(lie.getFalseDiamondsStolen());
 		}
 	}
@@ -285,7 +283,7 @@ public class AISuspectController extends AIController {
 							+ ".";
 				}
 				if (number == 16) {
-					if (tokenAsked.equals(response.getTokenMovedAside())) {
+					if (tokenAsked.equals(response.getTokenMovedAside()) && !lie.getfalseNotHiddenToken().contains(response.getTokenMovedAside())) {
 						lie.updateHiddenToken(tokenAsked);
 						content = "Oui";
 					} else {
