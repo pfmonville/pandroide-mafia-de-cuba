@@ -139,8 +139,9 @@ public class StrategyFactory {
 			throw new AttributeInUseException("Bad strategy name");
 		}
 		
-		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL(file.getParent())});
-		return (ISuspectStrategy) urlClassLoader.loadClass(file.getName()).newInstance();
+		URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new URL("file:///"+file.getParent()+"/")});
+		String[] result = file.getName().split("\\.");
+		return (ISuspectStrategy) urlClassLoader.loadClass(result[0]).newInstance();
 		
 	}
 	
@@ -206,4 +207,73 @@ public class StrategyFactory {
 		}
 		
 	}
+	
+	
+	public static String getGodFatherStrategyPath(){
+		if(standardGodFatherStrategy){
+			return null;
+		}
+		return godFatherStrategy.getAbsolutePath();
+	}
+	public static String getLoyalHenchmanStrategyPath(){
+		if(standardLoyalHenchmanStrategy){
+			return null;
+		}
+		return loyalHenchmanStrategy.getAbsolutePath();
+	}
+	public static String getCleanerStrategyPath(){
+		if(standardCleanerStrategy){
+			return null;
+		}
+		return cleanerStrategy.getAbsolutePath();
+	}
+	public static String getAgentStrategyPath(){
+		if(standardAgentStrategy){
+			return null;
+		}
+		return agentStrategy.getAbsolutePath();
+	}
+	public static String getThiefStrategyPath(){
+		if(standardThiefStrategy){
+			return null;
+		}
+		return thiefStrategy.getAbsolutePath();
+	}
+	public static String getStreetUrchinStrategyPath(){
+		if(standardStreetUrchinStrategy){
+			return null;
+		}
+		return streetUrchinStrategy.getAbsolutePath();
+	}
+	public static String getDriverStrategyPath(){
+		if(standardDriverStrategy){
+			return null;
+		}
+		return driverStrategy.getAbsolutePath();
+	}
+	public static String getFisrtPositionStrategyPath(){
+		if(standardFirstPositionStrategy){
+			return null;
+		}
+		return firstPositionStrategy.getAbsolutePath();
+	}
+	public static String getSecondPositionStrategyPath(){
+		if(standardSecondPositionStrategy){
+			return null;
+		}
+		return secondPositionStrategy.getAbsolutePath();
+	}
+	public static String getLastPositionStrategyPath(){
+		if(standardLastPositionStrategy){
+			return null;
+		}
+		return lastPositionStrategy.getAbsolutePath();
+	}
+	public static String getMiddlePositionStrategyPath(){
+		if(standardMiddlePositionStrategy){
+			return null;
+		}
+		return middlePositionStrategy.getAbsolutePath();
+	}
+	
 }

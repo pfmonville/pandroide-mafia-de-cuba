@@ -565,7 +565,7 @@ public class AIController implements PlayerController {
 			
 		Answer answer = talk.getAnswer();		
 		boolean liar = checkLiar(talk); //update of fiability
-			
+
 		if(!liar){
 			int questionId = talk.getAnswer().getId();
 			HashMap<Integer, Integer> truthValue; 
@@ -1476,7 +1476,7 @@ public class AIController implements PlayerController {
 	public void updateInspect(){
 		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
 		//instancier la hashmap
-		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
+//		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
 		for(int position:App.gameController.getAllPlayersPosition()){
 			if(position != this.player.getPosition() && position != 1){
 				playersAssumedRoles.put(position, new HashMap<>());
@@ -1504,7 +1504,7 @@ public class AIController implements PlayerController {
 				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
-				System.err.println("playerRoles:"+playerRoles);
+//				System.err.println("playerRoles:"+playerRoles);
 				if(playerRoles == null){
 					//ne devrait pas arriver
 					System.out.println("ne devrait pas arriver: un World n'a pas de role pour "+player);
@@ -1546,7 +1546,7 @@ public class AIController implements PlayerController {
 			for(String key: roles.keySet()){
 				roles.put(key, roles.get(key)/maxValue);
 			}
-			System.out.println("affichage des résultats: |"+id+"|"+roles.get(App.rules.getNameLoyalHenchman())+"|"+roles.get(App.rules.getNameCleaner())+"|"+roles.get(App.rules.getNameAgentLambda())+"|"+roles.get(App.rules.getNameThief())+"|"+roles.get(App.rules.getNameStreetUrchin())+"|"+roles.get(App.rules.getNameDriver())+"|");
+//			System.out.println("affichage des résultats: |"+id+"|"+roles.get(App.rules.getNameLoyalHenchman())+"|"+roles.get(App.rules.getNameCleaner())+"|"+roles.get(App.rules.getNameAgentLambda())+"|"+roles.get(App.rules.getNameThief())+"|"+roles.get(App.rules.getNameStreetUrchin())+"|"+roles.get(App.rules.getNameDriver())+"|");
 			//update inspect
 			inspect.updateAssumedRoleForPlayer(id, roles.get(App.rules.getNameLoyalHenchman()), 
 					roles.get(App.rules.getNameCleaner()), roles.get(App.rules.getNameAgentLambda()), 

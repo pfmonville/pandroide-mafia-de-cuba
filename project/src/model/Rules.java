@@ -148,7 +148,11 @@ public class Rules {
 
 
 	public boolean isAValidToken(String token){
-		if(token.equals(nameDriver)||token.equals(nameLoyalHenchman)||token.equals(nameAgentFBI)|| token.equals(nameAgentCIA)|| token.equals(nameAgentLambda)){
+		if(token.equals(nameDriver)
+				||token.equals(nameLoyalHenchman)
+				||token.equals(nameAgentFBI)
+				|| token.equals(nameAgentCIA)
+				|| token.equals(nameAgentLambda)){
 			return true;
 		}else if(this.numberOfCleaners > 0 && token.equals(nameCleaner)){
 			return true;
@@ -156,6 +160,9 @@ public class Rules {
 		return false;
 	}
 	
+	public boolean isAValidRole(String roleName){
+		return isAValidToken(roleName) || roleName.equals(nameThief) || roleName.equals(nameStreetUrchin);
+	}
 	public ArrayList<String> getTokens(){
 		ArrayList<String> tokens = new ArrayList<>();
 		for(int i = 0; i < this.numberOfLoyalHenchmen; i++){
@@ -165,8 +172,9 @@ public class Rules {
 			tokens.add(nameCleaner);
 		}
 		for(int i = 0; i < this.numberOfAgents; i++){
-			if(this.numberAgent > 2){
+			if(this.numberOfAgents > 2){
 				tokens.add(nameAgentLambda);
+
 			}else if(i ==0){
 				tokens.add(nameAgentFBI);
 			}else if(i == 1){
@@ -176,6 +184,8 @@ public class Rules {
 		for(int i = 0; i < this.numberOfDrivers; i++){
 			tokens.add(nameDriver);
 		}
+		System.out.println(tokens.toString());
+
 		return tokens;
 	}
 	

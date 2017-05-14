@@ -61,13 +61,14 @@ public class AgentStrategy implements ISuspectStrategy {
 		double proba = 0.25;
 		double decrease = proba / (player.getPosition() - 1);
 		for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-			// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
-			int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i - 1).getDiamondsGiven();
+			int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i).getDiamondsGiven();
 			if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
 				for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
 					diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
-				}	
-				diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther), proba);
+				}
+				// act like thief => have to decreased the amount given
+				int minus = new Random().nextInt((diamondsGivenByOther + 1) / 2) + 1; // division by 2 to not have a big value
+				diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther - minus), proba);
 			}
 			proba -= decrease; 
 		}

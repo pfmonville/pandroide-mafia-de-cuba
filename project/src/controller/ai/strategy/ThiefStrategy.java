@@ -76,8 +76,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			double proba = 0.25;
 			double decrease = proba / (player.getPosition() - 1);
 			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-				// /!\ : index - 1 : because the GH is player 1 in the index 0 in the list
-				int diamondsGivenByOther = diamondsAnnoncedbyOtherPlayers.get(i - 1).getDiamondsGiven();
+				int diamondsGivenByOther = diamondsAnnoncedbyOtherPlayers.get(i).getDiamondsGiven();
 				if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
 					for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
 						diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
@@ -256,7 +255,7 @@ public class ThiefStrategy implements ISuspectStrategy {
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
 		}
-		return null;
+		return hiddenTokenProbabilitiesResponse;
 	}
 	
 	/*
