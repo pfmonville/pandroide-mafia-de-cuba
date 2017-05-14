@@ -918,18 +918,20 @@ public class AIController implements PlayerController {
 		}
 	}
 	
-	public void updateWorldsVision(SecretID secret){
+	public void updateWorldsVision(int playerPosition, SecretID secret){
 		//TODO
-//		int playerPosition;
-//		keepWorldsWhere(playerPosition, App.rules.convertRoleNameIntoNumber(secret.getRole()), 
-//				App.rules.convertRoleNameIntoNumber(secret.getHiddenToken()));
-//
-//		if(secret.getRole().equals(App.rules.getNameThief())){
-//			fiability.put(playerPosition, 0.0);
-//		}
-//		else if(secret.getRole().equals(App.rules.getNameLoyalHenchman())){
-//			fiability.put(playerPosition, 1.0);
-//		}
+		keepWorldsWhere(playerPosition, App.rules.convertRoleNameIntoNumber(secret.getRole()), 
+				App.rules.convertRoleNameIntoNumber(secret.getHiddenToken()));
+		//thief
+		if(secret.getRole().equals(App.rules.getNameThief())){
+			fiability.put(playerPosition, 0.0);
+		} //loyalHenchman
+		else if(secret.getRole().equals(App.rules.getNameLoyalHenchman())){
+			fiability.put(playerPosition, 1.0);
+		} // godfather's driver
+		else if(playerPosition == 2 && secret.getRole().equals(App.rules.getNameDriver())){
+			fiability.put(playerPosition, 1.0);
+		}
 
 	}
 	

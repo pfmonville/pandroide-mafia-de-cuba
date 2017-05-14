@@ -13,8 +13,7 @@ public class SecretID {
 	}
 	public SecretID(String role, int nbDiamonds, String token, String hiddenToken){
 		this(role, nbDiamonds, token);
-		this.setHiddenToken(hiddenToken);
-			
+		this.setHiddenToken(hiddenToken);		
 	}
 	
 	public String getRole() {

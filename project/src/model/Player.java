@@ -76,13 +76,17 @@ public class Player {
 	}
 	
 	public SecretID reveal(){
+		String hiddenToken = App.rules.getNameNoRemovedToken();
+		if(isFirstPlayer()){
+			hiddenToken = role.getHiddenToken();
+		}
 		if(role instanceof Thief)
-			return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
+			return new SecretID(role.getName(),role.getNbDiamondsStolen(),"", hiddenToken);
 		else {
 			if(role instanceof StreetUrchin)
 				return new SecretID(role.getName(),role.getNbDiamondsStolen(),"");
 		}
-		return new SecretID(role.getName(),role.getNbDiamondsStolen(),role.getName());
+		return new SecretID(role.getName(),role.getNbDiamondsStolen(),role.getName(), hiddenToken);
 	}
 
 	public int getPosition(){
