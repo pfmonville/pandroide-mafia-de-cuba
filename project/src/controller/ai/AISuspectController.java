@@ -130,7 +130,7 @@ public class AISuspectController extends AIController {
 				}
 			}
 		} else {
-			HashMap<String, Double> tokenConfigurations = this.strategy.chooseTokenToShow(player, lie);
+			HashMap<String, Double> tokenConfigurations = this.strategy.chooseRoleToShow(player, lie);
 			// roll dice
 			String token = Lie.rollDice(tokenConfigurations);
 			// plus response

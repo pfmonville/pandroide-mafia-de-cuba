@@ -12,7 +12,7 @@ import model.RoleProbaCouple;
 public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie){
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie){
 		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		tokenResponseProbabilities.put(player.getRole().getName(), 1.0);
 		return tokenResponseProbabilities;

@@ -143,7 +143,7 @@ public class AgentStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
 		
 		//behave like a thief so show thief role

@@ -109,7 +109,7 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		
 		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
 		// Street Urchin 1st degree -> behave like a thief
