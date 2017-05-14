@@ -263,7 +263,10 @@ public class ThiefStrategy implements ISuspectStrategy {
 			
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
+		}else{
+			hiddenTokenProbabilitiesResponse.put(App.rules.getNameNoRemovedToken(), 1.0);
 		}
+		
 		return hiddenTokenProbabilitiesResponse;
 	}
 	
