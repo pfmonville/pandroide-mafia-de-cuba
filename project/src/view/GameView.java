@@ -361,6 +361,21 @@ public class GameView extends View{
 				if (!answerPicture.getChildren().isEmpty())
 					answerPicture.getChildren().remove(0);
 				answerPicture.getChildren().add(imv);
+				//for combo box : can't target himself
+				if(choices_player11!= null && choices_player12!= null && choices_player13!= null){
+					ObservableList<String> players11 = choices_player11.getItems(), players12 = choices_player12.getItems(), players13 =choices_player13.getItems() ;
+					players11.clear();players12.clear();players13.clear();
+					for (int pos =2; pos <= App.rules.getCurrentNumberOfPlayer(); pos++){
+						if(pos != target){
+							players11.add("Joueur "+pos);
+							players12.add("Joueur "+pos);
+							players13.add("Joueur "+pos);
+						}
+					}
+					choices_player11.setItems(players11);
+					choices_player12.setItems(players12);
+					choices_player13.setItems(players13);
+				}
 
 			});
 			aiButtons.add(b);
@@ -651,7 +666,12 @@ public class GameView extends View{
 				b.setToggleGroup(questionsGroup);
 				b.getStyleClass().add("question");
 				//la combo box
-				choices_tokenHidden = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?","Voleur?","Enfant des rues?"));
+				choices_tokenHidden = new ComboBox<>(FXCollections.observableArrayList("Fidèle?","Chauffeur?","Agent?"));
+				if(App.rules.getTokens().contains(App.rules.getNameCleaner())){
+					ObservableList<String> tmplist = choices_tokenHidden.getItems();
+					tmplist.add("Nettoyeur?");
+					choices_tokenHidden.setItems(tmplist);
+				}
 				choices_tokenHidden.setPromptText("Choix du jeton");
 				choices_tokenHidden.setVisibleRowCount(4);
 				choices_tokenHidden.setDisable(true);

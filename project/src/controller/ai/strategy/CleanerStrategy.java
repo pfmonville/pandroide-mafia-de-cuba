@@ -39,7 +39,7 @@ public class CleanerStrategy implements ISuspectStrategy{
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,7 +52,7 @@ public class CleanerStrategy implements ISuspectStrategy{
 	}
 
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}

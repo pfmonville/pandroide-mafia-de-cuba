@@ -19,10 +19,10 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	}
 	
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie){
-		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
-		tokenResponseProbabilities.put(player.getRole().getName(), 1.0);
-		return tokenResponseProbabilities;
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie){
+		HashMap<String, Double> roleResponseProbabilities = new HashMap<String, Double>();
+		roleResponseProbabilities.put(player.getRole().getName(), 1.0);
+		return roleResponseProbabilities;
 	}
 
 	@Override
@@ -33,7 +33,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers) {
 		HashMap<DiamondsCouple, Double> diamondResponseProbabilities = new HashMap<DiamondsCouple, Double>();
 		int nbDiamonds = player.getBox().getDiamonds();
 		diamondResponseProbabilities.put(new DiamondsCouple(nbDiamonds, nbDiamonds), 1.0);
@@ -43,9 +43,6 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 	@Override
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player, Lie lie) {
 		HashMap<String, Double> hiddenTokenResponseProbabilities = new HashMap<String, Double>();
-		if(player.getRole().getHiddenToken() == null){
-			
-		}
 		hiddenTokenResponseProbabilities.put(player.getRole().getHiddenToken(), 1.0);
 		return hiddenTokenResponseProbabilities;
 	}

@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.sun.corba.se.impl.presentation.rmi.IDLTypeException;
+
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
@@ -35,7 +37,7 @@ public class AIController implements PlayerController {
 	private int nbPlayers; // In the application, nbPlayers is equivalent to App.rules.getCurrentNumberOfPlayer();
 	private boolean debugMode = false;
 	private Inspect inspect;
-	protected Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers;
+	protected Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers;
 	
 	
 	
@@ -53,9 +55,9 @@ public class AIController implements PlayerController {
 		}
 		inspect = new Inspect(player.getPosition());
 		notLoyalHenchman = new ArrayList<Integer>();
-		diamondsAnnoncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
+		diamondsAnnouncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
 		for(int i = 1 ; i <= App.rules.getCurrentNumberOfPlayer() ; i++){
-			diamondsAnnoncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
+			diamondsAnnouncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
 		}
 	}
 	
@@ -75,9 +77,9 @@ public class AIController implements PlayerController {
 		this.nbPlayers = nbPlayers;
 		this.debugMode = true;
 		notLoyalHenchman = new ArrayList<Integer>();
-		diamondsAnnoncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
+		diamondsAnnouncedByOtherPlayers = new HashMap<Integer, DiamondsCouple>();
 		for(int i = 1 ; i <= App.rules.getCurrentNumberOfPlayer() ; i++){
-			diamondsAnnoncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
+			diamondsAnnouncedByOtherPlayers.put(new Integer(i), new DiamondsCouple(-1, -1)); // Initialization with -1, because a player can receive or give 0
 		}
 	}
 	
@@ -158,7 +160,7 @@ public class AIController implements PlayerController {
 					for(Integer roleNumber : typesOfTokensBefore){
 						tmp = new ArrayList<Integer>(rolesNumberTaken);
 						tmp.remove(roleNumber);
-						tmp.add(App.rules.getNumberThief());
+						tmp.add(App.rules.getCodeNumberThief());
 						worldsBefore.addAll(permutation(roleNumber, tmp, truthValue));
 					}
 				}
@@ -168,7 +170,7 @@ public class AIController implements PlayerController {
 					for(Integer roleNumber : typesOfTokensBefore){
 						ArrayList<Integer> tmp = new ArrayList<Integer>(rolesNumberTaken);
 						tmp.remove(roleNumber);
-						tmp.add(App.rules.getNumberThief());
+						tmp.add(App.rules.getCodeNumberThief());
 						worldsBefore.addAll(permutation(roleNumber, tmp, truthValue));
 						
 					}
@@ -178,7 +180,7 @@ public class AIController implements PlayerController {
 			else{				
 				// All previous players are thieves
 				if(box.getTokens().size() == nbTokensBeforeStart){
-					ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(player.getPosition() - 2, App.rules.getNumberThief()));
+					ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(player.getPosition() - 2, App.rules.getCodeNumberThief()));
 					worldsBefore.add(new World(-1, thievesList, truthValue));
 				}
 				
@@ -192,8 +194,8 @@ public class AIController implements PlayerController {
 					int thievesUpperBound = (player.getPosition() - 2) - (nbTokensBeforeStart - box.getTokens().size() - 1);
 					int thievesLowerBound = thievesUpperBound - 1;
 					
-					ArrayList<Integer> upperBoundThievesList = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
-					ArrayList<Integer> lowerBoundThievesList = new ArrayList<Integer>(Collections.nCopies(thievesLowerBound, App.rules.getNumberThief()));
+					ArrayList<Integer> upperBoundThievesList = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getCodeNumberThief()));
+					ArrayList<Integer> lowerBoundThievesList = new ArrayList<Integer>(Collections.nCopies(thievesLowerBound, App.rules.getCodeNumberThief()));
 					
 					ArrayList<Integer> tmpUpperBound = new ArrayList<Integer>(upperBoundThievesList);
 					ArrayList<Integer> tmpLowerBound = new ArrayList<Integer>(lowerBoundThievesList);
@@ -222,7 +224,7 @@ public class AIController implements PlayerController {
 							
 							while(tmpLowerBound.size() > 1){
 								tmpLowerBound.remove(0);
-								streetUrchinsList.add(App.rules.getNumberStreetUrchin());
+								streetUrchinsList.add(App.rules.getCodeNumberStreetUrchin());
 								
 								ArrayList<World> subset = new ArrayList<World>();
 								ArrayList<Integer> param = new ArrayList<Integer>(tmpLowerBound);
@@ -241,7 +243,7 @@ public class AIController implements PlayerController {
 						streetUrchinsList = new ArrayList<Integer>();
 						while(tmpUpperBound.size() > 1){
 							tmpUpperBound.remove(0);
-							streetUrchinsList.add(App.rules.getNumberStreetUrchin());
+							streetUrchinsList.add(App.rules.getCodeNumberStreetUrchin());
 							//add permutations for each possible hidden token 
 							ArrayList<World> subset = new ArrayList<World>();
 							for(Integer roleNumber : typesOfTokensBefore){
@@ -297,7 +299,7 @@ public class AIController implements PlayerController {
 			
 			// If the box is empty, all the players after are street urchins
 			if(boxAfter.isEmpty()){
-				ArrayList<Integer> StreetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbPlayersAfter, App.rules.getNumberStreetUrchin()));
+				ArrayList<Integer> StreetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbPlayersAfter, App.rules.getCodeNumberStreetUrchin()));
 				worldsAfter.add(new World(-1, StreetUrchinsList, truthValue));
 			}
 			/*
@@ -310,15 +312,15 @@ public class AIController implements PlayerController {
 			else if(boxAfter.getTokens().isEmpty()){
 				ArrayList<Integer> tmp = new ArrayList<Integer>();
 				int thievesUpperBound = Math.min(nbPlayersAfter, boxAfter.getDiamonds());
-				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getNumberThief()));
+				ArrayList<Integer> playersAfter = new ArrayList<Integer>(Collections.nCopies(thievesUpperBound, App.rules.getCodeNumberThief()));
 				
 				// Specific situation of the second to last player. The last player can only be thief or SU
 				if(player.getPosition() == nbPlayers - 1){
-					tmp.add(App.rules.getNumberThief());
+					tmp.add(App.rules.getCodeNumberThief());
 					worldsAfter.add(new World(-1, tmp, truthValue));
 					
 					tmp = new ArrayList<Integer>();
-					tmp.add(App.rules.getNumberStreetUrchin());
+					tmp.add(App.rules.getCodeNumberStreetUrchin());
 					worldsAfter.add(new World(-1, tmp, truthValue));
 				}
 				/*
@@ -326,13 +328,13 @@ public class AIController implements PlayerController {
 				 */
 				else{
 					int streetUrchinsLowerBound = nbPlayersAfter - thievesUpperBound;
-					playersAfter.addAll(new ArrayList<Integer>(Collections.nCopies(streetUrchinsLowerBound, App.rules.getNumberStreetUrchin())));
+					playersAfter.addAll(new ArrayList<Integer>(Collections.nCopies(streetUrchinsLowerBound, App.rules.getCodeNumberStreetUrchin())));
 					tmp = new ArrayList<Integer>(playersAfter);
 					worldsAfter.add(new World(-1, tmp, truthValue));
 					
 					for(int i=0; i < thievesUpperBound - 1; i++){
 						playersAfter.remove(0);
-						playersAfter.add(App.rules.getNumberStreetUrchin());
+						playersAfter.add(App.rules.getCodeNumberStreetUrchin());
 						tmp = new ArrayList<Integer>(playersAfter);
 						worldsAfter.add(new World(-1, tmp, truthValue));
 					}				
@@ -346,7 +348,7 @@ public class AIController implements PlayerController {
 				if(boxAfter.getTokens().size() < nbPlayersAfter){
 					ArrayList<Integer> tmp = new ArrayList<Integer>(rolesNumberGiven);				
 					int nbStreetUrchins = nbPlayersAfter - boxAfter.getTokens().size(); 
-					ArrayList<Integer> streetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbStreetUrchins, App.rules.getNumberStreetUrchin()));
+					ArrayList<Integer> streetUrchinsList = new ArrayList<Integer>(Collections.nCopies(nbStreetUrchins, App.rules.getCodeNumberStreetUrchin()));
 					ArrayList<World> subset = new ArrayList<World>();
 					
 					subset.addAll(permutation(-1, tmp, truthValue));
@@ -372,7 +374,7 @@ public class AIController implements PlayerController {
 					for(World w : partialPermutationsLists){
 						ArrayList<Integer> tmpList = new ArrayList<Integer>(w.getRolesDistribution());
 						tmpList.remove(tmpList.size() - 1);
-						tmpList.add(App.rules.getNumberStreetUrchin());
+						tmpList.add(App.rules.getCodeNumberStreetUrchin());
 						World world = new World(-1, tmpList, truthValue);
 						if(!tmp.contains(world)){
 							tmp.add(world);
@@ -387,7 +389,7 @@ public class AIController implements PlayerController {
 				// int lowerBoundThieves = (nbPlayersAfter <= boxAfter.getTokens().size()) ? 0 : 1;
 				int upperBoundThieves = Math.min(nbPlayersAfter, boxAfter.getDiamonds());
 				
-				ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(upperBoundThieves, App.rules.getNumberThief()));
+				ArrayList<Integer> thievesList = new ArrayList<Integer>(Collections.nCopies(upperBoundThieves, App.rules.getCodeNumberThief()));
 				ArrayList<Integer> rolesLeftEnhanced = new ArrayList<Integer>(rolesNumberGiven);
 				rolesLeftEnhanced.addAll(thievesList);
 				
@@ -402,7 +404,7 @@ public class AIController implements PlayerController {
 					for(World w : partialPermutationsLists){
 						ArrayList<Integer> tmpList = new ArrayList<Integer>(w.getRolesDistribution());
 						tmpList.remove(tmpList.size() - 1);
-						tmpList.add(App.rules.getNumberStreetUrchin());
+						tmpList.add(App.rules.getCodeNumberStreetUrchin());
 						World world = new World(-1, tmpList, truthValue);
 						if(!tmpResult.contains(world)){
 							tmpResult.add(world);
@@ -430,7 +432,7 @@ public class AIController implements PlayerController {
 							if(rolesLeftCopy.isEmpty()){
 								//second to last can be a SU
 								tmpList = new ArrayList<Integer>(list);
-								tmpList.set(list.size()-2, App.rules.getNumberStreetUrchin());
+								tmpList.set(list.size()-2, App.rules.getCodeNumberStreetUrchin());
 								worldsAfter.add(new World(-1, tmpList, truthValue));
 							}
 						}	
@@ -452,8 +454,8 @@ public class AIController implements PlayerController {
 					if(boxAfter.getTokens().size() + upperBoundThieves < nbPlayersAfter - 1){
 						for (World w : tmpResult){
 							ArrayList<Integer> list = w.getRolesDistribution();
-							list.add(App.rules.getNumberStreetUrchin());
-							list.add(App.rules.getNumberStreetUrchin());
+							list.add(App.rules.getCodeNumberStreetUrchin());
+							list.add(App.rules.getCodeNumberStreetUrchin());
 							w.setRoleDistribution(list);
 						}						
 						worldsAfter.addAll(tmpResult);
@@ -462,7 +464,7 @@ public class AIController implements PlayerController {
 					else{
 						for (World w : tmpResult){
 							ArrayList<Integer> list = w.getRolesDistribution();
-							list.add(App.rules.getNumberStreetUrchin());
+							list.add(App.rules.getCodeNumberStreetUrchin());
 							w.setRoleDistribution(list);
 						}						
 						worldsAfter.addAll(tmpResult);
@@ -556,23 +558,14 @@ public class AIController implements PlayerController {
 	}
 
 	
-	public void updateWorldsVision(Talk talk){
-		//TODO	
+	public void updateWorldsVision(Talk talk){	
 		int targetPlayer = talk.getQuestion().getTargetPlayer();
 		if( targetPlayer == player.getPosition())
 			return;
 			
 		Answer answer = talk.getAnswer();		
 		boolean liar = checkLiar(talk); //update of fiability
-		
-		for(Integer id: diamondsAnnoncedByOtherPlayers.keySet()){
-			System.err.println("ID: "+id);
-			System.err.println("avant: "+diamondsAnnoncedByOtherPlayers.get(id).getDiamondsReceived());
-			System.err.println("apres: "+diamondsAnnoncedByOtherPlayers.get(id).getDiamondsGiven());
 
-		}
-		
-		
 		if(!liar){
 			int questionId = talk.getAnswer().getId();
 			HashMap<Integer, Integer> truthValue; 
@@ -617,14 +610,14 @@ public class AIController implements PlayerController {
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j=0; j < targetPlayer - 2 ; j++){
 								//there can't be thieves before the TargetPlayer
-								if(distribution.get(j).equals(App.rules.getNumberThief())){
+								if(distribution.get(j).equals(App.rules.getCodeNumberThief())){
 									truthValue.put(targetPlayer, -1);
 									break;
 								}
 							}
 							
 							//if TargetPlayer said that he passed all diamonds
-							if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+							if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);
 							}
 							w.setTruthValue(truthValue);
@@ -641,7 +634,7 @@ public class AIController implements PlayerController {
 							truthValue = w.getTruthValue();
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j=0; j < targetPlayer - 2 ; j++){
-								if(distribution.get(j).equals(App.rules.getNumberThief())){
+								if(distribution.get(j).equals(App.rules.getCodeNumberThief())){
 									thieves = true;
 								}
 							}
@@ -649,7 +642,7 @@ public class AIController implements PlayerController {
 							if(!thieves){
 								truthValue.put(targetPlayer, -1);
 								
-								if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+								if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 									truthValue.put(targetPlayer, 0);//or the TargetPlayer is a thief
 								}
 							}						
@@ -665,12 +658,12 @@ public class AIController implements PlayerController {
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j= targetPlayer - player.getPosition(); j < distribution.size() ; j++){
 								//there can't be thieves after the TargetPlayer
-								if(distribution.get(j).equals(App.rules.getNumberThief())){
+								if(distribution.get(j).equals(App.rules.getCodeNumberThief())){
 									truthValue.put(targetPlayer, -1);
 									break;
 								}
 							}
-							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
 							}
 							w.setTruthValue(truthValue);
@@ -684,12 +677,12 @@ public class AIController implements PlayerController {
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j= indexPlayer+1; j < distribution.size() ; j++){
 								//there can't be thieves after the TargetPlayer
-								if(distribution.get(j).equals(App.rules.getNumberThief())){
+								if(distribution.get(j).equals(App.rules.getCodeNumberThief())){
 									truthValue.put(targetPlayer, -1);
 									break;
 								}
 							}
-							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getNumberThief())){
+							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
 							}
 							w.setTruthValue(truthValue);
@@ -702,8 +695,83 @@ public class AIController implements PlayerController {
 					
 				case 4 : //Combien de jetons contenait la boîte quand tu l'as reçue ?
 				case 5: //Combien de jetons contenait la boîte quand tu l'as passée ?
+					
+					int nbTokensAnswer = answer.getNbTokensAnswer();
+					int nbTokenTaken = App.rules.getTokensFor(nbPlayers).size() - nbTokensAnswer;
+					int rolesBeforePlayer;
+					
+					if(targetPlayer < player.getPosition()){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							rolesBeforePlayer = (w.getTokenMovedAside() != -1? 1 : 0);
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j=0; j < targetPlayer - 2 ; j++){
+								//check if nbTokenTaken players have taken a token (+hiddenToken)
+								if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+									rolesBeforePlayer++;
+								}
+							}
+							if(questionId == 4 && rolesBeforePlayer != nbTokenTaken){
+								truthValue.put(targetPlayer, -1);
+							}
+							else if(questionId == 5 ){
+								if(!distribution.get(targetPlayer-2).equals(App.rules.getCodeNumberThief())){
+									rolesBeforePlayer++;
+								}
+								if(rolesBeforePlayer != nbTokenTaken){
+									truthValue.put(targetPlayer, -1);
+								}
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}
+					else{
+						int playersToken; 
+						if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
+							playersToken = 0;
+						}					
+						else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != App.rules.getNameNoRemovedToken()){
+							playersToken = 2;
+						}				
+						else{
+							playersToken = 1;
+						}
+						int nbTokenTakenInBetween = player.getBox().getTokens().size() - playersToken - nbTokensAnswer;
+						
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							rolesBeforePlayer = 0;
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							for(int j=0; j < indexPlayer ; j++){
+								if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+									rolesBeforePlayer++;
+								}
+							}
+							if(questionId == 4 && rolesBeforePlayer != nbTokenTakenInBetween){
+								truthValue.put(targetPlayer, -1);
+							}
+							else if(questionId == 5 ){
+								if(!distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
+									rolesBeforePlayer++;
+								}
+								if(rolesBeforePlayer != nbTokenTakenInBetween){
+									truthValue.put(targetPlayer, -1);
+								}
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}	
 					break;
 				
+				case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
+				case 7 : //Quels rôles contenait la boîte quand tu l'as passée ?
+					//TODO
+					break;
+					
 				case 8: // Es tu un ...
 
 					String[] s = talk.getQuestion().getContent().split("[...]");
@@ -847,16 +915,24 @@ public class AIController implements PlayerController {
 						}
 					}
 			}
-
 		}
-		
-		// TODO màj de la liste diamondsAnnoncedByOtherPlayers
 	}
 	
-	public void updateWorldsVision(SecretID secret){
+	public void updateWorldsVision(int playerPosition, SecretID secret){
 		//TODO
-		// faire appel à keepWorldsWhere
-		// MaJ de fiability
+		keepWorldsWhere(playerPosition, App.rules.convertRoleNameIntoNumber(secret.getRole()), 
+				App.rules.convertRoleNameIntoNumber(secret.getHiddenToken()));
+		//thief
+		if(secret.getRole().equals(App.rules.getNameThief())){
+			fiability.put(playerPosition, 0.0);
+		} //loyalHenchman
+		else if(secret.getRole().equals(App.rules.getNameLoyalHenchman())){
+			fiability.put(playerPosition, 1.0);
+		} // godfather's driver
+		else if(playerPosition == 2 && secret.getRole().equals(App.rules.getNameDriver())){
+			fiability.put(playerPosition, 1.0);
+		}
+
 	}
 	
 
@@ -866,7 +942,7 @@ public class AIController implements PlayerController {
 		int questionId = talk.getAnswer().getId();
 		boolean liarDetected;
 		Answer answer = talk.getAnswer();
-		int otherPlayerPosition = talk.getQuestion().getTargetPlayer(); 
+		int targetPlayer = talk.getQuestion().getTargetPlayer(); 
 		
 		//0 Que contenait la boite quand tu l'a reçue?
 		//1 Que contenait la boîte quand tu l'as passée ?
@@ -876,54 +952,57 @@ public class AIController implements PlayerController {
 		if(questionId == 0 || questionId == 1 || questionId == 2 || questionId == 3){
 			int nbDiamonds = answer.getNbDiamondsAnswer();
 			
-			//update diamondsAnnoncedbyOtherPlayers
-			if(questionId == 2){//diamonds received
-				DiamondsCouple diamonds = diamondsAnnoncedByOtherPlayers.get(otherPlayerPosition);
+			//update diamondsAnnouncedbyOtherPlayers
+			DiamondsCouple diamonds = diamondsAnnouncedByOtherPlayers.get(targetPlayer);
+			if(questionId == 2){//diamonds received	
 				diamonds.setDiamondsReceived(nbDiamonds);
 			}
 			else if(questionId == 3){//diamonds given
-				DiamondsCouple diamonds = diamondsAnnoncedByOtherPlayers.get(otherPlayerPosition);
 				diamonds.setDiamondsGiven(nbDiamonds);
 			}
+			if(diamonds.getDiamondsGiven() != diamonds.getDiamondsReceived()){
+				fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+			}
+			
 			
 			//player just before me
-			if((questionId == 1 || questionId == 3) && otherPlayerPosition == player.getPosition()-1){
+			if((questionId == 1 || questionId == 3) && targetPlayer == player.getPosition()-1){
 				if(nbDiamonds != player.getBox().getDiamonds()){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}
 			}
 			//player just after me
-			else if((questionId == 0 || questionId == 2) && otherPlayerPosition == player.getPosition()+1){
+			else if((questionId == 0 || questionId == 2) && targetPlayer == player.getPosition()+1){
 				if(nbDiamonds != player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}
 			}
-			else if(otherPlayerPosition < player.getPosition()){
+			else if(targetPlayer < player.getPosition()){
 				if(nbDiamonds < player.getBox().getDiamonds()){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}
 			}
 			else{
 				if(nbDiamonds > player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen()){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}	
 					return true;
 				}
@@ -962,7 +1041,7 @@ public class AIController implements PlayerController {
 				 * inferior to the number of the same role in the box I gave,
 				 * he lies, so he's not a LoyalHenchman
 				 */
-				if(otherPlayerPosition < player.getPosition()){
+				if(targetPlayer < player.getPosition()){
 					// Counting the number of each roles in the box I received
 					rolesLeft = new ArrayList<String>(player.getBox().getTokens());
 					for(String tokenName : rolesLeft){
@@ -998,10 +1077,10 @@ public class AIController implements PlayerController {
 //						System.out.println("1. "+myCptDict);
 //						System.out.println("2. "+otherCptDict);
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}					
@@ -1014,19 +1093,19 @@ public class AIController implements PlayerController {
 				if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
 					tokenTaken = 0;
 				}					
-				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != null){
+				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != App.rules.getNameNoRemovedToken()){
 					tokenTaken = 2;
 				}				
 				else{
 					tokenTaken = 1;
 				}	
 				//player just after me
-				if(otherPlayerPosition == player.getPosition()+1){
+				if(targetPlayer == player.getPosition()+1){
 					if(nbTokensAnswer != player.getBox().getTokens().size() - tokenTaken){
-						fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-						if(!notLoyalHenchman.contains(otherPlayerPosition)){
-							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-							notLoyalHenchman.add(otherPlayerPosition);
+						fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(targetPlayer)){
+							pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+							notLoyalHenchman.add(targetPlayer);
 						}
 						return true;
 					}
@@ -1038,30 +1117,30 @@ public class AIController implements PlayerController {
 				if (player.isThief() || player.getRole().equals(App.rules.getNameStreetUrchin())){
 					tokenTaken = 0;
 				}					
-				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != null){
+				else if(player.isFirstPlayer() && player.getRole().getHiddenToken() != App.rules.getNameNoRemovedToken()){
 					tokenTaken = 2;
 				}				
 				else{
 					tokenTaken = 1;
 				}				
 				//player just before me
-				if(otherPlayerPosition == player.getPosition()-1){
+				if(targetPlayer == player.getPosition()-1){
 					if(nbTokensAnswer != player.getBox().getTokens().size()){
-						fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-						if(!notLoyalHenchman.contains(otherPlayerPosition)){
-							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-							notLoyalHenchman.add(otherPlayerPosition);
+						fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(targetPlayer)){
+							pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+							notLoyalHenchman.add(targetPlayer);
 						}
 						return true;
 					}
 					return false;
 				}				
-				else if(otherPlayerPosition < player.getPosition()){
+				else if(targetPlayer < player.getPosition()){
 					if(nbTokensAnswer < player.getBox().getTokens().size()){
-						fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-						if(!notLoyalHenchman.contains(otherPlayerPosition)){
-							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-							notLoyalHenchman.add(otherPlayerPosition);
+						fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(targetPlayer)){
+							pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+							notLoyalHenchman.add(targetPlayer);
 						}	
 						return true;
 					}
@@ -1069,10 +1148,10 @@ public class AIController implements PlayerController {
 				}
 				else{						
 					if(nbTokensAnswer > player.getBox().getTokens().size() - tokenTaken){
-						fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-						if(!notLoyalHenchman.contains(otherPlayerPosition)){
-							pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-							notLoyalHenchman.add(otherPlayerPosition);
+						fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+						if(!notLoyalHenchman.contains(targetPlayer)){
+							pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+							notLoyalHenchman.add(targetPlayer);
 						}	
 						return true;
 					}
@@ -1086,27 +1165,27 @@ public class AIController implements PlayerController {
 				Integer roleNumber = App.rules.convertRoleNameIntoNumber(roleAsked);
 				
 				//if the player admits he's not a LoyalHenchman
-				if(answer.getContent().equals("Oui") && !roleNumber.equals(App.rules.getNumberLoyalHenchman())){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+				if(answer.getContent().equals("Oui") && !roleNumber.equals(App.rules.getCodeNumberLoyalHenchman())){
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*distrustCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 				}
-				else if(answer.getContent().equals("Non") && roleNumber.equals(App.rules.getNumberLoyalHenchman())){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+				else if(answer.getContent().equals("Non") && roleNumber.equals(App.rules.getCodeNumberLoyalHenchman())){
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*distrustCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 				}	
 				
 				if(answer.getContent().equals("Oui")){	
 					liarDetected = true;
-					if(otherPlayerPosition < player.getPosition()){
+					if(targetPlayer < player.getPosition()){
 						//s'il existe un monde avant ou ce joueur a le role roleNumber
 						for(World w: worldsBefore){
-							if(w.getRolesDistribution().get(otherPlayerPosition-2).equals(roleNumber)){
+							if(w.getRolesDistribution().get(targetPlayer-2).equals(roleNumber)){
 								liarDetected = false;
 								break;
 							}
@@ -1115,7 +1194,7 @@ public class AIController implements PlayerController {
 					else{
 						//s'il existe un monde apres ou ce joueur a le role roleNumber
 						for(World w: worldsAfter){
-							if(w.getRolesDistribution().get(otherPlayerPosition-player.getPosition()-1).equals(roleNumber)){
+							if(w.getRolesDistribution().get(targetPlayer-player.getPosition()-1).equals(roleNumber)){
 								liarDetected = false;
 								break;
 							} 
@@ -1123,10 +1202,10 @@ public class AIController implements PlayerController {
 					}					
 				}
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}		
@@ -1135,17 +1214,17 @@ public class AIController implements PlayerController {
 			case 9: //Quel personnage es tu ? 
 				liarDetected = true;
 				roleNumber = App.rules.convertRoleNameIntoNumber(answer.getRoleAnswer());
-				if(!roleNumber.equals(App.rules.getNumberLoyalHenchman())){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*distrustCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+				if(!roleNumber.equals(App.rules.getCodeNumberLoyalHenchman())){
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*distrustCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 				}
-				if(otherPlayerPosition < player.getPosition()){
+				if(targetPlayer < player.getPosition()){
 					//s'il existe un monde avant ou ce joueur a le role roleNumber
 					for(World w: worldsBefore){
-						if(w.getRolesDistribution().get(otherPlayerPosition-2).equals(roleNumber)){
+						if(w.getRolesDistribution().get(targetPlayer-2).equals(roleNumber)){
 							liarDetected = false;
 							break;
 						}
@@ -1154,17 +1233,17 @@ public class AIController implements PlayerController {
 				else{
 					//s'il existe un monde apres ou ce joueur a le role roleNumber
 					for(World w: worldsAfter){
-						if(w.getRolesDistribution().get(otherPlayerPosition-player.getPosition()-1).equals(roleNumber)){
+						if(w.getRolesDistribution().get(targetPlayer-player.getPosition()-1).equals(roleNumber)){
 							liarDetected = false;
 							break;
 						}
 					}
 				}
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}
@@ -1192,10 +1271,10 @@ public class AIController implements PlayerController {
 					
 				}
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}			
@@ -1224,10 +1303,10 @@ public class AIController implements PlayerController {
 					
 				}
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}		
@@ -1258,10 +1337,10 @@ public class AIController implements PlayerController {
 					}
 				}
 				if(liarDetected){
-					fiability.put(otherPlayerPosition, fiability.get(otherPlayerPosition)*contradictionCoeff);
-					if(!notLoyalHenchman.contains(otherPlayerPosition)){
-						pruneWorldsWhere(otherPlayerPosition, App.rules.getNumberLoyalHenchman());
-						notLoyalHenchman.add(otherPlayerPosition);
+					fiability.put(targetPlayer, fiability.get(targetPlayer)*contradictionCoeff);
+					if(!notLoyalHenchman.contains(targetPlayer)){
+						pruneWorldsWhere(targetPlayer, App.rules.getCodeNumberLoyalHenchman());
+						notLoyalHenchman.add(targetPlayer);
 					}
 					return true;
 				}
@@ -1308,10 +1387,10 @@ public class AIController implements PlayerController {
 	 * keep only the worlds where the player at playerPosition has the role roleNumber 
 	 * (to be used after an accusation)
 	 */
-	public void keepWorldsWhere(int playerPosition, Integer roleNumber){
+	public void keepWorldsWhere(int playerPosition, Integer roleNumber, Integer hiddenToken){
 		
 		//Fiability's update if the player accused was a LoyalHenchman
-		if(roleNumber.equals(App.rules.getNumberLoyalHenchman())){
+		if(roleNumber.equals(App.rules.getCodeNumberLoyalHenchman())){
 			fiability.put(playerPosition, 1.0);
 		}
 		
@@ -1329,12 +1408,26 @@ public class AIController implements PlayerController {
 		for (World w : worldsList){
 			worldsListCopy.add(w.clone());
 		}
-		for(World world : worldsListCopy){
-			ArrayList<Integer> rolesDistribution = world.getRolesDistribution();
-			if( !rolesDistribution.get(index).equals(roleNumber)){
-				worldsList.remove(world);
+		if(playerPosition != 2 ){
+			for(World world : worldsListCopy){
+				ArrayList<Integer> rolesDistribution = world.getRolesDistribution();
+				if( !rolesDistribution.get(index).equals(roleNumber)){
+					worldsList.remove(world);
+				}
 			}
 		}
+		else{
+			for(World world : worldsListCopy){
+				ArrayList<Integer> rolesDistribution = world.getRolesDistribution();
+				if( !rolesDistribution.get(index).equals(roleNumber)){
+					worldsList.remove(world);
+				}
+				else if(!world.getTokenMovedAside().equals(hiddenToken)){
+					worldsList.remove(world);
+				}
+			}
+		}
+
 	}
 	
 	public Player getPlayer() {
@@ -1385,7 +1478,7 @@ public class AIController implements PlayerController {
 	public void updateInspect(){
 		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
 		//instancier la hashmap
-		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
+//		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
 		for(int position:App.gameController.getAllPlayersPosition()){
 			if(position != this.player.getPosition() && position != 1){
 				playersAssumedRoles.put(position, new HashMap<>());
@@ -1413,7 +1506,7 @@ public class AIController implements PlayerController {
 				}
 				String role = App.rules.convertNumberIntoRoleName(entry.getValue());
 				HashMap<String, Double> playerRoles = playersAssumedRoles.get(player);
-				System.err.println("playerRoles:"+playerRoles);
+//				System.err.println("playerRoles:"+playerRoles);
 				if(playerRoles == null){
 					//ne devrait pas arriver
 					System.out.println("ne devrait pas arriver: un World n'a pas de role pour "+player);
@@ -1455,7 +1548,7 @@ public class AIController implements PlayerController {
 			for(String key: roles.keySet()){
 				roles.put(key, roles.get(key)/maxValue);
 			}
-			System.out.println("affichage des résultats: |"+id+"|"+roles.get(App.rules.getNameLoyalHenchman())+"|"+roles.get(App.rules.getNameCleaner())+"|"+roles.get(App.rules.getNameAgentLambda())+"|"+roles.get(App.rules.getNameThief())+"|"+roles.get(App.rules.getNameStreetUrchin())+"|"+roles.get(App.rules.getNameDriver())+"|");
+//			System.out.println("affichage des résultats: |"+id+"|"+roles.get(App.rules.getNameLoyalHenchman())+"|"+roles.get(App.rules.getNameCleaner())+"|"+roles.get(App.rules.getNameAgentLambda())+"|"+roles.get(App.rules.getNameThief())+"|"+roles.get(App.rules.getNameStreetUrchin())+"|"+roles.get(App.rules.getNameDriver())+"|");
 			//update inspect
 			inspect.updateAssumedRoleForPlayer(id, roles.get(App.rules.getNameLoyalHenchman()), 
 					roles.get(App.rules.getNameCleaner()), roles.get(App.rules.getNameAgentLambda()), 

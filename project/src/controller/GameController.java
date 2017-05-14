@@ -1,4 +1,4 @@
-package controller;
+﻿package controller;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -566,7 +566,13 @@ public class GameController {
 			this.numberOfThievesCaught += 1;
 			this.setDiamondsTakenBack(this.getDiamondsTakenBack() + secret.getDiamondsTaken());
 			App.createPopUp("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.\n", "", 4);
-			a.setContent("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.");
+			a.setContent("Le joueur accusé est un voleur ! Vous récupérez "+secret.getDiamondsTaken()+" diamants.");		
+			for(PlayerController pc: playerControllers.values()){
+				if(pc instanceof AIController){
+				((AIController)pc).updateWorldsVision(targetPlayer, secret);
+				}
+			}
+			
 			//update the number of diamonds taken back in display
 			App.gv.displayUpdatedInfo(this.getDiamondsTakenBack(),-1) ;
 			Talk t = new Talk(q,a);
@@ -592,7 +598,7 @@ public class GameController {
 				App.createPopUp("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.\n", "", 4);
 				for(PlayerController pc: playerControllers.values()){
 					if(pc instanceof AIController){
-					((AIController)pc).updateWorldsVision(secret);
+					((AIController)pc).updateWorldsVision(targetPlayer, secret);
 					}
 				}
 				a.setContent("Le joueur accusé est un "+secret.getRole()+" ! Vous perdez un joker.");

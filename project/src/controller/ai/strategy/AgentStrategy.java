@@ -42,7 +42,7 @@ public class AgentStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers) {
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		
 		int realDiamsReceived = player.getBox().getDiamonds() ;
@@ -69,7 +69,7 @@ public class AgentStrategy implements ISuspectStrategy {
 		double proba = 0.25;
 		double decrease = proba / (player.getPosition() - 1);
 		for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-			int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i).getDiamondsGiven();
+			int diamondsGivenByOther = diamondsAnnouncedByOtherPlayers.get(i).getDiamondsGiven();
 			if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
 				for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
 					diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
@@ -151,13 +151,13 @@ public class AgentStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
-		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
+		HashMap<String, Double> roleProbabilitiesResponse = new HashMap<String, Double>();
 		
 		//behave like a thief so show thief role
-		tokenProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
+		roleProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
 		
-		return tokenProbabilitiesResponse;
+		return roleProbabilitiesResponse;
 	}
 
 	

@@ -1,18 +1,11 @@
 package controller.ai;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import controller.App;
-import controller.ai.position.IPositionStrategy;
-import controller.ai.strategy.CleanerStrategy;
-import controller.ai.strategy.ISuspectStrategy;
-import error.CoeherenceException;
-import error.StrategyError;
 import model.Answer;
 import model.Box;
 import model.DiamondsCouple;
@@ -21,6 +14,12 @@ import model.Player;
 import model.Question;
 import model.RoleProbaCouple;
 import model.SecretID;
+import controller.App;
+import controller.ai.position.IPositionStrategy;
+import controller.ai.strategy.CleanerStrategy;
+import controller.ai.strategy.ISuspectStrategy;
+import error.CoeherenceException;
+import error.StrategyError;
 
 public class AISuspectController extends AIController {
 	private ISuspectStrategy strategy;
@@ -73,7 +72,7 @@ public class AISuspectController extends AIController {
 		if (lie.isDiamondsInBoxSet()) {
 			response.setNbDiamondsAnswer(lie.getFalseBox().getDiamonds());
 		} else {
-			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie,diamondsAnnoncedByOtherPlayers);
+			HashMap<DiamondsCouple, Double> diamondsConfigurations = this.strategy.chooseDiamondsToShow(player, lie,diamondsAnnouncedByOtherPlayers);
 			// roll dice
 			DiamondsCouple diamonds = Lie.rollDice(diamondsConfigurations);
 			// update response
@@ -123,7 +122,7 @@ public class AISuspectController extends AIController {
 
 	private void getRole(Answer response, boolean substract, boolean update) {
 		if (lie.hasShownRole()) {
-			if (App.rules.isAValidToken(lie.getFalseRoleName())) {
+			if (App.rules.isAValidRole(lie.getFalseRoleName())) {
 				if (substract) {
 					response.getTokensAnswer().remove(lie.getFalseRoleName());
 				} else {
@@ -131,7 +130,7 @@ public class AISuspectController extends AIController {
 				}
 			}
 		} else {
-			HashMap<String, Double> tokenConfigurations = this.strategy.chooseTokenToShow(player, lie);
+			HashMap<String, Double> tokenConfigurations = this.strategy.chooseRoleToShow(player, lie);
 			// roll dice
 			String token = Lie.rollDice(tokenConfigurations);
 			// plus response
@@ -156,6 +155,7 @@ public class AISuspectController extends AIController {
 	public Answer chooseAnswer(Question question, ArrayList<Answer> answers) {
 		
 		System.out.println("DEBUG : AISuspectController : chooseAnswer");
+		System.out.println("Id de la question : "+ question.getId());
 		System.out.println("Debut de la fonction chooseAnswer : joueur : "+ player.getPosition() +" : mensonge initial : ");
 		System.out.println(lie.toString());
 		
@@ -206,14 +206,19 @@ public class AISuspectController extends AIController {
 			if (number == 6 || number == 7) {
 				Set<String> rolesTypes = new HashSet<String>(
 						response.getTokensAnswer());
-				for (String role : rolesTypes) {
-					int nb = response.getCount(role);
-					if (nb > 0) {
-						content += ", " + nb + " " + role;
+				
+				if(rolesTypes.isEmpty()){
+					content = "La boite ne contenait aucun jeton.";
+				}else{
+					for (String role : rolesTypes) {
+						int nb = response.getCount(role);
+						if (nb > 0) {
+							content += ", " + nb + " " + role;
+						}
 					}
+					content += ".";
+					content.replaceFirst("[,]", " ");
 				}
-				content += ".";
-				content.replaceFirst("[,]", " ");
 			} else {
 				content += (response.getTokensAnswer().size())
 						+ " jetons personnage.";

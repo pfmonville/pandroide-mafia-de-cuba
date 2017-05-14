@@ -47,7 +47,7 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnoncedByOtherPlayers) {
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers) {
 		
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		
@@ -65,7 +65,7 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 			double decrease = proba / (player.getPosition() - 1);
 			
 			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-				int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i).getDiamondsGiven();
+				int diamondsGivenByOther = diamondsAnnouncedByOtherPlayers.get(i).getDiamondsGiven();
 				//if previous players have announced a number bigger than what I gave to GF
 				if(diamondsGivenByOther != -1 && diamondsGivenByOther > diamondsGiven){
 					for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
@@ -91,7 +91,7 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 			double decrease = proba / (player.getPosition() - 1);
 			
 			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
-				int diamondsGivenByOther = diamondsAnnoncedByOtherPlayers.get(i - 1).getDiamondsGiven();
+				int diamondsGivenByOther = diamondsAnnouncedByOtherPlayers.get(i - 1).getDiamondsGiven();
 				// > 0 because box is empty
 				if(diamondsGivenByOther != -1 && diamondsGivenByOther > 0){
 					for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
@@ -125,13 +125,13 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<String, Double> chooseTokenToShow(Player player, Lie lie) {
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		
-		HashMap<String, Double> tokenProbabilitiesResponse = new HashMap<String, Double>();
+		HashMap<String, Double> roleProbabilitiesResponse = new HashMap<String, Double>();
 		// Street Urchin 1st degree -> behave like a thief
-		tokenProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
+		roleProbabilitiesResponse.put(App.rules.getNameThief(), 1.0);
 		
-		return tokenProbabilitiesResponse;
+		return roleProbabilitiesResponse;
 	}
 	
 	
