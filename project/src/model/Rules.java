@@ -148,6 +148,9 @@ public class Rules {
 
 
 	public boolean isAValidToken(String token){
+		if(token == null){
+			return false;
+		}
 		if(token.equals(nameDriver)
 				||token.equals(nameLoyalHenchman)
 				||token.equals(nameAgentFBI)
