@@ -23,8 +23,8 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgentCIA());
-		stringList.add(App.rules.getNameAgentFBI());
-		stringList.add(App.rules.getNameDriver());
+//		stringList.add(App.rules.getNameAgentFBI());
+//		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
 		int nombreDeDiamantsDansBoite = 9;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
@@ -33,7 +33,7 @@ public class MainTestAIController {
 		int nbPlayers = 6;
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 2; // inclus dans [2 ; n], le parrain est le joueur 1
+		int positionDuJoueur = 4; // inclus dans [2 ; n], le parrain est le joueur 1
 		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		p.setBox(testBox);
 		
@@ -96,17 +96,7 @@ public class MainTestAIController {
 		System.out.println("temps d'execution [ms] : "+endConfigAfter);
 		System.out.println();
 		
-		
-//		start = System.currentTimeMillis();
-//		for(World w : aic.getWorldsAfter()){
-//			ArrayList<Integer> list = w.getRolesDistribution();
-//			list.set(4, App.rules.getCodeNumberLoyalHenchman());
-//			w.setRoleDistribution(list);
-//		}
-//		endConfigAfter = System.currentTimeMillis() - start;
-//		System.out.println("test worldsAfter, temps (ms): "+endConfigAfter );
-		
-		
+			
 		//Tests getHashMap
 //		HashMap<Integer, Integer> hp;
 //		for(World w : aic.getWorldsAfter()){
