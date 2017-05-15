@@ -46,11 +46,11 @@ public class LastPositionStrategy implements IPositionStrategy{
 		//TODO affiner les probas en fonction du nombre de joueurs et du nombre de diamants
 
 		//there are both diamonds and token(s) in the box
-		if(box.getDiamonds()!= 0){
+		if(box.getDiamonds()!=0){
 			if(alea < 0.40) {
 				rand = r.nextFloat();
 				//take all remaining diamonds 
-				if(rand < 0.6){
+				if(rand < 0.6 || box.getDiamonds()==1){
 					return new SecretID(App.rules.getNameThief(), box.getDiamonds(), tokenTaken, hiddenToken);
 				}
 				//take some diamonds: at least one but never all
