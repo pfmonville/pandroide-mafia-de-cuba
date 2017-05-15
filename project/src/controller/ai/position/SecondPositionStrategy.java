@@ -71,13 +71,11 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					else if(alea<0.9 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 						rand = r.nextFloat();
 						if((rand<0.2 && rolesReceived.contains(App.rules.getNameCleaner())) ){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 						if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 						} else {
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 					}
@@ -98,7 +96,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					} 
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					
 				}else {
@@ -109,7 +106,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						// loyalHenchman strategy
 						if(rand< 0.6 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 							if(rolesReceived.contains(App.rules.getNameCleaner())){
-								System.out.println("CLEANER");
 								return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 							}
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
@@ -138,7 +134,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 							return new SecretID(App.rules.getNameThief(), diamondsTaken, tokenTaken);
 						}
 						if(rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 						
@@ -153,7 +148,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						if(rand < 0.5 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 							rand = r.nextFloat();
 							if(rand < 0.2 && rolesReceived.contains(App.rules.getNameCleaner())){
-								System.out.println("CLEANER");
 								return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 							} 
 							if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
@@ -186,7 +180,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 						}
 						if(rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 						if(rolesReceived.contains(App.rules.getNameDriver())){
@@ -248,14 +241,12 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						//loyalHenchman Strategy ( won't have much information about configurations after him )
 						rand = r.nextFloat();
 						if(rand<0.2 && rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 						if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 						}
 						if(rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 					}
@@ -286,7 +277,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
 					if(rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(box.getDiamonds()!=0){
@@ -310,7 +300,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 				if(rand < 0.7){
 						rand = r.nextFloat();
 						if(rand < 0.2 && rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						} 
 						else if(rand<0.7 && rolesReceived.contains(App.rules.getNameDriver())){
@@ -320,7 +309,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 						}
 						if(rolesReceived.contains(App.rules.getNameCleaner())){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 						if(rolesReceived.contains(App.rules.getNameDriver())){
@@ -349,7 +337,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				if(rolesReceived.contains(App.rules.getNameCleaner())){
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				if(rolesReceived.contains(App.rules.getNameDriver())){
@@ -392,7 +379,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						alea = r.nextFloat();
 						//choose Cleaner
 						if(alea < 0.9){
-							System.out.println("CLEANER");
 							return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 						}
 					}
@@ -401,7 +387,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
 					if(rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 						
@@ -420,14 +405,12 @@ public class SecondPositionStrategy implements IPositionStrategy{
 						if(rand< 0.5){
 							return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 						}
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
 					if(rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 				}
@@ -471,7 +454,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				else{
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 			}
@@ -484,13 +466,11 @@ public class SecondPositionStrategy implements IPositionStrategy{
 				if(alea < 0.5 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 					//loyalhenchman strategy
 					if(rand < 0.1 && rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				//agent strategy
@@ -518,7 +498,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				if(rolesReceived.contains(App.rules.getNameCleaner())){
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				if(rolesReceived.contains(App.rules.getNameAgentCIA())){
@@ -539,13 +518,11 @@ public class SecondPositionStrategy implements IPositionStrategy{
 				//loyalHenchman strategy
 				if(alea < 0.4 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 					if(rand < 0.1 && rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				//agent strategy
@@ -573,7 +550,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				if(rolesReceived.contains(App.rules.getNameCleaner())){
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				if(rolesReceived.contains(App.rules.getNameDriver())){
@@ -594,13 +570,11 @@ public class SecondPositionStrategy implements IPositionStrategy{
 				//loyalHenchman strategy
 				if(alea < 0.3  && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 					if(rand < 0.1 && rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				//agent strategy
@@ -637,7 +611,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				if(rolesReceived.contains(App.rules.getNameCleaner())){
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				else{
@@ -649,13 +622,11 @@ public class SecondPositionStrategy implements IPositionStrategy{
 				//loyalHenchman strategy
 				if(alea < 0.5 && (rolesReceived.contains(App.rules.getNameLoyalHenchman()) || rolesReceived.contains(App.rules.getNameCleaner()))){
 					if(rand < 0.9 && rolesReceived.contains(App.rules.getNameCleaner())){
-						System.out.println("CLEANER");
 						return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 					}
 					if(rolesReceived.contains(App.rules.getNameLoyalHenchman())){
 						return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 					}
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				//agent strategy (if any remains)
@@ -683,7 +654,6 @@ public class SecondPositionStrategy implements IPositionStrategy{
 					return new SecretID(App.rules.getNameLoyalHenchman(), diamondsTaken, App.rules.getNameLoyalHenchman());
 				}
 				if(rolesReceived.contains(App.rules.getNameCleaner())){
-					System.out.println("CLEANER");
 					return new SecretID(App.rules.getNameCleaner(), diamondsTaken, App.rules.getNameCleaner());
 				}
 				if(rolesReceived.contains(App.rules.getNameAgentCIA())){

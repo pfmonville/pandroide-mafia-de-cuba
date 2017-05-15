@@ -788,7 +788,7 @@ public class GameController {
 					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameDriver())){
-					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.LOYALHENCHMANSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
+					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.DRIVERSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));
 				}
 				if(player.getRole().getName().equals(App.rules.getNameThief())){
 					((AISuspectController) playerControllers.get(position)).addStrategy((ISuspectStrategy) StrategyFactory.getStrategyFor(StrategyFactory.THIEFSTRATEGY, ((AIController) playerControllers.get(position)).getInspect()));

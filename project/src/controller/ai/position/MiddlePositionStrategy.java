@@ -10,7 +10,6 @@ import model.SecretID;
 public class MiddlePositionStrategy implements IPositionStrategy{
 
 	
-	//TODO : GROS PROBLEME : considère que dans la boite il y a un  nettoyeur...
 	public SecretID chooseWhatToTake(Integer position, Box box) {
 		int diamondsTaken = 0;
 		String tokenTaken = null;
