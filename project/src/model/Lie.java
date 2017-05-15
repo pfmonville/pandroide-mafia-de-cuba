@@ -270,12 +270,13 @@ public class Lie {
 		T result = null;
 		Double maxValue = 0D;
 		
-		//change NaN value to 0 ? //TODO
-		for( T key : choice.keySet()){
-			if(choice.get(key).equals("NaN")){
-				choice.put(key, 0.0);
-			}
-		}
+//		//change NaN value to 0 ? //TODO Rustine vite fait, plus nécessaire, mais à garder au cas où...
+//		for( T key : choice.keySet()){
+//			if(choice.get(key).equals("NaN")){
+//				choice.put(key, 0.0);
+//			}
+//		}
+		
 		//normalize
 		for(Double value: choice.values()){
 			maxValue += value;
