@@ -1,0 +1,158 @@
+.root{
+	-fx-background-image: url("../image/bg-1.jpg");
+    -fx-base: rgb(200, 120, 50);
+}
+
+.button{
+	-fx-opacity:0.75;
+	-fx-background-color:linear-gradient(grey, black);
+	-fx-border-color:black;
+	-fx-border-width:3;
+	-fx-text-alignment:center;
+	-fx-text-fill:white;
+	-fx-font:14px Tahoma;
+	-fx-font-weight: bold;
+}
+
+.button:hover{
+	-fx-background-color:linear-gradient(black, grey);
+}
+
+.button:selected{
+	-fx-background-color:grey;
+	-fx-border-width:5;
+	-fx-border-color:cyan;
+}
+
+#title{
+	-fx-font: 64px Tahoma;
+	-fx-stroke: black;
+	-fx-stroke-width: 1;
+	-fx-text-fill : white ;
+}
+
+#stat{
+	-fx-font: 18px Tahoma;
+	-fx-text-alignment:center;
+}
+
+#niveau{
+	-fx-font: 18px Tahoma;
+}
+
+#titrePlateau{
+	-fx-font: 28px Tahoma;
+	-fx-text-alignment:center;
+}
+
+.radio-button{
+	-fx-font: 12px Tahoma;
+    -fx-background-color: rgb(200, 120, 50);
+    -fx-text-fill: rgb(50, 25, 0);
+    -fx-border-color: rgb(50, 25, 0);
+    -fx-border-radius: 20;
+    -fx-background-radius: 20;
+    -fx-padding: 7;
+
+}
+
+#boutonInvisible{
+	-fx-opacity:1;
+	-fx-background-color:transparent;
+	-fx-border-color:transparent;
+}
+
+#answer{
+	-fx-text-alignment:center;
+	-fx-alignment:center;
+	-fx-text-fill:white;
+}
+
+#log{
+
+	-fx-font : 15px Tahoma; 
+	-fx-font-weight:bold;
+	-fx-text-fill : black ;
+	-fx-background: transparent
+}
+
+#info{
+	-fx-text-alignment:justify;
+	-fx-font : 20px Tahoma;
+	-fx-text-fill: white;
+}
+
+.player{
+	-fx-background-color:rgb(200, 120, 50);
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+
+.player:hover{
+	-fx-background-color:rgb(255,127,0);
+}
+
+.player:chosen{
+	-fx-background-color:rgb(255,127,0);
+	-fx-border-width:3;
+	-fx-border-color:cyan;
+}
+
+.godFather{
+	-fx-background-color:dimgray;
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+.godFather:hover{
+	-fx-background-color:dimgray;
+}
+
+.humanPlayer{
+	-fx-background-color:rgb(62,240,120);
+	-fx-opacity:1;
+	-fx-border-radius: 70;
+	-fx-background-radius: 70;
+}
+.humanPlayer:hover{
+	-fx-background-color: rgb(62,240,120);
+}
+.question{
+	-fx-font: 15px Tahoma;
+	-fx-background-color:linear-gradient(grey, black);
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-opacity : 0.90;
+}
+
+.question_box{
+	-fx-font: 15px Tahoma;
+	-fx-background-color:dimgray;
+    -fx-text-fill: white;
+    -fx-border-color: black;
+    -fx-opacity : 0.90;
+}
+
+.scroll-pane .viewport{
+	-fx-background-color: transparent;
+	
+}
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-background-image:url(../image/confidentialfile.png) ;
+    -fx-background-repeat:no-repeat;
+    -fx-background-size:stretch;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}
+
+
+
