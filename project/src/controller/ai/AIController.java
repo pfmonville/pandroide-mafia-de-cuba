@@ -562,7 +562,7 @@ public class AIController implements PlayerController {
 		int targetPlayer = talk.getQuestion().getTargetPlayer();
 		if( targetPlayer == player.getPosition())
 			return;
-			
+		
 		Answer answer = talk.getAnswer();		
 		boolean liar = checkLiar(talk); //update of fiability
 
@@ -596,7 +596,6 @@ public class AIController implements PlayerController {
 			
 			switch(questionId){
 			
-				//TODO: traiter plus de cas?
 				case 2://2 Combien de diamants contenait la boite quand tu l'as recu?
 				case 3://3 Combien de diamants qd tu l'as passe?
 					
@@ -1015,8 +1014,7 @@ public class AIController implements PlayerController {
 			
 			case 0: //Que contenait la boite quand tu l'a reçue?
 			case 1: //Que contenait la boîte quand tu l'as passée ?
-
-			//TODO: on peut encore reperer d'autres cas de mensonges 
+ 
 			case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
 			case 7: //Quels rôles contenait la boîte quand tu l'as passée ?
 
@@ -1381,10 +1379,7 @@ public class AIController implements PlayerController {
 		}
 	}
 	
-	/* TODO: faire appel a la methode en cas d'accusation 
-	 * exemple: si un voleur a la position playerPosition a été trouvé, 
-	 * on garde que les mondes ou ce joueur est voleur
-	 * exemple 2: lorsqu'un joueur a été accusé à tort (et pas un agent) et que le parrain a un joker
+	/*  
 	 * 
 	 * keep only the worlds where the player at playerPosition has the role roleNumber 
 	 * (to be used after an accusation)
@@ -1473,6 +1468,7 @@ public class AIController implements PlayerController {
 	
 	//met à jour les probas des roles des joueurs
 	public void updateInspect(){
+		
 		HashMap<Integer, HashMap<String, Double>> playersAssumedRoles = new HashMap<>();
 		//instancier la hashmap
 //		System.out.println("affichage vision des autres *********** pour joueur " + this.player.getPosition());
@@ -1492,7 +1488,6 @@ public class AIController implements PlayerController {
 		
 		//count all roles (with the weight of each world)
 		for(World world: worldsBefore){
-			//sera un hashMap<Integer, Integer>
 			HashMap<Integer, Integer> distribution = getHashMapDistributionForWorldBefore(world);
 			Double weight = world.getWeight(fiability);
 			for(Entry<Integer, Integer> entry: distribution.entrySet()){
@@ -1511,6 +1506,7 @@ public class AIController implements PlayerController {
 				}
 				playerRoles.put(role, weight + playerRoles.get(role));
 			}
+			
 		}
 		for(World world: worldsAfter){
 			HashMap<Integer, Integer> distribution = getHashMapDistributionForWorldAfter(world);
@@ -1531,9 +1527,8 @@ public class AIController implements PlayerController {
 				playerRoles.put(role, weight + playerRoles.get(role));
 			}
 		}
-	
-		
-		
+			
+			
 		for(Entry<Integer, HashMap<String, Double>> entry: playersAssumedRoles.entrySet()){
 			int id = entry.getKey();
 			HashMap<String, Double> roles = entry.getValue();

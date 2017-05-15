@@ -655,6 +655,7 @@ public class GameController {
 		for(PlayerController pc: playerControllers.values()){
 			if(pc instanceof AIController){
 				((AIController)pc).updateWorldsVision(this.gameHistory.get(gameHistory.size()-1));
+				((AIController) pc).updateInspect();
 			}
 		}
 	}
