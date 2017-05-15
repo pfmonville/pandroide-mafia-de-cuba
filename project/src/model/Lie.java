@@ -17,7 +17,7 @@ public class Lie {
 	private String falseAssumedRole;
 	private ArrayList<String> falseNotAssumedRoles;
 	private String falseHiddenToken;
-	private ArrayList<String> falseNotHiddenToken;
+	private ArrayList<String> falseNotHiddenTokens;
 	private Boolean hideToken;
 	
 	private Integer myself;
@@ -29,7 +29,7 @@ public class Lie {
 		falseNotAssumedRoles = new ArrayList<>();
 		hideToken = null;
 		falseHiddenToken = null;
-		falseNotHiddenToken = new ArrayList<>();
+		falseNotHiddenTokens = new ArrayList<>();
 		this.myself = myself;
 		
 	}
@@ -43,8 +43,8 @@ public class Lie {
 	public String getFalseHiddenToken(){
 		return falseHiddenToken;
 	}
-	public ArrayList<String> getfalseNotHiddenToken(){
-		return this.falseNotHiddenToken;
+	public ArrayList<String> getfalseNotHiddenTokens(){
+		return this.falseNotHiddenTokens;
 	}
 	public Integer getFalseDiamondsStolen(){
 		return falseDiamondsStolen;
@@ -73,7 +73,7 @@ public class Lie {
 		}
 		if(App.rules.isAValidToken(token) || token == App.rules.getNameNoRemovedToken()){
 			if(this.falseHiddenToken == null){
-				if(!this.falseNotHiddenToken.contains(token)){
+				if(!this.falseNotHiddenTokens.contains(token)){
 					this.falseHiddenToken = token;
 					this.hideToken = true;
 				}else{
@@ -102,8 +102,8 @@ public class Lie {
 			throw new CoeherenceException("le joueur a déjà décidé de montrer le jeton qu'il a caché, il ne sert à rien de remplir falseNotHiddenToken");
 		}
 		if(App.rules.isAValidToken(token)){
-			if(!this.falseNotHiddenToken.contains(token)){
-				this.falseNotHiddenToken.add(token);
+			if(!this.falseNotHiddenTokens.contains(token)){
+				this.falseNotHiddenTokens.add(token);
 			}else{
 				throw new AttributeInUseException("le joueur a déjà choisi de dire qu'il n'a pas caché ce jeton: "+token+", le jeton, "+token+ " n'a pas pu être ajouté");
 			}
@@ -307,7 +307,7 @@ public class Lie {
 		s += "falseAssumedRole : "+ falseAssumedRole +"\n";
 		s += "falseNotAssumedRoles : "+ falseNotAssumedRoles +"\n";
 		s += "falseHiddenToken : "+ falseHiddenToken +"\n";
-		s += "falseNotHiddenToken : "+ falseNotHiddenToken +"\n";
+		s += "falseNotHiddenToken : "+ falseNotHiddenTokens +"\n";
 		s += "hideToken : "+ hideToken +"\n";
 		s += "**********************\n";
 		return s;

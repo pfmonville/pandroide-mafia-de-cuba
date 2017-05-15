@@ -64,8 +64,17 @@ public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player,
 			Lie lie) {
 		//TODO
+		/* for 1st player only : 
+		 * if I have chosen a false role -> according to my role and to number of tokens of this role, choose a false hidden token
+		 * if I haven't chosen a role yet :
+		 * 
+		 */
 		return null;
 	}
+	
+	
+	
+	
 
 	@Override
 	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {

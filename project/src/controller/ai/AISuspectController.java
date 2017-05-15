@@ -283,7 +283,7 @@ public class AISuspectController extends AIController {
 							+ ".";
 				}
 				if (number == 16) {
-					if (tokenAsked.equals(response.getTokenMovedAside()) && !lie.getfalseNotHiddenToken().contains(response.getTokenMovedAside())) {
+					if (tokenAsked.equals(response.getTokenMovedAside()) && !lie.getfalseNotHiddenTokens().contains(response.getTokenMovedAside())) {
 						lie.updateHiddenToken(tokenAsked);
 						content = "Oui";
 					} else {
