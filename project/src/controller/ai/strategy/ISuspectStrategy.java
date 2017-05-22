@@ -16,5 +16,5 @@ public interface ISuspectStrategy extends Strategy{
 	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers);
 	public HashMap<String, Double> chooseHiddenTokenToShow(Player player, Lie lie);
 	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie);
-	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers();
+	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie);
 }

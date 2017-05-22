@@ -11,333 +11,462 @@ import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
+import model.Inspect.InspectView;
 import controller.App;
 
 public class ThiefStrategy implements ISuspectStrategy {
-	
+
 	private Inspect inspect;
-	
-	
+
 	public ThiefStrategy(Inspect inspect) {
 		super();
 		this.inspect = inspect;
 	}
 
 	@Override
-	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie, Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers){
+	public HashMap<DiamondsCouple, Double> chooseDiamondsToShow(Player player, Lie lie,
+			Map<Integer, DiamondsCouple> diamondsAnnouncedByOtherPlayers) {
 		HashMap<DiamondsCouple, Double> diamondProbabilitiesResponse = new HashMap<DiamondsCouple, Double>();
 		double lieOnReceivedProba;
 		double lieOnGivenProba;
-		
+
 		/*
-		 * Special case for the first player
-		 * I say that I gave what I received
+		 * Special case for the first player I say that I gave what I received
 		 */
-		if(player.isFirstPlayer()){
-			diamondProbabilitiesResponse.put(new DiamondsCouple(player.getBox().getDiamonds(), player.getBox().getDiamonds()), 1.0);
+		if (player.isFirstPlayer()) {
+			diamondProbabilitiesResponse
+					.put(new DiamondsCouple(player.getBox().getDiamonds(), player.getBox().getDiamonds()), 1.0);
 			return diamondProbabilitiesResponse;
 		}
-		
+
 		/*
-		 * Special case for the last player, he can't lie to the GF. 
-		 * So for his lie, he forcefully says that he gave what he virtually received 
+		 * Special case for the last player, he can't lie to the GF. So for his
+		 * lie, he forcefully says that he gave what he virtually received
 		 */
-		if (player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+		if (player.getPosition() == App.rules.getCurrentNumberOfPlayer()) {
 			int nbDiamonds = player.getBox().getDiamonds() - player.getRole().getNbDiamondsStolen();
-			diamondProbabilitiesResponse.put(new DiamondsCouple(nbDiamonds, nbDiamonds), 1.0); 
+			diamondProbabilitiesResponse.put(new DiamondsCouple(nbDiamonds, nbDiamonds), 1.0);
 			return diamondProbabilitiesResponse;
 		}
-		
+
 		/*
-		 * Less tokens in the box than taken before me
-		 * More probably I will bring the doubt on the players before me
-		 * (reduce the number of diamonds I received
-		 * i.e. I subtract the diamond I stole from the real amount
-		 * so I create a virtual thief before me)
+		 * Less tokens in the box than taken before me More probably I will
+		 * bring the doubt on the players before me (reduce the number of
+		 * diamonds I received i.e. I subtract the diamond I stole from the real
+		 * amount so I create a virtual thief before me)
 		 */
-		if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()){
+		if (player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()) {
 			lieOnReceivedProba = 0.7;
 			lieOnGivenProba = 1.0 - lieOnReceivedProba;
 		}
-		
+
 		/*
-		 *  More tokens in the box than taken before me
-		 *  More probably, I will bring the doubt on the players after me
-		 *  (increase the number of diamonds I gave
-		 *  i.e. I virtually gave the same number of diamonds that I received)
+		 * More tokens in the box than taken before me More probably, I will
+		 * bring the doubt on the players after me (increase the number of
+		 * diamonds I gave i.e. I virtually gave the same number of diamonds
+		 * that I received)
 		 */
-		else{
+		else {
 			lieOnReceivedProba = 0.3;
 			lieOnGivenProba = 1.0 - lieOnReceivedProba;
 		}
-		
+
 		int diamondsTrullyReceived = player.getBox().getDiamonds();
 		int diamondsTrullyGiven = diamondsTrullyReceived - player.getRole().getNbDiamondsStolen();
-		diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsTrullyGiven, diamondsTrullyGiven), lieOnReceivedProba);
-		diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived), lieOnGivenProba);
-		
-		// If I lie about being a LH, I can't follow a bluff said by someone before
-		if(lie.getFalseRoleName() != null && lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())){
+		diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsTrullyGiven, diamondsTrullyGiven),
+				lieOnReceivedProba);
+		diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsTrullyReceived, diamondsTrullyReceived),
+				lieOnGivenProba);
+
+		// If I lie about being a LH, I can't follow a bluff said by someone
+		// before
+		if (lie.getFalseRoleName() != null && lie.getFalseRoleName().equals(App.rules.getNameLoyalHenchman())) {
 			return diamondProbabilitiesResponse;
 		}
 		// Add the possibility to follow a bluff from a previous player
-		else{
+		else {
 			double proba = 0.25;
 			double decrease = proba / (player.getPosition() - 1);
-			for(int i = player.getPosition() - 1 ; i > 1 ; i--){
+			for (int i = player.getPosition() - 1; i > 1; i--) {
 				int diamondsGivenByOther = diamondsAnnouncedByOtherPlayers.get(i).getDiamondsGiven();
-				if(diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()){
-					for(Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()){
+				if (diamondsGivenByOther != -1 && diamondsGivenByOther != player.getBox().getDiamonds()) {
+					for (Entry<DiamondsCouple, Double> entry : diamondProbabilitiesResponse.entrySet()) {
 						diamondProbabilitiesResponse.put(entry.getKey(), entry.getValue() - proba * entry.getValue());
-					}	
-					diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther), proba);
+					}
+					diamondProbabilitiesResponse.put(new DiamondsCouple(diamondsGivenByOther, diamondsGivenByOther),
+							proba);
 				}
-				proba -= decrease; 
+				proba -= decrease;
 			}
 		}
 		return diamondProbabilitiesResponse;
 	}
-	
+
 	// First degree
 	@Override
-	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie){
+	public HashMap<String, Double> chooseRoleToShow(Player player, Lie lie) {
 		HashMap<String, Double> roleProbabilitiesResponse = new HashMap<String, Double>();
-		
+
 		double lhProba = 0.65;
 		double dProba = 0.25;
 		double aProba = 0.1;
-		
+
 		int lhNb = 0;
 		int dNb = 0;
 		int aNb = 0;
-		
+
 		boolean isCleanerHere = false;
-		
+
 		/*
-		 * If I already set a false list of tokens
-		 * I randomly choose a role in this list
+		 * If I already set a false list of tokens I randomly choose a role in
+		 * this list
 		 */
-		if(lie.isTokensInBoxSet()){
+		if (lie.isTokensInBoxSet()) {
 			lhNb = lie.getFalseBox().getCount(App.rules.getNameLoyalHenchman())
 					+ lie.getFalseBox().getCount(App.rules.getNameCleaner());
 			dNb = lie.getFalseBox().getCount(App.rules.getNameDriver());
-			aNb = lie.getFalseBox().getCount(App.rules.getNameAgentCIA()) 
+			aNb = lie.getFalseBox().getCount(App.rules.getNameAgentCIA())
 					+ lie.getFalseBox().getCount(App.rules.getNameAgentFBI())
 					+ lie.getFalseBox().getCount(App.rules.getNameAgentLambda());
-			
-			if(lie.getFalseBox().getTokens().contains(App.rules.getNumberOfCleaners())){
+
+			if (lie.getFalseBox().getTokens().contains(App.rules.getNumberOfCleaners())) {
 				isCleanerHere = true;
 			}
-		}
-		else{
+		} else {
 			/*
-			 * Less tokens in the box than taken before me OR I'm the last player
-			 * I choose to show a token already taken AND if I'm last player I can become a SU
+			 * Less tokens in the box than taken before me OR I'm the last
+			 * player I choose to show a token already taken AND if I'm last
+			 * player I can become a SU
 			 */
-			if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size() 
-					|| player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+			if (player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()
+					|| player.getPosition() == App.rules.getCurrentNumberOfPlayer()) {
 				lhNb = App.rules.getNumberOfLoyalHenchmen() - player.getBox().getCount(App.rules.getNameLoyalHenchman())
 						+ App.rules.getNumberOfCleaners() - player.getBox().getCount(App.rules.getNameCleaner());
 				dNb = App.rules.getNumberOfDrivers() - player.getBox().getCount(App.rules.getNameDriver());
-				aNb = App.rules.getNumberOfAgents() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
+				aNb = App.rules.getNumberOfAgents() - (player.getBox().getCount(App.rules.getNameAgentCIA())
 						+ player.getBox().getCount(App.rules.getNameAgentFBI())
 						+ player.getBox().getCount(App.rules.getNameAgentLambda()));
-				
-				if(App.rules.getNumberOfCleaners() != 0 && !player.getBox().getTokens().contains(App.rules.getNameCleaner())){
+
+				if (App.rules.getNumberOfCleaners() != 0
+						&& !player.getBox().getTokens().contains(App.rules.getNameCleaner())) {
 					isCleanerHere = true;
 				}
 			}
 			/*
-			 * More tokens in the box than taken before me
-			 * I choose to show a token which is in the box
+			 * More tokens in the box than taken before me I choose to show a
+			 * token which is in the box
 			 */
-			else{
+			else {
 				lhNb = player.getBox().getCount(App.rules.getNameLoyalHenchman())
 						+ player.getBox().getCount(App.rules.getNameCleaner());
 				dNb = player.getBox().getCount(App.rules.getNameDriver());
-				aNb = player.getBox().getCount(App.rules.getNameAgentCIA()) 
+				aNb = player.getBox().getCount(App.rules.getNameAgentCIA())
 						+ player.getBox().getCount(App.rules.getNameAgentFBI())
 						+ player.getBox().getCount(App.rules.getNameAgentLambda());
-				
-				if(player.getBox().getTokens().contains(App.rules.getNameCleaner())){
+
+				if (player.getBox().getTokens().contains(App.rules.getNameCleaner())) {
 					isCleanerHere = true;
 				}
 			}
 		}
-		
-		roleProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba, isCleanerHere);
-		
+
+		roleProbabilitiesResponse = calculTokenResponseProbatilities(player, lhNb, dNb, aNb, lhProba, dProba, aProba,
+				isCleanerHere);
+
 		// If I'm last player I can pretend to be a street urchin
-		if(player.getPosition() == App.rules.getCurrentNumberOfPlayer()){
+		if (player.getPosition() == App.rules.getCurrentNumberOfPlayer()) {
 			double suProba = 0.3;
-			for(Entry<String, Double> entry : roleProbabilitiesResponse.entrySet()){
+			for (Entry<String, Double> entry : roleProbabilitiesResponse.entrySet()) {
 				roleProbabilitiesResponse.put(entry.getKey(), entry.getValue() - suProba * entry.getValue());
 			}
-			roleProbabilitiesResponse.put(App.rules.getNameStreetUrchin(), suProba);	
+			roleProbabilitiesResponse.put(App.rules.getNameStreetUrchin(), suProba);
 		}
-		
+
 		/*
-		 *  TODO : Ajouter qque part le choix d'une stratégie de 1er degré ou 2nd
-		 *  Utiliser le début du code avant pour pondérer le choix entre les 2 degrés. 
+		 * TODO : Ajouter qque part le choix d'une stratégie de 1er degré ou 2nd
+		 * Utiliser le début du code avant pour pondérer le choix entre les 2
+		 * degrés.
 		 */
-		
+
 		// Second degree
 		// Number of agent token taken before me
-//		int aNb = App.rules.getNumberOfAgents() - (player.getBox().getCount(App.rules.getNameAgentCIA()) 
-//				+ player.getBox().getCount(App.rules.getNameAgentFBI())
-//				+ player.getBox().getCount(App.rules.getNameAgentLambda()));
-//		
-//		/* 
-//		 * At least 1 agent token missing
-//		 * I can pretend to be this agent, and say I'm a thief => 2nd degree strategy
-//		 */
-//		if(aNb >= 1){
-//			double tProba = 0.2;
-//			for(Entry<String, Double> entry : tokenProbabilitiesResponse.entrySet()){
-//				tokenProbabilitiesResponse.put(entry.getKey(), entry.getValue() - tProba * entry.getValue());
-//			}	
-//			tokenProbabilitiesResponse.put(App.rules.getNameThief(), tProba);
-//		}
-		
+		// int aNb = App.rules.getNumberOfAgents() -
+		// (player.getBox().getCount(App.rules.getNameAgentCIA())
+		// + player.getBox().getCount(App.rules.getNameAgentFBI())
+		// + player.getBox().getCount(App.rules.getNameAgentLambda()));
+		//
+		// /*
+		// * At least 1 agent token missing
+		// * I can pretend to be this agent, and say I'm a thief => 2nd degree
+		// strategy
+		// */
+		// if(aNb >= 1){
+		// double tProba = 0.2;
+		// for(Entry<String, Double> entry :
+		// tokenProbabilitiesResponse.entrySet()){
+		// tokenProbabilitiesResponse.put(entry.getKey(), entry.getValue() -
+		// tProba * entry.getValue());
+		// }
+		// tokenProbabilitiesResponse.put(App.rules.getNameThief(), tProba);
+		// }
+
 		System.out.println("DEBUG : ThiefStrategy : chooseRoleToShow");
 		System.out.println(roleProbabilitiesResponse.toString());
 		return roleProbabilitiesResponse;
-	}	
-	
+	}
+
 	@Override
-	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player, Lie lie){
+	public HashMap<ArrayList<String>, Double> showTokensInBox(Player player, Lie lie) {
 		HashMap<ArrayList<String>, Double> tokenListProbabilitiesResponse = new HashMap<ArrayList<String>, Double>();
-		
+
 		/*
 		 * Less tokens in the box than taken before me
 		 */
 		System.out.println("DEBUG : ThiefStrategy : showTokensInBox");
-		if(player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()){
+		if (player.getBox().getTokens().size() < App.rules.getTokens().size() - player.getBox().getTokens().size()) {
 			/*
-			 * I have already defined a false role among one of the roles already taken
-			 * I add it in the real list to create a false one
+			 * I have already defined a false role among one of the roles
+			 * already taken I add it in the real list to create a false one
 			 */
-			
+
 			String tokenToAdd;
-			
-			if(lie.hasShownRole()){
+
+			if (lie.hasShownRole()) {
 				tokenToAdd = new String(lie.getFalseRoleName());
 			}
 			/*
-			 *  I have not already defined a false role among those already taken
-			 *  I choose to add randomly a token among those already taken 
-			 */ 
-			else{
+			 * I have not already defined a false role among those already taken
+			 * I choose to add randomly a token among those already taken
+			 */
+			else {
 				ArrayList<String> rolesAlreadyTaken = new ArrayList<String>(App.rules.getTokens());
 				rolesAlreadyTaken.removeAll(player.getBox().getTokens());
 				Random rand = new Random();
 				tokenToAdd = new String(rolesAlreadyTaken.get(rand.nextInt(rolesAlreadyTaken.size())));
 			}
-			
+
 			ArrayList<String> result = new ArrayList<String>(player.getBox().getTokens());
 			result.add(tokenToAdd);
 			tokenListProbabilitiesResponse.put(result, 1.0);
 		}
 		/*
-		 * More tokens in the box than taken before me
-		 * I say the truth
+		 * More tokens in the box than taken before me I say the truth
 		 */
-		else{
+		else {
 			ArrayList<String> result = new ArrayList<String>(player.getBox().getTokens());
 			tokenListProbabilitiesResponse.put(result, 1.0);
 		}
 		return tokenListProbabilitiesResponse;
 	}
-	
+
 	@Override
-	public HashMap<String, Double> chooseHiddenTokenToShow (Player player, Lie lie){
+	public HashMap<String, Double> chooseHiddenTokenToShow(Player player, Lie lie) {
 		HashMap<String, Double> hiddenTokenProbabilitiesResponse = new HashMap<String, Double>();
-		
+
 		double hidAgentProba = 0.0;
-		double hidDriverProba = 0.0;		
-		
-		if(player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())
-				|| player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman()) 
+		double hidDriverProba = 0.0;
+
+		if (player.getRole().getHiddenToken().equals(App.rules.getNameNoRemovedToken())
+				|| player.getRole().getHiddenToken().equals(App.rules.getNameLoyalHenchman())
 				|| player.getRole().getHiddenToken().equals(App.rules.getNameCleaner())
-				|| player.getRole().getHiddenToken().equals(App.rules.getNameDriver())){
+				|| player.getRole().getHiddenToken().equals(App.rules.getNameDriver())) {
 			hidAgentProba = 0.7;
 			hidDriverProba = 0.3;
-			
+
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameAgentFBI(), hidAgentProba);
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameDriver(), hidDriverProba);
-		}else{
+		} else {
 			hiddenTokenProbabilitiesResponse.put(App.rules.getNameNoRemovedToken(), 1.0);
 		}
-		
+
 		return hiddenTokenProbabilitiesResponse;
 	}
-	
+
 	/*
-	 * showAssumedRolesForAllPLayers
-	 * que penses tu des autres joueurs, renvoie un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
-	 */	
+	 * showAssumedRolesForAllPLayers que penses tu des autres joueurs, renvoie
+	 * un dico : cle = id du joueur, valeur = liste de couple avec (rôle, proba)
+	 */
 	@Override
-	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(){
+	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie){
 		// TODO
-		return null;
-	}
+		HashMap<Integer, RoleProbaCouple> assumedRolesForAllPlayers = new HashMap<Integer, RoleProbaCouple>();
+		ArrayList<InspectView> inspectViews = inspect.getAllInspectViews();
+		
+		/*
+		 * en fonction du role pris réfléchir à qui accuser :	
+		 *
+		 * + interet de faire accuser tout le monde sauf agent
+		 */
 	
-	private HashMap<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb, double lhProba, double dProba, double aProba, boolean isCleanerHere){
+		//--> si aucun role choisi, dire vérité ou qu'on ne sait rien
+		if(lie.getFalseRoleName() == null ){
+			if(new Random().nextFloat()<0.6){
+				for (InspectView iv : inspectViews){
+					int id = Integer.parseInt(iv.getId().getValue());
+					Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
+		
+					if((Double) res[1] != 0. ){
+						assumedRolesForAllPlayers.put(id , new RoleProbaCouple((String)res[0], (Double)res[1]));
+					}
+				}
+			}
+		} 
+		else{
+			//--> si Agent -> ne rien dire sauf pour agent
+			if(lie.getFalseRoleName().equals(App.rules.getNameAgentCIA()) || lie.getFalseRoleName().equals(App.rules.getNameAgentFBI()) ||lie.getFalseRoleName().equals(App.rules.getNameAgentLambda())){
+				for (InspectView iv : inspectViews){
+					int id = Integer.parseInt(iv.getId().getValue());
+					Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
+
+					if( ((String)res[0]).equals(App.rules.getNameAgentLambda()) && (Double) res[1] != 0. ){
+						assumedRolesForAllPlayers.put(id , new RoleProbaCouple((String)res[0], (Double)res[1]));
+					}
+				}
+			} 
+			else {
+				// 	--> si Enfant des rues : accuser fidele et dénoncer agent
+				if(lie.getFalseRoleName().equals(App.rules.getNameStreetUrchin())){
+					for (InspectView iv : inspectViews){
+						int id = Integer.parseInt(iv.getId().getValue());
+						Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
+
+						if((Double) res[1] != 0. ){
+							String role = (String)res[0];
+							/*
+							 * si on pense que le joueur est fidele ou enfant des rues : le faire accuser
+							 */
+							if( role.equals(App.rules.getNameLoyalHenchman()) || role.equals(App.rules.getNameCleaner()) || role.equals(App.rules.getNameStreetUrchin())){
+								assumedRolesForAllPlayers.put(id , new RoleProbaCouple(App.rules.getNameThief(), (Double)res[1]));
+							}
+							/*
+							 * si on pense qu'il est voleur, l'innocenter
+							 */
+							else if (role.equals(App.rules.getNameThief())){
+								assumedRolesForAllPlayers.put(id , new RoleProbaCouple(App.rules.getNameLoyalHenchman(), (Double)res[1]));
+							} else{
+								assumedRolesForAllPlayers.put(id , new RoleProbaCouple(role, (Double)res[1]));
+							}
+							
+						}
+					}
+				}
+//			 	--> si Fidèle ou chauffeur -> dire vérité
+				else{
+					for (InspectView iv : inspectViews){
+						int id = Integer.parseInt(iv.getId().getValue());
+						Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
+			//TODO a completer
+						if((Double) res[1] != 0. ){
+							assumedRolesForAllPlayers.put(id , new RoleProbaCouple((String)res[0], (Double)res[1]));
+						}
+					}
+				}
+			}
+		}
+		
+		return assumedRolesForAllPlayers;
+	}
+
+	
+	
+	
+	private HashMap<String, Double> calculTokenResponseProbatilities(Player player, int lhNb, int dNb, int aNb,
+			double lhProba, double dProba, double aProba, boolean isCleanerHere) {
 		HashMap<String, Double> tokenResponseProbabilities = new HashMap<String, Double>();
 		int totalNb = lhNb + dNb + aNb;
-		
-		if(lhNb == totalNb){
-			if(isCleanerHere){
+
+		if (lhNb == totalNb) {
+			if (isCleanerHere) {
 				tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), (lhNb - 1) * 100.0 / lhNb);
 				tokenResponseProbabilities.put(App.rules.getNameCleaner(), 100.0 / lhNb);
-			}else{
+			} else {
 				tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), 1.0);
 			}
 			return tokenResponseProbabilities;
-		}else if(dNb == totalNb){
+		} else if (dNb == totalNb) {
 			tokenResponseProbabilities.put(App.rules.getNameDriver(), 1.0);
 			return tokenResponseProbabilities;
-		}else if(aNb == totalNb){
-			if(App.rules.getNumberOfAgents() == 1){
+		} else if (aNb == totalNb) {
+			if (App.rules.getNumberOfAgents() == 1) {
 				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 1.0);
-			}else{
+			} else {
 				tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), 0.5);
 				tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), 0.5);
-			}	
+			}
 			return tokenResponseProbabilities;
-		}else if(lhNb == 0){
+		} else if (lhNb == 0) {
 			lhProba /= 2;
 			dProba += lhProba;
 			aProba += lhProba;
-		}else if(dNb == 0){
+		} else if (dNb == 0) {
 			dProba /= 2;
 			lhProba += dProba;
 			aProba += dProba;
-		}else if(aNb == 0){
+		} else if (aNb == 0) {
 			aProba /= 2;
 			lhProba += aProba;
 			dProba += aProba;
 		}
-		
+
 		double totalSum = lhNb * lhProba + dNb * dProba + aNb * aProba;
-		if(isCleanerHere){
-			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), (lhNb - 1) * lhProba * lhNb / ( lhNb * totalSum) );
+		if (isCleanerHere) {
+			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(),
+					(lhNb - 1) * lhProba * lhNb / (lhNb * totalSum));
 			tokenResponseProbabilities.put(App.rules.getNameCleaner(), lhProba * lhNb / (lhNb * totalSum));
-		}else{
+		} else {
 			tokenResponseProbabilities.put(App.rules.getNameLoyalHenchman(), lhProba * lhNb / totalSum);
 		}
 		tokenResponseProbabilities.put(App.rules.getNameDriver(), dProba * dNb / totalSum);
-		if(App.rules.getNumberOfAgents() == 1){
+		if (App.rules.getNumberOfAgents() == 1) {
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / totalSum);
-		}else if(App.rules.getNumberOfAgents() == 2){
+		} else if (App.rules.getNumberOfAgents() == 2) {
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (2 * totalSum));
 			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (2 * totalSum));
-		}else{
+		} else {
 			int agentNumber = App.rules.getNumberOfAgents();
 			tokenResponseProbabilities.put(App.rules.getNameAgentFBI(), aProba * aNb / (agentNumber * totalSum));
 			tokenResponseProbabilities.put(App.rules.getNameAgentCIA(), aProba * aNb / (agentNumber * totalSum));
-			tokenResponseProbabilities.put(App.rules.getNameAgentLambda(), (agentNumber - 2) * aProba * aNb / (agentNumber * totalSum));
+			tokenResponseProbabilities.put(App.rules.getNameAgentLambda(),
+					(agentNumber - 2) * aProba * aNb / (agentNumber * totalSum));
 		}
 		return tokenResponseProbabilities;
+	}
+
+	public Object[] bestProbaRole(ArrayList<Double> rolesList) {
+
+		Double max = -1.;
+		int ind_max = -1;
+
+		for (int i = 0; i < rolesList.size(); i++) {
+			Double proba;
+			if (rolesList.get(i).isNaN()) {
+				proba = 0.;
+			} else {
+				proba = rolesList.get(i);
+			}
+
+			if (proba > max) {
+				max = proba;
+				ind_max = i;
+			}
+		}
+
+		switch (ind_max) {
+		case 0:
+			return new Object[] { App.rules.getNameLoyalHenchman(), max };
+		case 1:
+			return new Object[] { App.rules.getNameCleaner(), max };
+		case 2:
+			return new Object[] { App.rules.getNameAgentLambda(), max };
+		case 3:
+			return new Object[] { App.rules.getNameThief(), max };
+		case 4:
+			return new Object[] { App.rules.getNameStreetUrchin(), max };
+		case 5:
+			return new Object[] { App.rules.getNameDriver(), max };
+		default:
+			return null;
+		}
+
 	}
 }

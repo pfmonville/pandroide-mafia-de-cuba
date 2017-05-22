@@ -53,7 +53,7 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 
 	// renvoit le role le plus probable
 	@Override
-	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
+	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie) {
 		HashMap<Integer, RoleProbaCouple> assumedRolesForAllPlayers = new HashMap<Integer, RoleProbaCouple>();
 		ArrayList<InspectView> inspectViews = inspect.getAllInspectViews();
 		/*

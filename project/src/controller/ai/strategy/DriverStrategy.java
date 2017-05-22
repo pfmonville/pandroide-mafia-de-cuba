@@ -101,7 +101,7 @@ public class DriverStrategy implements ISuspectStrategy{
 	
 	
 	@Override
-	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
+	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie) {
 		//TODO à améliorer
 		HashMap<Integer, RoleProbaCouple> assumedRolesForAllPlayers = new HashMap<Integer, RoleProbaCouple>();
 		ArrayList<InspectView> inspectViews = inspect.getAllInspectViews();

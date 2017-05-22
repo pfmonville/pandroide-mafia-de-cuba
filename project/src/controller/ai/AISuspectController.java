@@ -306,7 +306,7 @@ public class AISuspectController extends AIController {
 
 		if (number == 10 || number == 11 || number == 12 || number == 13) {
 			// doit renvoyer une liste des roles présumés des autres
-			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers();
+			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers(player, lie);
 
 			ArrayList<Integer> targets = new ArrayList<>();
 			for (Entry<Integer, RoleProbaCouple> entry : assumedRoles.entrySet()) {

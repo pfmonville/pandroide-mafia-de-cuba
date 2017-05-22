@@ -64,7 +64,7 @@ public class ThiefStrategy_2ndDegree implements ISuspectStrategy{
 		return null;
 	}
 	
-	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(){
+	public  HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie){
 		// TODO
 		return null;
 	}
