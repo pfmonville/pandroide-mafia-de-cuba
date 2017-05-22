@@ -63,7 +63,6 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 		for (InspectView iv : inspectViews){
 			int id = Integer.parseInt(iv.getId().getValue());
 			Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
-			System.out.println(res);
 
 			if( (Double) res[1] != 0. ){
 				assumedRolesForAllPlayers.put(id , new RoleProbaCouple((String)res[0], (Double)res[1]));
@@ -109,8 +108,6 @@ public class LoyalHenchmanStrategy implements ISuspectStrategy{
 		default :
 			return null ;
 		}
-		
-		
 		
 	}
 }
