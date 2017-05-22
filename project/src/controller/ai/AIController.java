@@ -21,6 +21,7 @@ import model.Talk;
 import model.World;
 import controller.App;
 import controller.PlayerController;
+import jdk.nashorn.internal.parser.TokenStream;
 
 public class AIController implements PlayerController {
 
@@ -769,6 +770,117 @@ public class AIController implements PlayerController {
 				case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
 				case 7 : //Quels rôles contenait la boîte quand tu l'as passée ?
 					//TODO
+					System.err.println("case 6");
+					ArrayList<String> tokensAnswer = answer.getTokensAnswer();	
+					
+					// Roles already taken (or hidden) by previous players
+					ArrayList<String> rolesTaken = App.rules.getTokensFor(nbPlayers);
+					for(String i : tokensAnswer){
+						rolesTaken.remove(i);
+					}
+
+					ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
+					// Conversion of String into Integer
+					for(String s : rolesTaken){
+						rolesNumberTaken.add(App.rules.convertRoleNameIntoNumber(s));
+					}
+					
+					if(targetPlayer < player.getPosition()){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
+							for(Integer d : rolesNumberTaken){
+								rolesCopy.add(d);
+							}
+							int j = 0;
+							//cas du jeton écarté
+							if( rolesCopy.contains(w.getTokenMovedAside()) || w.getTokenMovedAside() == -1){
+								rolesCopy.remove(w.getTokenMovedAside());	
+
+								//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
+								for(j=0; j < targetPlayer - 2 ; j++){
+									if(rolesCopy.contains(distribution.get(j))){
+										rolesCopy.remove(distribution.get(j));
+									} //if one token announced is not one of the tokens taken in this distribution
+									else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+										truthValue.put(targetPlayer, -1);
+										break;
+									}
+								}
+							}
+							else{
+								truthValue.put(targetPlayer, -1);
+							}
+							
+							if(questionId == 7){
+								if(rolesCopy.contains(distribution.get(indexPlayer))){
+									rolesCopy.remove(distribution.get(indexPlayer));
+								}
+							}
+							
+							if(j == targetPlayer - 2 && rolesCopy.isEmpty()){
+								truthValue.put(targetPlayer, 1);	
+							}
+							else{
+								truthValue.put(targetPlayer, -1);	
+							}
+							
+
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}						
+					}
+					else{
+								
+						ArrayList<String> rolesPassed = player.getBox().getTokens();
+						rolesPassed.remove(player.getRole().getName());
+						rolesPassed.removeAll(tokensAnswer);
+
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+
+							
+							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
+							
+							for(String d : rolesPassed){
+								rolesCopy.add(App.rules.convertRoleNameIntoNumber(d));
+							}
+							int j = 0;
+
+							//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
+							for(j=0; j < indexPlayer; j++){
+								if(rolesCopy.contains(distribution.get(j))){
+									rolesCopy.remove(distribution.get(j));
+								} //if one token announced is not one of the tokens taken in this distribution
+								else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+									truthValue.put(targetPlayer, -1);
+									break;
+								}
+							}
+							
+							if(j == indexPlayer && rolesCopy.isEmpty()){
+								truthValue.put(targetPlayer, 1);	
+							}
+							else{
+								truthValue.put(targetPlayer, -1);	
+							}
+							if(questionId == 7){
+								if(tokensAnswer.contains(App.rules.convertNumberIntoRoleName(distribution.get(indexPlayer)))){
+									truthValue.put(targetPlayer, -1);
+								}
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}
+				
+					
+					
+					
 					break;
 					
 				case 8: // Es tu un ...
