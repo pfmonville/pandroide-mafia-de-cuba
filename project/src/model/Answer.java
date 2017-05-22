@@ -11,6 +11,8 @@ public class Answer extends Phrase{
 	private String roleAnswer;
 	private String tokenMovedAside;
 	private ArrayList<Integer> targets ;
+	private int roleAsked ;
+	private String roleThought ;
 	
 	public Answer(int id, String content, ArrayList<Integer> questionsIDs) {
 		super(id, content);
@@ -93,6 +95,19 @@ public class Answer extends Phrase{
 
 	public void setTargets(ArrayList<Integer> targets) {
 		this.targets = targets;
+	}
+
+	public int getRoleAsked(){
+		return roleAsked;
+	}
+	
+	public String getRoleThought() {
+		return roleThought;
+	}
+
+	public void setRoleProbaCouple(int pos,String role) {
+		this.roleAsked = pos;
+		this.roleThought = role;
 	}
 	
 }
