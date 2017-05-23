@@ -107,7 +107,7 @@ public class MainTestAIController {
 		
 	
 		//Tests de checkLiar
-		Question q = new Question(7, "", new ArrayList<Integer>(), 0);
+		Question q = new Question(1, "", new ArrayList<Integer>(), 0);
 		q.setTargetPlayer(5);
 		//pour question 8
 		//q.setContent("Est-tu un... Agent?");
@@ -119,7 +119,9 @@ public class MainTestAIController {
 		//question 15
 		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
 		//a.setNbTokensAnswer(1);
-		a.setTokensAnswer(new ArrayList<String>(Arrays.asList("Chauffeur")));
+		a.setTokensAnswer(new ArrayList<String>());
+		//a.setTokensAnswer(new ArrayList<String>(Arrays.asList("Chauffeur")));
+		a.setNbDiamondsAnswer(0);
 		//a.setNbDiamondsAnswer(0);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.add(App.rules.getNameLoyalHenchman());

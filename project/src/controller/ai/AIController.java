@@ -597,6 +597,121 @@ public class AIController implements PlayerController {
 			
 			switch(questionId){
 			
+				case 0://Que contenait la boîte quand tu l'as reçue ?
+				case 1://Que contenait la boîte quand tu l'as passée ?
+				case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
+				case 7 : //Quels rôles contenait la boîte quand tu l'as passée ?
+	
+					ArrayList<String> tokensAnswer = answer.getTokensAnswer();	
+					
+					// Roles already taken (or hidden) by previous players
+					ArrayList<String> rolesTaken = App.rules.getTokensFor(nbPlayers);
+					for(String i : tokensAnswer){
+						rolesTaken.remove(i);
+					}
+	
+					ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
+					// Conversion of String into Integer
+					for(String s : rolesTaken){
+						rolesNumberTaken.add(App.rules.convertRoleNameIntoNumber(s));
+					}
+					
+					if(targetPlayer < player.getPosition()){
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
+							for(Integer d : rolesNumberTaken){
+								rolesCopy.add(d);
+							}
+							int j = 0;
+							//cas du jeton écarté
+							if( rolesCopy.contains(w.getTokenMovedAside()) || w.getTokenMovedAside() == -1){
+								rolesCopy.remove(w.getTokenMovedAside());	
+	
+								//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
+								for(j=0; j < targetPlayer - 2 ; j++){
+									if(rolesCopy.contains(distribution.get(j))){
+										rolesCopy.remove(distribution.get(j));
+									} //if one token announced is not one of the tokens taken in this distribution
+									else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+										truthValue.put(targetPlayer, -1);
+										break;
+									}
+								}
+							}
+							else{
+								truthValue.put(targetPlayer, -1);
+							}
+							
+							if(questionId == 7 || questionId == 1){
+								if(rolesCopy.contains(distribution.get(indexPlayer))){
+									rolesCopy.remove(distribution.get(indexPlayer));
+								}
+							}
+							
+							if(j == targetPlayer - 2 && rolesCopy.isEmpty()){
+								truthValue.put(targetPlayer, 1);	
+							}
+							else{
+								truthValue.put(targetPlayer, -1);	
+							}
+							
+	
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}						
+					}
+					else{
+								
+						ArrayList<String> rolesPassed = player.getBox().getTokens();
+						rolesPassed.remove(player.getRole().getName());
+						rolesPassed.removeAll(tokensAnswer);
+	
+						for(int i=0; i<worldsListCopy.size(); i++){
+							w = worldsListCopy.get(i).clone();
+							truthValue = w.getTruthValue();
+							ArrayList<Integer> distribution = w.getRolesDistribution();
+	
+							
+							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
+							
+							for(String d : rolesPassed){
+								rolesCopy.add(App.rules.convertRoleNameIntoNumber(d));
+							}
+							int j = 0;
+	
+							//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
+							for(j=0; j < indexPlayer; j++){
+								if(rolesCopy.contains(distribution.get(j))){
+									rolesCopy.remove(distribution.get(j));
+								} //if one token announced is not one of the tokens taken in this distribution
+								else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
+									truthValue.put(targetPlayer, -1);
+									break;
+								}
+							}
+							
+							if(j == indexPlayer && rolesCopy.isEmpty()){
+								truthValue.put(targetPlayer, 1);	
+							}
+							else{
+								truthValue.put(targetPlayer, -1);	
+							}
+							if(questionId == 7 || questionId == 1){
+								if(tokensAnswer.contains(App.rules.convertNumberIntoRoleName(distribution.get(indexPlayer)))){
+									truthValue.put(targetPlayer, -1);
+								}
+							}
+							w.setTruthValue(truthValue);
+							worldsList.set(i, w);
+						}
+					}									
+					if(questionId == 6 || questionId == 7){
+						break;
+					}
+			
 				case 2://2 Combien de diamants contenait la boite quand tu l'as recu?
 				case 3://3 Combien de diamants qd tu l'as passe?
 					
@@ -607,6 +722,8 @@ public class AIController implements PlayerController {
 						for(int i=0; i<worldsListCopy.size(); i++){
 							w = worldsListCopy.get(i).clone();
 							truthValue = w.getTruthValue();
+							truthValue.put(targetPlayer, 1);
+							
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j=0; j < targetPlayer - 2 ; j++){
 								//there can't be thieves before the TargetPlayer
@@ -617,7 +734,7 @@ public class AIController implements PlayerController {
 							}
 							
 							//if TargetPlayer said that he passed all diamonds
-							if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
+							if((questionId == 3 || questionId == 1) && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);
 							}
 							w.setTruthValue(truthValue);
@@ -632,6 +749,7 @@ public class AIController implements PlayerController {
 							thieves = false;
 							w = worldsListCopy.get(i).clone();
 							truthValue = w.getTruthValue();
+							truthValue.put(targetPlayer, 1);
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j=0; j < targetPlayer - 2 ; j++){
 								if(distribution.get(j).equals(App.rules.getCodeNumberThief())){
@@ -642,8 +760,8 @@ public class AIController implements PlayerController {
 							if(!thieves){
 								truthValue.put(targetPlayer, -1);
 								
-								if(questionId == 3 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
-									truthValue.put(targetPlayer, 0);//or the TargetPlayer is a thief
+								if((questionId == 3 || questionId == 1) && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
+									truthValue.put(targetPlayer, 1);//or the TargetPlayer is a thief
 								}
 							}						
 							w.setTruthValue(truthValue);
@@ -655,6 +773,7 @@ public class AIController implements PlayerController {
 						for(int i=0; i<worldsListCopy.size(); i++){
 							w = worldsListCopy.get(i).clone();
 							truthValue = w.getTruthValue();
+							truthValue.put(targetPlayer, 1);
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j= targetPlayer - player.getPosition(); j < distribution.size() ; j++){
 								//there can't be thieves after the TargetPlayer
@@ -663,7 +782,7 @@ public class AIController implements PlayerController {
 									break;
 								}
 							}
-							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
+							if((questionId == 2 || questionId == 0) && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
 							}
 							w.setTruthValue(truthValue);
@@ -674,6 +793,7 @@ public class AIController implements PlayerController {
 						for(int i=0; i<worldsListCopy.size(); i++){
 							w = worldsListCopy.get(i).clone();
 							truthValue = w.getTruthValue();
+							truthValue.put(targetPlayer, 1);
 							ArrayList<Integer> distribution = w.getRolesDistribution();
 							for(int j= indexPlayer+1; j < distribution.size() ; j++){
 								//there can't be thieves after the TargetPlayer
@@ -682,14 +802,13 @@ public class AIController implements PlayerController {
 									break;
 								}
 							}
-							if(questionId == 2 && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
+							if((questionId == 2 || questionId == 0) && distribution.get(indexPlayer).equals(App.rules.getCodeNumberThief())){
 								truthValue.put(targetPlayer, -1);//the TargetPlayer can't be a thief
 							}
 							w.setTruthValue(truthValue);
 							worldsList.set(i, w);
 						}
 					}
-					
 					
 					break;
 					
@@ -765,122 +884,6 @@ public class AIController implements PlayerController {
 							worldsList.set(i, w);
 						}
 					}	
-					break;
-				
-				case 6: //Quels rôles contenait la boîte quand tu l'as reçue ?
-				case 7 : //Quels rôles contenait la boîte quand tu l'as passée ?
-					//TODO
-					System.err.println("case 6");
-					ArrayList<String> tokensAnswer = answer.getTokensAnswer();	
-					
-					// Roles already taken (or hidden) by previous players
-					ArrayList<String> rolesTaken = App.rules.getTokensFor(nbPlayers);
-					for(String i : tokensAnswer){
-						rolesTaken.remove(i);
-					}
-
-					ArrayList<Integer> rolesNumberTaken = new ArrayList<Integer>();
-					// Conversion of String into Integer
-					for(String s : rolesTaken){
-						rolesNumberTaken.add(App.rules.convertRoleNameIntoNumber(s));
-					}
-					
-					if(targetPlayer < player.getPosition()){
-						for(int i=0; i<worldsListCopy.size(); i++){
-							w = worldsListCopy.get(i).clone();
-							truthValue = w.getTruthValue();
-							ArrayList<Integer> distribution = w.getRolesDistribution();
-							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
-							for(Integer d : rolesNumberTaken){
-								rolesCopy.add(d);
-							}
-							int j = 0;
-							//cas du jeton écarté
-							if( rolesCopy.contains(w.getTokenMovedAside()) || w.getTokenMovedAside() == -1){
-								rolesCopy.remove(w.getTokenMovedAside());	
-
-								//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
-								for(j=0; j < targetPlayer - 2 ; j++){
-									if(rolesCopy.contains(distribution.get(j))){
-										rolesCopy.remove(distribution.get(j));
-									} //if one token announced is not one of the tokens taken in this distribution
-									else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
-										truthValue.put(targetPlayer, -1);
-										break;
-									}
-								}
-							}
-							else{
-								truthValue.put(targetPlayer, -1);
-							}
-							
-							if(questionId == 7){
-								if(rolesCopy.contains(distribution.get(indexPlayer))){
-									rolesCopy.remove(distribution.get(indexPlayer));
-								}
-							}
-							
-							if(j == targetPlayer - 2 && rolesCopy.isEmpty()){
-								truthValue.put(targetPlayer, 1);	
-							}
-							else{
-								truthValue.put(targetPlayer, -1);	
-							}
-							
-
-							w.setTruthValue(truthValue);
-							worldsList.set(i, w);
-						}						
-					}
-					else{
-								
-						ArrayList<String> rolesPassed = player.getBox().getTokens();
-						rolesPassed.remove(player.getRole().getName());
-						rolesPassed.removeAll(tokensAnswer);
-
-						for(int i=0; i<worldsListCopy.size(); i++){
-							w = worldsListCopy.get(i).clone();
-							truthValue = w.getTruthValue();
-							ArrayList<Integer> distribution = w.getRolesDistribution();
-
-							
-							ArrayList<Integer> rolesCopy = new ArrayList<Integer>();
-							
-							for(String d : rolesPassed){
-								rolesCopy.add(App.rules.convertRoleNameIntoNumber(d));
-							}
-							int j = 0;
-
-							//on vérifie si les jetons manquants dans la boite ont bien été pris pour cette configuration
-							for(j=0; j < indexPlayer; j++){
-								if(rolesCopy.contains(distribution.get(j))){
-									rolesCopy.remove(distribution.get(j));
-								} //if one token announced is not one of the tokens taken in this distribution
-								else if(!distribution.get(j).equals(App.rules.getCodeNumberThief())){
-									truthValue.put(targetPlayer, -1);
-									break;
-								}
-							}
-							
-							if(j == indexPlayer && rolesCopy.isEmpty()){
-								truthValue.put(targetPlayer, 1);	
-							}
-							else{
-								truthValue.put(targetPlayer, -1);	
-							}
-							if(questionId == 7){
-								if(tokensAnswer.contains(App.rules.convertNumberIntoRoleName(distribution.get(indexPlayer)))){
-									truthValue.put(targetPlayer, -1);
-								}
-							}
-							w.setTruthValue(truthValue);
-							worldsList.set(i, w);
-						}
-					}
-				
-					
-					
-					
 					break;
 					
 				case 8: // Es tu un ...
