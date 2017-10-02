@@ -198,9 +198,9 @@ public class Inspect {
 		}
 		
 		public ArrayList<Double> getAllRolesValue(){
-			return (ArrayList<Double>) Arrays.asList(Double.parseDouble(loyalHenchman.getValue()), Double.parseDouble(cleaner.getValue()), 
+			return new ArrayList<Double>(Arrays.asList(Double.parseDouble(loyalHenchman.getValue()), Double.parseDouble(cleaner.getValue()), 
 					Double.parseDouble(agent.getValue()), Double.parseDouble(thief.getValue()), 
-					Double.parseDouble(streetUrchin.getValue()), Double.parseDouble(driver.getValue()));
+					Double.parseDouble(streetUrchin.getValue()), Double.parseDouble(driver.getValue())));
 		}
 		
 		public String rollDice(){

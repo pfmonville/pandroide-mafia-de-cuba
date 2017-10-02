@@ -12,6 +12,7 @@ import model.Inspect;
 import model.Lie;
 import model.Player;
 import model.RoleProbaCouple;
+import model.Inspect.InspectView;
 
 public class StreetUrchinStrategy implements ISuspectStrategy {
 
@@ -140,9 +141,80 @@ public class StreetUrchinStrategy implements ISuspectStrategy {
 	
 
 	@Override
-	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
-		// TODO Auto-generated method stub
-		return null;
+	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie) {
+		/*
+		 * aide les voleurs à gagner
+		 * va empecher le parain d'accuser un agent + le faire accuser des fidèles 
+		 */
+		HashMap<Integer, RoleProbaCouple> assumedRolesForAllPlayers = new HashMap<Integer, RoleProbaCouple>();
+		ArrayList<InspectView> inspectViews = inspect.getAllInspectViews();
+		
+		for (InspectView iv : inspectViews){
+			int id = Integer.parseInt(iv.getId().getValue());
+			Object[] res = bestProbaRole(iv.getAllRolesValue()) ; 
+
+			if((Double) res[1] != 0. ){
+				String role = (String)res[0];
+				/*
+				 * si on pense que le joueur est fidele ou enfant des rues : le faire accuser
+				 */
+				if( role.equals(App.rules.getNameLoyalHenchman()) || role.equals(App.rules.getNameCleaner()) || role.equals(App.rules.getNameStreetUrchin())){
+					assumedRolesForAllPlayers.put(id , new RoleProbaCouple(App.rules.getNameThief(), (Double)res[1]));
+				}
+				/*
+				 * si on pense qu'il est voleur, l'innocenter
+				 */
+				else if (role.equals(App.rules.getNameThief())){
+					assumedRolesForAllPlayers.put(id , new RoleProbaCouple(App.rules.getNameLoyalHenchman(), (Double)res[1]));
+				} else{
+					assumedRolesForAllPlayers.put(id , new RoleProbaCouple(role, (Double)res[1]));
+				}
+				
+			}
+		}
+		
+		return assumedRolesForAllPlayers;
+	}
+	
+	
+	
+	
+	public Object[] bestProbaRole(ArrayList<Double> rolesList) {
+
+		Double max = -1.;
+		int ind_max = -1;
+
+		for (int i = 0; i < rolesList.size(); i++) {
+			Double proba;
+			if (rolesList.get(i).isNaN()) {
+				proba = 0.;
+			} else {
+				proba = rolesList.get(i);
+			}
+
+			if (proba > max) {
+				max = proba;
+				ind_max = i;
+			}
+		}
+
+		switch (ind_max) {
+		case 0:
+			return new Object[] { App.rules.getNameLoyalHenchman(), max };
+		case 1:
+			return new Object[] { App.rules.getNameCleaner(), max };
+		case 2:
+			return new Object[] { App.rules.getNameAgentLambda(), max };
+		case 3:
+			return new Object[] { App.rules.getNameThief(), max };
+		case 4:
+			return new Object[] { App.rules.getNameStreetUrchin(), max };
+		case 5:
+			return new Object[] { App.rules.getNameDriver(), max };
+		default:
+			return null;
+		}
+
 	}
 
 

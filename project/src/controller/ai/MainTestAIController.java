@@ -1,6 +1,7 @@
 package controller.ai;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import controller.App;
@@ -24,16 +25,16 @@ public class MainTestAIController {
 //		stringList.add(App.rules.getNameLoyalHenchman());
 //		stringList.add(App.rules.getNameAgentCIA());
 //		stringList.add(App.rules.getNameAgentFBI());
+		stringList.add(App.rules.getNameDriver());
 //		stringList.add(App.rules.getNameDriver());
-//		stringList.add(App.rules.getNameDriver());
-		int nombreDeDiamantsDansBoite = 9;
+		int nombreDeDiamantsDansBoite = 5;
 		Box testBox = new Box(nombreDeDiamantsDansBoite, stringList);
 		
 		// Nombre de joueurs dans la partie
 		int nbPlayers = 6;
 		
 		// Initialisation du joueur courant
-		int positionDuJoueur = 4; // inclus dans [2 ; n], le parrain est le joueur 1
+		int positionDuJoueur = 3; // inclus dans [2 ; n], le parrain est le joueur 1
 		Player p = new Player(new Role(""), positionDuJoueur, false, false);
 		p.setBox(testBox);
 		
@@ -106,8 +107,8 @@ public class MainTestAIController {
 		
 	
 		//Tests de checkLiar
-		Question q = new Question(5, "", new ArrayList<Integer>(), 0);
-		q.setTargetPlayer(3);
+		Question q = new Question(1, "", new ArrayList<Integer>(), 0);
+		q.setTargetPlayer(5);
 		//pour question 8
 		//q.setContent("Est-tu un... Agent?");
 		
@@ -117,7 +118,10 @@ public class MainTestAIController {
 		Answer a = new Answer(q.getId(), "",  new ArrayList<Integer>());
 		//question 15
 		//a.setTokenMovedAside(App.rules.getNameAgentFBI());
-		a.setNbTokensAnswer(1);
+		//a.setNbTokensAnswer(1);
+		a.setTokensAnswer(new ArrayList<String>());
+		//a.setTokensAnswer(new ArrayList<String>(Arrays.asList("Chauffeur")));
+		a.setNbDiamondsAnswer(0);
 		//a.setNbDiamondsAnswer(0);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.add(App.rules.getNameLoyalHenchman());

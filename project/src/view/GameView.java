@@ -1355,11 +1355,11 @@ public class GameView extends View{
 				if(q.getId()==16) 
 					intitule = q.getContent().split("[...]")[0]+"..."+choices_tokenHidden.getValue();
 				if(q.getId()==11) 
-					intitule = q.getContent()+choices_player11.getValue();
+					intitule = q.getContent().split("Joueur")[0]+choices_player11.getValue();
 				if(q.getId()==12) 
-					intitule = q.getContent()+choices_player12.getValue();
+					intitule = q.getContent().split("Joueur")[0]+choices_player12.getValue();
 				if(q.getId()==13) 
-					intitule = q.getContent()+choices_player13.getValue();
+					intitule = q.getContent().split("Joueur")[0]+choices_player13.getValue();
 				q.setContent(intitule);
 				App.gameController.askTo(q);
 			}

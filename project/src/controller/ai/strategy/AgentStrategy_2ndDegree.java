@@ -197,7 +197,7 @@ public class AgentStrategy_2ndDegree  implements ISuspectStrategy{
 	
 	
 	@Override
-	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers() {
+	public HashMap<Integer, RoleProbaCouple> showAssumedRolesForAllPlayers(Player player, Lie lie) {
 		// TODO Auto-generated method stub
 		return null;
 	}

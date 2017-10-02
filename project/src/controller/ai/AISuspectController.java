@@ -306,7 +306,7 @@ public class AISuspectController extends AIController {
 
 		if (number == 10 || number == 11 || number == 12 || number == 13) {
 			// doit renvoyer une liste des roles présumés des autres
-			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers();
+			HashMap<Integer, RoleProbaCouple> assumedRoles = this.strategy.showAssumedRolesForAllPlayers(player, lie);
 
 			ArrayList<Integer> targets = new ArrayList<>();
 			for (Entry<Integer, RoleProbaCouple> entry : assumedRoles.entrySet()) {
@@ -315,15 +315,20 @@ public class AISuspectController extends AIController {
 				}
 			}
 			if (number == 10) {
-				// TODO response.setTargets(targets);
-				content += "Selon moi, j'accuserais les joueurs: \n";
-				for (Integer target : targets) {
-					content += target + " ";
+				response.setTargets(targets);
+				if(assumedRoles.isEmpty()){
+					content +="Je ne sais pas qui accuser.";
 				}
+				else {
+					content += "Selon moi, j'accuserais les joueurs: \n";
+					for (Integer target : targets) {
+						content += target + " ";
+					}
+				}
+				
 			} else {
-				String[] s = question.getContent().split("[...]");
-				int roleAsked = Integer.parseInt(s[s.length - 1].replace('?',
-						' ').trim());
+				String[] s = question.getContent().split("Joueur");
+				int roleAsked = Integer.parseInt(s[s.length - 1].trim());
 				if (number == 11) {
 					if (assumedRoles.get(roleAsked) != null
 							&& assumedRoles.get(roleAsked).getPercentage() == 1) {
@@ -334,13 +339,12 @@ public class AISuspectController extends AIController {
 				}
 				if (number == 12) {
 					if (assumedRoles.get(roleAsked) != null) {
-						// TODO response.setRoleProbaCouple(roleAsked,
-						// assumedRoles.get(roleAsked).getRole());
+						response.setRoleProbaCouple(roleAsked,assumedRoles.get(roleAsked).getRole());
 						content += "Le joueur " + roleAsked
 								+ " est selon moi un "
-								+ assumedRoles.get(roleAsked);
+								+ assumedRoles.get(roleAsked).getRole();
 					} else {
-						// TODO response.setRoleProbaCouple(roleAsked, null);
+						response.setRoleProbaCouple(roleAsked, null);
 						content += "Je n'ai pas assez d'informations concernant le joueur "
 								+ roleAsked;
 					}
